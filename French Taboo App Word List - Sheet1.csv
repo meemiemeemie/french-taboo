@@ -1,0 +1,1026 @@
+Target Word,Level,Type,Taboo 1,Taboo 2,Taboo 3,Taboo 4,Taboo 5
+Boulangerie,A1,Nom,Pain,Croissant,Acheter,Matin,Baguette
+Tour Eiffel,A1,Nom,Paris,Monument,Fer,France,Dame de fer
+Médecin,A1,Nom,Hôpital,Malade,Docteur,Santé,Ordonnance
+Cinéma,A1,Nom,Film,Écran,Pop-corn,Regarder,Salle
+Soleil,A1,Nom,Été,Chaud,Ciel,Jaune,Lumière
+Voyage,A2,Nom,Avion,Valise,Vacances,Partir,Passeport
+Cuisiner,A2,Nom,Manger,Recette,Poêle,Chef,Préparer
+Ordinateur,A2,Nom,Écran,Clavier,Internet,Souris,Travail
+Vêtement,A2,Nom,Porter,Habit,Mode,Magasin,Pantalon
+Sport,A2,Nom,Ballon,Courir,Équipe,Match,Exercice
+Environnement,B1,Nom,Planète,Écologie,Nature,Pollution,Recyclage
+Gouvernement,B1,Nom,Politique,Lois,État,Ministre,Président
+Entreprise,B1,Nom,Travail,Bureau,Patron,Société,Salariés
+Éducation,B1,Nom,École,Apprendre,Professeur,Études,Diplôme
+Publicité,B1,Nom,Télévision,Vendre,Marque,Affiche,Produit
+Célibataire,B2,Nom,Marié,Couple,Seul,Relation,Amour
+Chômage,B2,Nom,Travail,Emploi,Argent,Licenciement,Aide
+Citoyenneté,B2,Nom,Droit,Vote,Pays,Nationalité,Devoir
+Égalité,B2,Nom,Homme,Femme,Justice,Même,Liberté
+Nucléaire,B2,Nom,Énergie,Centrale,Atome,Radioactif,Électricité
+Prendre,A1,Verb,Utiliser,Aller,Bus,Train,Main
+Grand,A1,Adj,Petit,Taille,Haut,Large,Immense
+Travailler,A1,Verb,Bureau,Argent,Emploi,Métier,Faire
+Heureux,A1,Adj,Content,Joie,Sourire,Triste,Bien
+Arriver,A1,Verb,Venir,Destination,Gare,Retard,Finir
+Réserver,A2,Verb,Hôtel,Chambre,Place,Restaurant,Ticket
+Fatigué,A2,Adj,Sommeil,Dormir,Énergie,Épuisé,Lit
+Choisir,A2,Verb,Option,Décider,Préférer,Sélection,Entre
+Rapide,A2,Adj,Vite,Vitesse,Train,Lent,Course
+Louer,A2,Verb,Appartement,Voiture,Prix,Vacances,Propriétaire
+Découvrir,B1,Verb,Nouveau,Trouver,Voyage,Explorer,Voir
+Efficace,B1,Adj,Rapide,Travail,Résultat,Performance,Utile
+Négocier,B1,Verb,Prix,Acheter,Vendre,Discussion,Accord
+Passionnant,B1,Adj,Intéressant,Captivant,Ennuyeux,Super,Aimé
+Embaucher,B1,Verb,Recruter,Travail,Entretien,Nouveau,Salarié
+Ambitieux,B2,Adj,Réussite,Carrière,Vouloir,Succès,Futur
+Démissionner,B2,Verb,Quitter,Poste,Travail,Lettre,Partir
+Polyvalent,B2,Adj,Plusieurs,Choses,Capable,Compétence,Adaptable
+Postuler,B2,Verb,CV,Emploi,Candidat,Lettre,Offre
+Lucratif,B2,Adj,Argent,Profit,Gagner,Rentable,Business
+Valise,A1,Noun,Bagage,Vêtements,Voyage,Avion,Porter
+Partir,A1,Verb,Aller,Sortir,Voyage,Vacances,Avion
+Beau,A1,Adj,Joli,Regarder,Esthétique,Moche,Magnifique
+Manger,A1,Verb,Nourriture,Restaurant,Faim,Repas,Bouche
+Hôtel,A1,Noun,Dormir,Chambre,Lit,Nuit,Réception
+Écrire,A2,Verb,Stylo,Papier,Lettre,Texte,Noter
+Difficile,A2,Adj,Dur,Facile,Problème,Complexe,Effort
+Conduire,A2,Verb,Voiture,Route,Permis,Volant,Aller
+Pratique,A2,Adj,Utile,Facile,Simple,Objet,Utiliser
+Vendre,A2,Verb,Magasin,Argent,Acheter,Commerce,Client
+Se souvenir,B1,Verb,Mémoire,Oublier,Passé,Rappeler,Pensée
+Responsable,B1,Adj,Chef,Faute,Devoir,Travail,Charge
+Améliorer,B1,Verb,Mieux,Changer,Progrès,Augmenter,Parfaire
+Étranger,B1,Adj,Pays,Langue,Autre,Voyage,Frontière
+Partager,B1,Verb,Diviser,Ensemble,Amis,Réseaux,Donner
+Compétitif,B2,Adj,Concours,Marché,Gagner,Meilleur,Sport
+S'épanouir,B2,Verb,Heureux,Bien,Grandir,Fleur,Sentiment
+Rigoureux,B2,Adj,Précis,Travail,Sérieux,Détail,Strict
+Licencier,B2,Verb,Chômage,Renvoyer,Fin,Patron,Contrat
+Indispensable,B2,Adj,Nécessaire,Obligatoire,Essentiel,Besoin,Sans
+Gare,A1,Noun,Train,SNCF,Voyage,Rails,Quai
+Chercher,A1,Verb,Trouver,Perdu,Regarder,Objet,Quête
+Jeune,A1,Adj,Âge,Enfant,Vieux,Nouveau,Petit
+Apprendre,A1,Verb,École,Étudier,Savoir,Professeur,Leçon
+Billet,A1,Noun,Train,Avion,Ticket,Argent,Payer
+Voler,A2,Verb,Avion,Air,Oiseau,Ciel,Aile
+Propre,A2,Adj,Sale,Nettoyer,Eau,Lavé,Clair
+Gagner,A2,Verb,Argent,Match,Victoire,Salaire,Premier
+Libre,A2,Adj,Temps,Prison,Choix,Vacances,Occupé
+Dormir,A1,Verb,Lit,Nuit,Rêver,Fatigue,Sommeil
+Paris,A1,City,France,Capitale,Eiffel,Ville,Seine
+La France,A1,Country,Pays,Europe,Hexagone,Français,Paris
+Le Louvre,A1,Museum,Musée,Peinture,Joconde,Pyramide,Paris
+Molière,A2,Person,Théâtre,Écrivain,Comédie,Auteur,Dramaturge
+La Seine,A1,River,Paris,Eau,Bateau,Fleuve,Pont
+Napoléon,A2,Person,Empereur,Guerre,Bonaparte,Corse,Histoire
+Renault,A1,Brand,Voiture,Auto,Marque,Français,Transport
+La Joconde,A2,Art,Mona Lisa,Tableau,Peinture,Vinci,Sourire
+Édith Piaf,B1,Person,Chanteuse,Musique,Môme,Voix,Rose
+Le 14 Juillet,A2,Event,Fête,Bastille,National,Feu,Défilé
+Asterix,A2,Fiction,BD,Gaulois,Obelix,Romain,Dessin
+Le Rhône,B1,River,Fleuve,Lyon,Sud,Eau,Suisse
+Bordeaux,A2,City,Vin,Rouge,Sud-ouest,Ville,Alcool
+Air France,A1,Brand,Avion,Voler,Compagnie,Aéroport,Transport
+Notre-Dame,A2,Church,Cathédrale,Paris,Victor Hugo,Bossu,Feu
+Le Mont Blanc,A2,Nature,Montagne,Alpes,Sommet,Neige,France
+Versailles,B1,Palace,Château,Louis XIV,Roi,Jardin,Cour
+Zinedine Zidane,A2,Person,Foot,Ballon,Sport,Champion,Algérie
+Michelin,B1,Brand,Pneu,Guide,Restaurant,Étoile,Route
+La Loire,B1,River,Châteaux,Fleuve,Eau,Vallée,Rois
+Cannes,B1,City,Festival,Cinéma,Film,Plage,Sud
+Coco Chanel,B1,Person,Mode,Parfum,Couture,Luxe,Femme
+SNCF,A1,Brand,Train,Gare,Rail,Voyager,Transport
+Camembert,A2,Food,Fromage,Lait,Normand,Manger,Odeur
+Montmartre,B1,Place,Paris,Peintre,Sacré-Cœur,Colline,Bohème
+Claude Monet,B1,Person,Peintre,Impressionnisme,Giverny,Tableau,Art
+Lyon,A2,City,Gastronomie,Rhône,Ville,Lumières,Bouchon
+Champagne,A2,Drink,Vin,Bulles,Fête,Boisson,Alcool
+Marseille,A2,City,Sud,Mer,Port,Foot,Pastis
+L'Arc de Triomphe,A2,Landmark,Paris,Étoile,Champs-Élysées,Soldat,Monument
+Carrefour,A1,Brand,Magasin,Supermarché,Courses,Acheter,Nourriture
+TGV,A1,Brand,Train,Rapide,SNCF,Rail,Vitesse
+Victor Hugo,B1,Person,Écrivain,Poète,Misérables,Livre,France
+L'Algérie,B1,Country,Afrique,Maghreb,Colonie,Guerre,Sud
+Nice,A2,City,Côte d'Azur,Mer,Sud,Plage,Promenade
+Ratatouille,A2,Food,Légumes,Plat,Cuisine,Provence,Film
+Dior,B1,Brand,Mode,Luxe,Parfum,Couture,France
+Louis XIV,B1,Person,Roi,Soleil,Versailles,Histoire,Monarchie
+La Corse,B1,Region,Île,Méditerranée,Napoléon,Mer,Vacances
+Le Tour de France,A2,Event,Vélo,Cyclisme,Course,Juillet,Maillot jaune
+L'Alsace,B1,Region,Strasbourg,Allemagne,Est,Vin,Choucroute
+Baguette,A1,Food,Pain,Boulangerie,Manger,Farine,Long
+Mairie,A2,Place,Ville,Mariage,Maire,Hôtel,Public
+Marie Curie,B1,Person,Science,Radioactivité,Nobel,Femme,Physique
+Strasbourg,B1,City,Alsace,Europe,Parlement,Noël,Est
+Vittel,A1,Brand,Eau,Boire,Bouteille,Source,Soif
+Le Sacré-Cœur,B1,Landmark,Église,Blanc,Montmartre,Paris,Basilique
+Le Larousse,B1,Brand,Dictionnaire,Mots,Livre,Définition,Langue
+Charles de Gaulle,B2,Person,Président,Général,Aéroport,Guerre,Histoire
+La Provence,B1,Region,Sud,Lavande,Soleil,Vacances,Marseille
+Chien,A1,Noun,Animal,Chat,Aboyer,Fidèle,Animal de compagnie
+Chat,A1,Noun,Miauler,Souris,Animal,Poils,Tigre
+Oiseau,A1,Noun,Voler,Plumes,Ciel,Ailes,Nid
+Poisson,A1,Noun,Eau,Mer,Nager,Aquarium,Pêcher
+Fleur,A1,Noun,Rose,Plante,Jardin,Couleur,Odeur
+Forêt,A2,Noun,Arbres,Bois,Vert,Marcher,Nature
+Montagne,A2,Noun,Neige,Ski,Haut,Sommet,Alpes
+Plage,A2,Noun,Mer,Sable,Été,Vacances,Soleil
+Sauvage,A2,Adj,Animal,Nature,Forêt,Libre,Domestique
+Pluies,A2,Noun,Eau,Ciel,Parapluie,Mouillé,Nuage
+Pollution,B1,Noun,Air,Déchets,Environnement,Sale,Planète
+Protéger,B1,Verb,Sauver,Garder,Environnement,Sécurité,Aider
+Menacé,B1,Adj,Danger,Espèce,Disparaître,Risque,Extinction
+Climat,B1,Noun,Météo,Température,Terre,Réchauffement,Changement
+Cultiver,B1,Verb,Jardin,Terre,Légumes,Faire pousser,Agriculture
+Écosystème,B2,Noun,Nature,Équilibre,Espèces,Environnement,Vivant
+Biodiversité,B2,Noun,Nature,Animaux,Variété,Espèces,Planète
+Durable,B2,Adj,Développement,Écologie,Longtemps,Vert,Futur
+Fertile,B2,Adj,Terre,Pousser,Agriculture,Riche,Productif
+Cheval,A1,Noun,Monter,Galop,Animal,Équitation,Ferme
+Vache,A1,Noun,Lait,Ferme,Animal,Taureau,Viande
+Mer,A1,Noun,Eau,Plage,Bleu,Bateau,Océan
+Arbre,A1,Noun,Forêt,Feuilles,Bois,Vert,Tronc
+Vert,A1,Adj,Couleur,Herbe,Nature,Arbre,Écologie
+Chasser,A2,Verb,Tuer,Animal,Fusil,Forêt,Chasseur
+Calme,A2,Adj,Tranquille,Bruit,Silence,Paix,Nature
+Nuage,A2,Noun,Ciel,Pluie,Blanc,Soleil,Météo
+Froid,A2,Adj,Hiver,Glace,Neige,Chaud,Température
+Recycler,B1,Verb,Poubelle,Plastique,Trier,Déchets,Environnement
+Paysage,B1,Noun,Vue,Nature,Beau,Regarder,Panorama
+Se promener,B1,Verb,Marcher,Sortir,Pieds,Parc,Forêt
+Humide,B1,Adj,Eau,Mouillé,Pluie,Sec,Air
+Espèce,B1,Noun,Animal,Groupe,Type,Genre,Vivant
+Réchauffement,B2,Noun,Climat,Terre,Chaud,Glace,Pollution
+Nuisible,B2,Adj,Mauvais,Insecte,Problème,Jardin,Animal
+Éolienne,B2,Noun,Vent,Énergie,Électricité,Vert,Renouvelable
+S'adapter,B2,Verb,Changer,Habitude,Nouveau,Climat,Évolution
+Urbain,B2,Adj,Ville,Campagne,Rue,Bâtiment,Habiter
+Loup,A2,Noun,Animal,Forêt,Chien,Peur,Conte
+Lion,A1,Noun,Roi,Jungle,Savane,Animal,Afrique
+Lune,A1,Noun,Nuit,Ciel,Étoiles,Lumière,Blanc
+Campagne,A2,Noun,Ville,Village,Nature,Ferme,Calme
+Ramasser,A2,Verb,Prendre,Terre,Main,Objet,Lever
+Fleuve,B1,Noun,Rivière,Eau,Mer,Courant,Grand
+Écologique,B1,Adj,Vert,Planète,Nature,Respectueux,Environnement
+Épuiser,B2,Verb,Finir,Ressource,Énergie,Fatigué,Utiliser
+Triste,A1,Adj,Malheureux,Pleurer,Joie,Content,Sentiment
+Aimer,A1,Verb,Amour,Adorer,Coeur,Préférer,Sentiment
+Gentil,A1,Adj,Méchant,Sympa,Bon,Aimable,Personne
+Peur,A1,Noun,Effrayé,Cri,Phobie,Nuit,Dangereux
+Rire,A1,Verb,Drôle,Blague,Sourire,Amusant,Bouche
+En colère,A2,Adj,Énervé,Fâché,Crier,Rouge,Sentiment
+Sourire,A2,Verb,Heureux,Bouche,Content,Rire,Visage
+Timide,A2,Adj,Parler,Peur,Rouge,Discret,Gens
+Pleurer,A2,Verb,Triste,Yeux,Larme,Eau,Malheur
+Drôle,A2,Adj,Rigolo,Amusant,Comique,Rire,Blague
+S'ennuyer,B1,Verb,Temps,Intéressant,Occupé,Rien,Long
+Inquiet,B1,Adj,Stressé,Peur,Problème,Rassurer,Calme
+Généreux,B1,Adj,Donner,Partager,Cadeau,Argent,Bon
+Déçu,B1,Adj,Espérer,Attendre,Triste,Dommage,Résultat
+Se fâcher,B1,Verb,Colère,Énervé,Disputer,Crier,Contre
+Hypocrite,B2,Adj,Mentir,Faux,Sincère,Visage,Vérité
+Angoisse,B2,Noun,Peur,Stress,Panique,Sentiment,Anxiété
+Misanthrope,B2,Adj,Gens,Humains,Seul,Détester,Société
+Sympa,A1,Adj,Gentil,Cool,Ami,Agréable,Personne
+Détester,A1,Verb,Haïr,Aimer,Pas,Horreur,Dégoût
+Content,A1,Adj,Heureux,Joie,Satisfait,Triste,Sourire
+Merveilleux,A2,Adj,Magnifique,Beau,Super,Génial,Magique
+Surpris,A2,Adj,Étonné,Cadeau,Inattendu,Choc,Bouche bée
+Méchant,A2,Adj,Mauvais,Gentil,Mal,Agressif,Cruel
+Courageux,A2,Adj,Peur,Héros,Fort,Brave,Risque
+Patient,A2,Adj,Attendre,Temps,Calme,Vite,Énervé
+Se sentir,B1,Verb,Aller,Émotion,État,Bien,Mal
+Optimiste,B1,Adj,Positif,Voir,Bien,Futur,Pessimiste
+Ressentir,B1,Verb,Émotion,Sentiment,Éprouver,Intérieur,Coeur
+Égoïste,B1,Adj,Soi-même,Partager,Seul,Prendre,Moi
+Honnête,B1,Adj,Vérité,Mentir,Sincère,Franc,Voler
+Susceptible,B2,Adj,Vexé,Critique,Émotion,Fragile,Prendre mal
+Nostalgie,B2,Noun,Passé,Souvenir,Triste,Temps,Regret
+S'entendre,B1,Verb,Amis,Ensemble,Relation,Disputer,Sympa
+Mépriser,B2,Verb,Détester,Juger,Inférieur,Regard,Respect
+Extraverti,B2,Adj,Parler,Gens,Ouvert,Timide,Sortir
+Rancunier,B2,Adj,Pardonner,Colère,Oublier,Passé,Garder
+Modeste,B1,Adj,Humble,Vaniteux,Prétentieux,Réussite,Simple
+Jaloux,A2,Adj,Envie,Amour,Autre,Copain,Possessif
+Énervé,A2,Adj,Colère,Fatigué,Stress,Fâché,Calme
+Adorer,A1,Verb,Aimer,Passion,Beaucoup,Fan,Culte
+Inquiéter,B1,Verb,Souci,Peur,Rassurer,Problème,Stress
+Fier,B1,Adj,Content,Succès,Soi,Réussite,Estime
+Sincère,B1,Adj,Honnête,Vérité,Mentir,Franc,Coeur
+Cruel,B2,Adj,Méchant,Mal,Souffrir,Dur,Cœur
+Mélancolie,B2,Noun,Triste,Doux,Sentiment,Noir,Passé
+Séduire,B2,Verb,Plaire,Amour,Charme,Attirer,Draguer
+Pain,A1,Noun,Boulangerie,Baguette,Manger,Farine,Sandwich
+Pomme,A1,Noun,Fruit,Rouge,Arbre,Jus,Manger
+Boire,A1,Verb,Eau,Soif,Verre,Liquide,Bouteille
+Lait,A1,Noun,Blanc,Vache,Boire,Fromage,Petit-déjeuner
+Délicieux,A2,Adj,Bon,Goût,Manger,Excellent,Savoureux
+Sucre,A2,Noun,Doux,Dessert,Blanc,Gâteau,Bonbon
+Goûter,A2,Verb,Manger,Saveur,Essayer,Bouche,Langue
+Légume,A2,Noun,Salade,Vert,Carotte,Sain,Jardin
+Recette,B1,Noun,Livre,Cuisine,Ingrédients,Préparer,Plat
+Savoureux,B1,Adj,Goût,Bon,Délicieux,Manger,Épicé
+Grignoter,B1,Verb,Manger,Petit,Faim,Entre,Repas
+Équilibré,B1,Adj,Santé,Repas,Bien,Régime,Varié
+Végétarien,B1,Adj,Viande,Animal,Manger,Régime,Légumes
+Gastronomie,B2,Noun,Cuisine,France,Luxe,Restaurant,Chef
+Mijoter,B2,Verb,Cuire,Lentement,Feu,Préparer,Plat
+Assaisonner,B2,Verb,Sel,Poivre,Goût,Épices,Ajouter
+Succulent,B2,Adj,Très,Bon,Délicieux,Manger,Goût
+Gourmand,B2,Adj,Manger,Beaucoup,Sucre,Plaisir,Faim
+Fromage,A1,Noun,Lait,Camembert,France,Plateau,Vache
+Viande,A1,Noun,Boucherie,Animal,Bœuf,Poulet,Manger
+Petit-déjeuner,A1,Noun,Matin,Boire,Manger,Café,Croissant
+Sel,A2,Noun,Poivre,Blanc,Mer,Goût,Cuisine
+Faim,A2,Noun,Manger,Estomac,Appetit,Avoir,Soif
+Commander,A2,Verb,Restaurant,Menu,Serveur,Payer,Choisir
+Sucré,A2,Adj,Dessert,Sucre,Bonbon,Gâteau,Salé
+Frais,A2,Adj,Nature,Nouveau,Froid,Aliment,Eau
+Nourrissant,B1,Adj,Manger,Énergie,Riche,Santé,Calorie
+Cuit,B1,Adj,Cru,Feu,Four,Cuisine,Manger
+Saveur,B1,Noun,Goût,Langue,Épice,Ressentir,Bouche
+Bruncher,B1,Verb,Matin,Midi,Manger,Weekend,Oeufs
+Bio,B1,Adj,Naturel,Agriculture,Sain,Écologique,Produit
+Amer,B2,Adj,Goût,Café,Chocolat,Sucre,Acide
+Comestible,B2,Adj,Manger,Poison,Danger,Aliment,Possible
+Déguster,B2,Verb,Goût,Vin,Manger,Apprécier,Lentement
+Aigre-doux,B2,Adj,Chinois,Sucre,Vinaigre,Goût,Mélange
+Friandise,B2,Noun,Bonbon,Sucre,Enfant,Douceur,Petit
+Beurre,A1,Noun,Lait,Gras,Tartine,Cuisine,Jaune
+Vin,A1,Noun,Alcool,Bouteille,Rouge,Boire,Raisin
+Bouteille,A1,Noun,Boire,Verre,Eau,Vin,Plastique
+Gâteau,A2,Noun,Dessert,Sucre,Anniversaire,Chocolat,Four
+Servir,A2,Verb,Restaurant,Assiette,Serveur,Donner,Table
+Salé,A2,Adj,Sel,Goût,Mer,Sucré,Cuisine
+Épicé,B1,Adj,Piment,Chaud,Fort,Goût,Cuisine
+Bouillir,B1,Verb,Eau,Chaud,Feu,Cuire,Pâtes
+Produit,B1,Noun,Acheter,Magasin,Objet,Fabriquer,Article
+Abondant,B2,Adj,Beaucoup,Trop,Riche,Quantité,Plein
+Savourer,B2,Verb,Manger,Apprécier,Lentement,Goût,Plaisir
+Porter,A1,Verb,Mettre,Habits,Corps,Vêtement,Chaussures
+Pantalon,A1,Noun,Jambes,Jean,Vêtement,Bas,Porter
+Chaussure,A1,Noun,Pieds,Marcher,Paire,Basket,Talon
+Rouge,A1,Adj,Couleur,Sang,Tomate,Lèvres,Clair
+Mettre,A2,Verb,Porter,Habiller,Vêtement,Enlever,Matin
+Joli,A2,Adj,Beau,Esthétique,Mignon,Regarder,Laid
+Cher,A2,Adj,Prix,Argent,Coûter,Luxe,Euro
+S'habiller,B1,Verb,Vêtements,Matin,Mode,Prêt,Look
+Élégant,B1,Adj,Chic,Beau,Classe,Style,Vêtement
+Précieux,B1,Adj,Bijou,Cher,Or,Valeur,Diamant
+Essayer,B1,Verb,Cabine,Taille,Vêtement,Magasin,Voir
+Tendance,B2,Adj,Mode,Actuel,Style,Magazine,Populaire
+Se démoder,B2,Verb,Vieux,Style,Passer,Ancien,Mode
+Sophistiqué,B2,Adj,Complexe,Élégant,Chic,Recherche,Simple
+Coudre,B2,Verb,Aiguille,Fil,Machine,Tissu,Réparer
+Superficiel,B2,Adj,Apparence,Profond,Image,Extérieur,Beauté
+Chemise,A1,Noun,Boutons,Porter,Haut,Cravate,Travail
+Robe,A1,Noun,Femme,Porter,Mariage,Jupe,Vêtement
+Bleu,A1,Adj,Couleur,Ciel,Mer,Foncé,Clair
+Sac,A1,Noun,Porter,Main,Dos,Objet,Cuir
+Chapeau,A1,Noun,Tête,Soleil,Porter,Casquette,Bonnet
+Laid,A2,Adj,Moche,Beau,Horrible,Regarder,Visage
+Neuf,A2,Adj,Nouveau,Vieux,Occasion,Acheter,Propre
+Payer,A2,Verb,Argent,Acheter,Caisse,Prix,Carte
+Court,A2,Adj,Long,Taille,Petit,Jambes,Cheveux
+Maquiller,A2,Verb,Visage,Yeux,Rouge à lèvres,Beauté,Femme
+Assortir,B1,Verb,Couleurs,Ensemble,Marier,Vêtements,Aller
+Confortable,B1,Adj,Bien,Mou,Pyjama,Porter,Chaise
+Rayures,B1,Noun,Lignes,Motif,Zèbre,Chemise,Dessin
+Prêter,B1,Verb,Donner,Rendre,Ami,Emprunter,Objet
+Coton,B1,Noun,Matière,Tissu,T-shirt,Doux,Plante
+Luxueux,B2,Adj,Cher,Riche,Or,Marque,Qualité
+S'apprêter,B2,Verb,Préparer,Sortir,Habiller,Soirée,Miroir
+Vulgaire,B2,Adj,Chic,Style,Mauvais,Élégant,Simple
+Désuet,B2,Adj,Vieux,Mode,Ancien,Passé,Style
+Sur-mesure,B2,Adj,Taille,Corps,Tailleur,Précis,Unique
+T-shirt,A1,Noun,Haut,Porter,Coton,Manche,Vêtement
+Jupe,A1,Noun,Femme,Jambes,Courte,Robe,Porter
+Vieux,A1,Adj,Jeune,Neuf,Ancien,Âge,Temps
+Couleur,A1,Noun,Rouge,Bleu,Peinture,Arc-en-ciel,Teinte
+Laine,A2,Noun,Mouton,Chaud,Hiver,Pull,Tricot
+Maillot,A2,Noun,Bain,Sport,Plage,Nager,Corps
+Parfum,A2,Noun,Odeur,Sentir,Flacon,Luxe,Fleur
+Large,A2,Adj,Grand,Étroit,Taille,Place,Pantalon
+Démodé,B1,Adj,Vieux,Style,Ancien,Ringard,Mode
+Taille,B1,Noun,Mesure,Grand,Petit,Vêtement,Corps
+Ballon,A1,Noun,Rond,Foot,Jouer,Lancer,Sport
+Jouer,A1,Verb,Jeu,Amusement,Match,Équipe,Gagner
+Courir,A1,Verb,Pieds,Vite,Jambes,Sport,Marathon
+Vite,A1,Adj,Rapide,Vitesse,Lent,Courir,Temps
+Nager,A2,Verb,Eau,Piscine,Mer,Maillot,Poisson
+Équipe,A2,Noun,Groupe,Joueurs,Ensemble,Match,Club
+Pratiquer,A2,Verb,Faire,Sport,Activité,Régulièrement,Exercice
+Fort,A2,Adj,Puissant,Muscle,Faible,Force,Sport
+Entraînement,B1,Noun,Préparer,Coach,Sport,Séance,Exercice
+Détendre (Se),B1,Verb,Calme,Repos,Relaxer,Stress,Vacances
+Compétition,B1,Noun,Match,Gagner,Concours,Sport,Adversaire
+Passionné,B1,Adj,Aimer,Fan,Adorer,Intérêt,Beaucoup
+Siffler,B1,Verb,Arbitre,Match,Bruit,Bouche,Faute
+Performance,B2,Noun,Résultat,Sportif,Capacité,Niveau,Réussite
+Endurance,B2,Noun,Longtemps,Effort,Fatigue,Résistance,Courir
+Amateur,B2,Adj,Professionnel,Sport,Loisir,Débutant,Plaisir
+Défier,B2,Verb,Duel,Contre,Provocateur,Adversaire,Compétition
+Épuisant,B2,Adj,Fatigué,Dur,Effort,Énergie,Vide
+Vélo,A1,Noun,Bicyclette,Roues,Pédaler,Rouler,Transport
+Match,A1,Noun,Jeu,Équipe,Sport,Gagner,Stade
+Lent,A1,Adj,Vite,Tortue,Vitesse,Doucement,Temps
+Marcher,A1,Verb,Pieds,Jambes,Promener,Randonnée,Aller
+Musique,A1,Noun,Écouter,Instrument,Chanter,Radio,Note
+Perdre,A2,Verb,Gagner,Match,Défaite,Moins,Trouver
+Sortir,A2,Verb,Dehors,Amis,Soirée,Partir,Maison
+Stade,A2,Noun,Foot,Match,Sport,Gradins,Terrain
+Vif,A2,Adj,Rapide,Énergie,Couleur,Vite,Esprit
+Sauter,A2,Verb,Air,Pieds,Bondir,Haut,Sol
+Loisir,B1,Noun,Temps,Libre,Activité,Passion,Vacances
+Adversaire,B1,Noun,Contre,Ennemi,Match,Joueur,Autre
+Remporter,B1,Verb,Gagner,Victoire,Prix,Coupe,Obtenir
+Agile,B1,Adj,Souple,Rapide,Mouvement,Corps,Facile
+Arbitre,B1,Noun,Match,Règles,Sifflet,Faute,Décider
+Exigeant,B2,Adj,Dur,Difficile,Perfection,Travail,Strict
+S'investir,B2,Verb,Temps,Énergie,Faire,Engagement,Travail
+Incontournable,B2,Adj,Obligatoire,Nécessaire,Important,Voir,Manquer
+Se surpasser,B2,Verb,Meilleur,Limite,Effort,Gagner,Progrès
+Stratégie,B2,Noun,Plan,Gagner,Jeu,Tactique,Réfléchir
+Foot,A1,Noun,Ballon,But,Terrain,Équipe,Sport
+Tennis,A1,Noun,Raquette,Balle,Court,Filet,Sport
+Mince,A2,Adj,Gros,Taille,Corps,Maigre,Poids
+Pêcher,A2,Verb,Poisson,Eau,Mer,Ligne,Rivière
+Skier,A2,Verb,Neige,Montagne,Hiver,Station,Glisser
+Randonnée,B1,Noun,Marcher,Montagne,Nature,Sac à dos,Pieds
+Inscrire (S'),B1,Verb,Club,Sport,Participer,Adhérer,Nom
+Spectacle,B1,Noun,Voir,Théâtre,Concert,Public,Scène
+Redoutable,B2,Adj,Peur,Danger,Fort,Adversaire,Impressionnant
+Cohésion,B2,Noun,Équipe,Ensemble,Unité,Groupe,Lien
+Malade,A1,Adj,Santé,Médecin,Lit,Grippe,Mal
+Corps,A1,Noun,Humain,Bras,Jambes,Tête,Physique
+Tête,A1,Noun,Cheveux,Visage,Cerveau,Chapeau,Haut
+Main,A1,Noun,Doigts,Bras,Prendre,Gauche,Droite
+Hôpital,A2,Noun,Médecin,Malade,Lit,Opération,Urgence
+Douleur,A2,Noun,Mal,Souffrir,Corps,Blessure,Aïe
+Sain,A2,Adj,Santé,Bien,Manger,Corps,Équilibré
+Cœur,A2,Noun,Amour,Poitrine,Sang,Battre,Corps
+Ordonnance,B1,Noun,Médecin,Papier,Pharmacie,Médicament,Écrire
+Guérir,B1,Verb,Malade,Mieux,Santé,Soigner,Finir
+Médicament,B1,Noun,Pharmacie,Pilule,Pharmacie,Soigner,Boire
+Blessure,B1,Noun,Mal,Sang,Accident,Coupure,Sport
+Contagieux,B2,Adj,Maladie,Transmettre,Virus,Attraper,Gens
+Symptôme,B2,Noun,Maladie,Signe,Médecin,Corps,Ressentir
+Diagnostic,B2,Noun,Médecin,Maladie,Résultat,Examen,Trouver
+Bénévole,B2,Adj,Aider,Argent,Gratuit,Association,Temps
+Prévention,B2,Noun,Éviter,Danger,Santé,Avant,Risque
+Bras,A1,Noun,Main,Épaule,Corps,Porter,Gauche
+Jambe,A1,Noun,Pied,Marcher,Genou,Pantalon,Corps
+Ventre,A1,Noun,Manger,Estomac,Corps,Bas,Gros
+Yeux,A1,Noun,Voir,Regarder,Visage,Lunettes,Couleur
+Bouche,A1,Noun,Manger,Parler,Dents,Lèvres,Visage
+Soigner,A2,Verb,Médecin,Malade,Mieux,Guérir,Médicament
+Fièvre,A2,Noun,Chaud,Température,Malade,Degrés,Front
+Pharmacien,A2,Noun,Médicaments,Magasin,Vendre,Ordonnance,Santé
+Sportif,A2,Adj,Sport,Corps,Forme,Exercice,Musclé
+Rassurer,B1,Verb,Peur,Calmer,Dire,Confiance,Inquiet
+Souffrir,B1,Verb,Mal,Douleur,Triste,Corps,Ressentir
+S'essouffler,B1,Verb,Air,Respirer,Sport,Fatigué,Courir
+Fracture,B1,Noun,Os,Cassé,Accident,Plâtre,Jambe
+Vaccin,B1,Noun,Piqûre,Virus,Maladie,Protection,Médecin
+Sédentaire,B2,Adj,Assis,Bouger,Sport,Vie,Travail
+Héréditaire,B2,Adj,Famille,Parents,Gènes,Transmettre,Naissance
+Anxiété,B2,Noun,Stress,Peur,Inquiet,Angoisse,Esprit
+Chronique,B2,Adj,Temps,Maladie,Longtemps,Toujours,Régulier
+Convalescence,B2,Noun,Après,Guérir,Repos,Malade,Temps
+Dos,A1,Noun,Arrière,Corps,Sac,Épaules,Porter
+Dents,A1,Noun,Bouche,Blanc,Manger,Brosse,Sourire
+Pied,A1,Noun,Chaussure,Marcher,Jambe,Bas,Doigt
+Nez,A1,Noun,Visage,Sentir,Odeur,Air,Respirer
+Oreille,A1,Noun,Écouter,Entendre,Son,Tête,Musique
+Tousser,A2,Verb,Malade,Gorge,Bruit,Bouche,Grippe
+Mourir,A2,Verb,Vie,Fin,Mort,Naître,Tombe
+Maigrir,A2,Verb,Poids,Régime,Mince,Manger,Perdre
+Infirmier,B1,Noun,Hôpital,Médecin,Soigner,Aide,Piqûre
+École,A1,Noun,Enfant,Apprendre,Professeur,Classe,Étudier
+Étudier,A1,Verb,Apprendre,Livre,École,Examen,Travail
+Livre,A1,Noun,Lire,Papier,Pages,Bibliothèque,Histoire
+Professeur,A1,Noun,Enseigner,École,Élève,Classe,Apprendre
+Classe,A1,Noun,École,Salle,Élèves,Professeur,Bureau
+Examen,A2,Noun,Test,Note,Réussir,Étudier,Papier
+Diplôme,A2,Noun,Fin,Études,Réussite,Papier,Université
+Élève,A2,Noun,École,Enfant,Étudiant,Classe,Apprendre
+Langue,A2,Noun,Parler,Français,Anglais,Étranger,Communiquer
+Université,B1,Noun,Études,Étudiant,Faculté,Diplôme,Après
+Réussir,B1,Verb,Gagner,Examen,Note,Bien,Échec
+Échouer,B1,Verb,Rater,Examen,Mauvais,Perdre,Échec
+Matière,B1,Noun,Sujet,École,Maths,Histoire,Cours
+Bourse,B1,Noun,Argent,Études,Aide,Étudiant,Payer
+Alphabétisation,B2,Noun,Lire,Écrire,Apprendre,École,Savoir
+Compétence,B2,Noun,Capacité,Savoir,Travail,Faire,Talent
+Pédagogie,B2,Noun,Méthode,Enseigner,Professeur,École,Apprendre
+Apprentissage,B2,Noun,Formation,Métier,Pratique,Nouveau,Apprendre
+Scolarité,B2,Noun,École,Études,Temps,Enfant,Éducation
+Crayon,A1,Noun,Écrire,Papier,Dessiner,Gomme,Mine
+Papier,A1,Noun,Écrire,Feuille,Crayon,Stylo,Lire
+Lire,A1,Verb,Livre,Yeux,Texte,Histoire,Comprendre
+Maths,A1,Noun,Chiffres,Calculer,Nombre,École,Addition
+Cahier,A2,Noun,Écrire,École,Papier,Notes,Leçon
+Leçon,A2,Noun,Apprendre,Professeur,Étudier,Classe,Devoir
+Devoirs,A2,Noun,Maison,École,Soir,Faire,Exercice
+Note,A2,Noun,Examen,Points,Résultat,Professeur,Sur vingt
+Vacances,A2,Noun,École,Été,Pause,Partir,Repos
+Dictionnaire,B1,Noun,Mots,Définition,Langue,Livre,Chercher
+Bibliothèque,B1,Noun,Livres,Silence,Lire,Emprunter,Étudier
+Formation,B1,Noun,Apprendre,Stage,Travail,Métier,Cours
+Stagiaire,B1,Noun,Entreprise,Travail,Étudiant,Apprendre,Période
+Oral,B1,Adj,Parler,Bouche,Examen,Écrit,Entretien
+Curriculum,B2,Noun,CV,Études,École,Parcours,Travail
+Érudit,B2,Adj,Savant,Intelligent,Culture,Connaissance,Livre
+Discipline,B2,Noun,École,Matière,Règle,Comportement,Sport
+S'inscrire,B1,Verb,École,Nom,Participer,Adhésion,Formulaire
+Réviser,B1,Verb,Étudier,Examen,Mémoire,Lire,Avant
+Tableau,A1,Noun,Classe,Écrire,Noir,Blanc,Professeur
+Bureau,A1,Noun,Table,Travail,École,S'asseoir,Meuble
+Sac à dos,A1,Noun,École,Porter,Livres,Affaires,Cahier
+Histoire,A2,Noun,Passé,Dates,École,Récit,Guerre
+Géographie,A2,Noun,Cartes,Pays,Monde,Terre,École
+Cantine,A2,Noun,Manger,École,Midi,Déjeuner,Plateau
+Gymnase,A2,Noun,Sport,École,Salle,Exercice,Professeur
+Brouillon,B1,Noun,Papier,Écrire,Premier,Essai,Jeter
+Soutenance,B2,Noun,Parler,Thèse,Diplôme,Jury,Fin
+Autodidacte,B2,Adj,Seul,Apprendre,Professeur,Sans,École
+Maison,A1,Noun,Habiter,Toit,Famille,Jardin,Bâtiment
+Appartement,A1,Noun,Immeuble,Étage,Habiter,Ville,Studio
+Chambre,A1,Noun,Dormir,Lit,Pièce,Maison,Nuit
+Cuisine,A1,Noun,Manger,Cuire,Repas,Pièce,Frigo
+Habiter,A1,Verb,Vivre,Adresse,Maison,Ville,Résider
+Immeuble,A2,Noun,Appartements,Haut,Ville,Bâtiment,Étages
+Voisin,A2,Noun,Habiter,Côté,Personne,Quartier,Bruit
+Meuble,A2,Noun,Table,Chaise,Maison,Décoration,Objet
+Déménager,A2,Verb,Changer,Maison,Cartons,Partir,Nouvelle
+Loyers,B1,Noun,Argent,Payer,Mois,Appartement,Location
+Quartier,B1,Noun,Ville,Endroit,Voisins,Zone,Rue
+Propriétaire,B1,Noun,Louer,Maison,Argent,Posséder,Patron
+Rénover,B1,Verb,Travaux,Maison,Neuf,Réparer,Changer
+Colocation,B2,Noun,Partager,Appartement,Amis,Loyer,Ensemble
+Urbanisme,B2,Noun,Ville,Construction,Bâtiment,Plan,Espace
+Hypothèque,B2,Noun,Banque,Argent,Maison,Prêt,Achat
+Insaloubre,B2,Adj,Sale,Mauvais,Santé,Logement,Danger
+Porte,A1,Noun,Ouvrir,Fermer,Entrer,Clef,Poignée
+Fenêtre,A1,Noun,Voir,Regarder,Verre,Lumière,Ouvrir
+Lit,A1,Noun,Dormir,Chambre,Nuit,Matelas,Sommeil
+Table,A1,Noun,Manger,Chaises,Salon,Meuble,Cuisine
+Jardin,A1,Noun,Fleurs,Arbres,Dehors,Maison,Herbe
+Douche,A2,Noun,Se laver,Eau,Salle de bain,Propre,Savon
+Étage,A2,Noun,Immeuble,Monter,Ascenseur,Haut,Premier
+Balcon,A2,Noun,Dehors,Vue,Appartement,Fenêtre,Terrasse
+Garage,A2,Noun,Voiture,Maison,Ranger,Parking,Sous-sol
+Chauffage,A2,Noun,Chaud,Hiver,Maison,Radiateur,Froid
+Ascenseur,B1,Noun,Monter,Immeuble,Étage,Bouton,Escalier
+Banlieue,B1,Noun,Ville,Autour,Train,Loin,Quartier
+Climatisation,B1,Noun,Froid,Été,Air,Chaud,Machine
+Bricoler,B1,Verb,Travaux,Réparer,Outils,Maison,Faire
+Meublé,B1,Adj,Appartement,Meubles,Lit,Prêt,Location
+Charges,B2,Noun,Payer,Eau,Électricité,Loyer,Facture
+Coût,B2,Noun,Prix,Argent,Cher,Payer,Valeur
+Spacieux,B2,Adj,Grand,Place,Large,Appartement,Pièce
+Aménager,B2,Verb,Meubles,Installer,Décorer,Maison,Espace
+Précaire,B2,Adj,Fragile,Pauvre,Argent,Stable,Logement
+Chaise,A1,Noun,S'asseoir,Table,Meuble,Quatre,Pieds
+Toit,A1,Noun,Maison,Haut,Pluie,Couvrir,Tuiles
+Clé,A1,Noun,Ouvrir,Porte,Serrure,Métal,Fermer
+Salon,A2,Noun,Télévision,Canapé,Pièce,Maison,Recevoir
+Miroir,A2,Noun,Regarder,Voir,Visage,Verre,Salle de bain
+Escalier,A2,Noun,Monter,Pieds,Étage,Marches,Descendre
+Sous-sol,B1,Noun,Cave,Bas,Maison,Ranger,Noir
+Grenier,B1,Noun,Haut,Maison,Toit,Ranger,Vieux
+Isoler,B2,Verb,Froid,Bruit,Mur,Protéger,Maison
+Demeure,B2,Noun,Maison,Grande,Belle,Habiter,Résidence
+Avion,A1,Noun,Voler,Aéroport,Air,Pilote,Ailes
+Aller,A1,Verb,Venir,Partir,Destination,Lieu,Marcher
+Passeport,A2,Noun,Avion,Frontière,Identité,Papier,Voyager
+Visiter,A2,Verb,Monument,Touriste,Voir,Ville,Musée
+Bateau,A2,Noun,Mer,Eau,Naviguer,Port,Paquebot
+Aéroport,B1,Noun,Avion,Vol,Terminal,Bagages,Sécurité
+Destination,B1,Noun,Arriver,Lieu,Voyage,Pays,Vacances
+Guide,B1,Noun,Touriste,Livre,Visite,Expliquer,Ville
+Itinéraire,B1,Noun,Route,Chemin,Carte,GPS,Voyage
+Dépaysement,B2,Noun,Nouveau,Changer,Culture,Voyage,Habitude
+Frontière,B2,Noun,Pays,Limite,Douane,Passer,Séparer
+Excursion,B2,Noun,Visite,Journée,Sortie,Groupe,Voyage
+Séjour,B2,Noun,Temps,Vacances,Passer,Hôtel,Durée
+Train,A1,Noun,Gare,Rails,Voyager,SNCF,Wagon
+Carte,A1,Noun,Plan,Géographie,Itinéraire,Ville,Papier
+Photo,A1,Noun,Appareil,Souvenir,Image,Prendre,Regarder
+Camping,A2,Noun,Tente,Dormir,Nature,Forêt,Vacances
+Valable,A2,Adj,Date,Passeport,Bon,Utiliser,Expiré
+Retard,A2,Noun,Train,Avion,Heure,Attendre,Gare
+Valoir,A2,Verb,Prix,Coûter,Argent,Cher,Qualité
+Bagage,B1,Noun,Valise,Sac,Avion,Aéroport,Cabine
+Embarquer,B1,Verb,Avion,Monter,Bateau,Vol,Départ
+Monument,B1,Noun,Histoire,Visiter,Statue,Ville,Tour Eiffel
+Lointain,B1,Adj,Loin,Pays,Voyage,Distance,Horizon
+Souvenir,B1,Noun,Acheter,Cadeau,Voyage,Objet,Mémoire
+Autochtone,B2,Noun/Adj,Habitant,Pays,Local,Gens,Originaire
+Pittoresque,B2,Adj,Beau,Village,Paysage,Charme,Typique
+Croisière,B2,Noun,Bateau,Mer,Vacances,Voyage,Escale
+Transports,B1,Noun,Bus,Train,Métro,Commun,Voyager
+Escapade,B2,Noun,Voyage,Court,Weekend,Partir,Petite
+Bus,A1,Noun,Transport,Ville,Arrêt,Route,Monter
+Pays,A1,Noun,France,Nation,Monde,Frontière,Drapeau
+Vol,A2,Noun,Avion,Air,Aéroport,Voyage,Compagnie
+Douane,B2,Noun,Frontière,Valise,Aéroport,Policier,Interdit
+S'évader,B2,Verb,Partir,Loin,Voyage,Liberté,Routine
+Téléphone,A1,Noun,Appeler,Mobile,Portable,Écran,Parler
+Internet,A1,Noun,Web,Connexion,Réseau,Site,Ligne
+Science,A1,Noun,École,Savant,Laboratoire,Étudier,Physique
+Cliquer,A1,Verb,Souris,Ordinateur,Bouton,Doigt,Écran
+Écran,A2,Noun,Regarder,Télévision,Ordinateur,Verre,Image
+Machine,A2,Noun,Appareil,Électricité,Robot,Fabriquer,Moteur
+Utiliser,A2,Verb,Se servir,Outil,Objet,Faire,Pratique
+Inventer,A2,Verb,Nouveau,Créer,Idée,Premier,Découvrir
+Électrique,A2,Adj,Énergie,Courant,Lumière,Prise,Fil
+Recherche,B1,Noun,Chercher,Science,Laboratoire,Savant,Information
+Logiciel,B1,Noun,Programme,Ordinateur,Installer,Application,Windows
+Numérique,B1,Adj,Digital,Ordinateur,Internet,Écran,Technologie
+Connecté,B1,Adj,Internet,Réseau,Wifi,Téléphone,En ligne
+Expérience,B1,Noun,Science,Test,Laboratoire,Résultat,Faire
+Intelligence,B2,Noun,Artificielle,Cerveau,Esprit,Capacité,Humain
+Innovant,B2,Adj,Nouveau,Technologie,Idée,Moderne,Changer
+Données,B2,Noun,Information,Internet,Stocker,Ordinateur,Data
+Éthique,B2,Noun,Moral,Bien,Science,Question,Juste
+Automatisé,B2,Adj,Robot,Machine,Seul,Travail,Système
+Souris,A1,Noun,Ordinateur,Cliquer,Main,Flèche,Animal
+Clavier,A1,Noun,Écrire,Lettres,Touches,Ordinateur,Doigts
+Robot,A1,Noun,Machine,Humain,Métal,Intelligence,Futur
+Calculer,A1,Verb,Maths,Chiffres,Nombre,Addition,Machine
+Lumière,A1,Noun,Soleil,Lampe,Éclairer,Voir,Ampoule
+Fichier,A2,Noun,Document,Enregistrer,Ordinateur,Dossier,Nom
+Message,A2,Noun,Envoyer,Texte,Téléphone,Écrire,Recevoir
+Batterie,A2,Noun,Énergie,Charger,Téléphone,Pile,Vide
+Technique,A2,Adj/Noun,Méthode,Façon,Travail,Savoir,Faire
+Réseau,B1,Noun,Social,Internet,Connexion,Amis,Facebook
+Télécharger,B1,Verb,Internet,Fichier,Musique,Installer,Prendre
+Énergie,B1,Noun,Électricité,Force,Nucléaire,Solaire,Puissance
+Espace,B1,Noun,Planète,Étoiles,Astronaute,Ciel,Univers
+Précis,B1,Adj,Exact,Détail,Juste,Mesure,Erreur
+Algorithme,B2,Noun,Maths,Internet,Ordinateur,Calcul,Code
+Virtuel,B2,Adj,Réalité,Faux,Écran,Internet,Casque
+Génétique,B2,Noun/Adj,ADN,Gènes,Famille,Biologie,Hérédité
+Obsolète,B2,Adj,Vieux,Dépassé,Mode,Changer,Technologie
+Cloner,B2,Verb,Copier,Identique,ADN,Science,Même
+Site,A1,Noun,Web,Internet,Adresse,Page,Consulter
+Outil,A2,Noun,Travail,Réparer,Main,Objet,Utiliser
+Moteur,A2,Noun,Voiture,Machine,Tourner,Essence,Bruit
+Radio,A1,Noun,Écouter,Musique,Ondes,Information,Son
+Laboratoire,B1,Noun,Science,Recherche,Savant,Chimie,Expérience
+Satellite,B1,Noun,Espace,Terre,Télévision,GPS,Ciel
+Microscope,B1,Noun,Voir,Petit,Science,Laboratoire,Lentille
+Nanotechnologie,B2,Noun,Petit,Science,Futur,Atome,Matière
+Évolution,B2,Noun,Changement,Temps,Darwin,Progrès,Nature
+Roi,A1,Noun,Reine,Couronne,Château,Louis XIV,Monarchie
+Guerre,A1,Noun,Paix,Soldat,Armée,Combat,Bataille
+Passé,A1,Noun,Présent,Futur,Avant,Souvenir,Histoire
+Château,A2,Noun,Roi,Versailles,Moyen Âge,Fort,Princesse
+Siècle,A2,Noun,Cent,Ans,Temps,Époque,Histoire
+Drapeau,A2,Noun,Pays,France,Couleurs,Symbole,National
+Liberté,A2,Noun,Égalité,Fraternité,Prison,Droit,Libre
+Révolution,B1,Noun,France,1789,Changer,Peuple,Bastille
+Empire,B1,Noun,Napoléon,Empereur,Rome,Pouvoir,Territoire
+Indépendance,B1,Noun,Pays,Liberté,Fête,Colonie,Guerre
+Héritage,B1,Noun,Famille,Passé,Argent,Parents,Succession
+Démocratie,B2,Noun,Vote,Peuple,Politique,Élection,Liberté
+Archéologie,B2,Noun,Fouilles,Ancien,Terre,Histoire,Objet
+Colonisation,B2,Noun,Pays,Afrique,Empire,Territoire,Histoire
+Résistance,B2,Noun,Guerre,Seconde,France,Cacher,Ennemi
+Chronologie,B2,Noun,Temps,Dates,Ordre,Suite,Histoire
+Reine,A1,Noun,Roi,Femme,Couronne,Château,Angleterre
+Soldat,A1,Noun,Guerre,Armée,Uniforme,Fusil,Militaire
+Ancien,A2,Adj,Nouveau,Vieux,Passé,Antique,Temps
+Musée,A1,Noun,Louvre,Art,Tableaux,Visiter,Histoire
+Paix,A2,Noun,Guerre,Calme,Silence,Amour,Drapeau blanc
+Célèbre,A2,Adj,Connu,Star,Nom,Important,Populaire
+Raconter,A2,Verb,Dire,Histoire,Livre,Parole,Parler
+Gouverner,B1,Verb,Roi,Président,Pays,Politique,Diriger
+Époque,B1,Noun,Temps,Période,Siècle,Moment,Histoire
+Bataille,B1,Noun,Guerre,Combat,Armée,Soldats,Napoléon
+Origine,B1,Noun,Début,Famille,Pays,Source,Histoire
+Souverain,B2,Noun/Adj,Roi,Pouvoir,État,Chef,Monarchie
+Vestige,B2,Noun,Ruine,Ancien,Passé,Reste,Archéologie
+Témoignage,B2,Noun,Dire,Personne,Vérité,Histoire,Raconter
+Légende,B1,Noun,Histoire,Mythe,Vrai,Raconter,Conte
+Féodalité,B2,Noun,Moyen Âge,Seigneur,Roi,Terre,Système
+Moyen Âge,B1,Noun,Chevalier,Château,Époque,Histoire,Siècle
+Antiquité,B1,Noun,Rome,Grèce,Égypte,Ancien,Histoire
+Commémorer,B2,Verb,Fête,Souvenir,Mort,Célébrer,Guerre
+Invasion,B2,Noun,Guerre,Entrer,Armée,Pays,Ennemi
+Peuple,A2,Noun,Gens,Nation,Pays,Population,Démocratie
+Loi,A2,Noun,Règle,Droit,Justice,Gouvernement,Voter
+Esclave,B1,Noun,Liberté,Travail,Histoire,Noir,Vendre
+Siège,B2,Noun,Guerre,Ville,Entourer,Attendre,Bataille
+Dynastie,B2,Noun,Famille,Roi,Succession,Sang,Histoire
+Rebelle,B1,Adj/Noun,Contre,Ordre,Guerre,Révolution,Obéir
+Traité,B2,Noun,Accord,Paix,Papier,Pays,Fin
+Armée,A2,Noun,Soldats,Guerre,Militaire,Défendre,Pays
+Triomphe,B2,Noun,Victoire,Gagner,César,Succès,Célébrer
+Film,A1,Noun,Cinéma,Regarder,Écran,Acteur,Vidéo
+Chanter,A1,Verb,Musique,Voix,Chanson,Micro,Bouche
+Dessiner,A1,Verb,Crayon,Papier,Image,Peindre,Art
+Peinture,A2,Noun,Tableau,Couleur,Musée,Artiste,Pinceau
+Acteur,A2,Noun,Film,Cinéma,Théâtre,Jouer,Rôle
+Poème,A2,Noun,Vers,Rime,Écrire,Poète,Littérature
+Roman,B1,Noun,Livre,Histoire,Écrivain,Lire,Fiction
+Exposition,B1,Noun,Musée,Voir,Art,Tableaux,Galerie
+Chef-d'œuvre,B1,Noun,Grand,Art,Magnifique,Meilleur,Tableau
+Émouvant,B1,Adj,Triste,Émotion,Sentiment,Touchant,Pleurer
+Critique,B1,Noun/Adj,Journal,Avis,Film,Dire,Juger
+Littérature,B2,Noun,Livres,Écrire,Auteur,Roman,Français
+Esthétique,B2,Adj,Beau,Art,Visuel,Style,Design
+S'inspirer,B2,Verb,Idée,Créer,Artiste,Modèle,Influence
+Provocateur,B2,Adj,Choc,Réagir,Art,Public,Scandale
+Danse,A1,Noun,Musique,Bouger,Corps,Ballet,Rythme
+Théâtre,A1,Noun,Pièce,Acteur,Scène,Jouer,Molière
+Pinceau,A2,Noun,Peindre,Couleur,Tableau,Artiste,Main
+Instrument,A2,Noun,Musique,Piano,Guitare,Jouer,Son
+Auteur,A2,Noun,Écrire,Livre,Nom,Personne,Roman
+Original,A2,Adj,Nouveau,Différent,Unique,Bizarre,Créatif
+Personnage,B1,Noun,Histoire,Livre,Film,Héros,Rôle
+Concert,B1,Noun,Musique,Scène,Chanter,Groupe,Public
+Mettre en scène,B1,Verb,Théâtre,Film,Directeur,Pièce,Créer
+Talentueux,B1,Adj,Doué,Bien,Artiste,Capacité,Génial
+Parution,B2,Noun,Livre,Sortir,Date,Librairie,Publier
+Symbolique,B2,Adj,Signe,Sens,Signifier,Image,Objet
+Controversé,B2,Adj,Débat,Discuter,Polémique,Opinion,Avis
+Intrigue,B2,Noun,Histoire,Roman,Action,Mystère,Scénario
+Évocateur,B2,Adj,Rappeler,Image,Sentiment,Pensée,Souvenir
+Sculpture,A2,Noun,Statue,Musée,Pierre,Art,Volume
+Guitare,A1,Noun,Musique,Instrument,Cordes,Jouer,Rock
+Piano,A1,Noun,Musique,Instrument,Touches,Noir,Blanc
+Artiste,A1,Noun,Peindre,Créer,Talent,Métier,Art
+Public,A2,Noun,Gens,Regarder,Spectacle,Concert,Salle
+Scène,A2,Noun,Théâtre,Acteur,Planches,Spectacle,Lieu
+Lyrique,B1,Adj,Opéra,Chant,Émotion,Musique,Poésie
+Épique,B2,Adj,Grand,Aventure,Histoire,Héros,Impressionnant
+Dénouement,B2,Noun,Fin,Histoire,Résolution,Roman,Conclusion
+Télévision,A1,Noun,Regarder,Écran,Chaîne,Programme,Télé
+Journal,A1,Noun,Lire,Papier,Information,Actualité,Presse
+Magazine,A2,Noun,Lire,Papier,Photos,Journal,Revue
+Information,A2,Noun,Nouvelles,Journal,Savoir,Dire,Radio
+Émission,A2,Noun,Télévision,Regarder,Programme,Radio,Direct
+Réseaux sociaux,B1,Noun,Facebook,Amis,Partager,Internet,Profil
+Journaliste,B1,Noun,Métier,Écrire,Journal,Information,Article
+S'abonner,B1,Verb,Magazine,Chaîne,Payer,Suivre,Compte
+Diffuser,B1,Verb,Télévision,Radio,Émission,Envoyer,Passer
+Divertissement,B1,Noun,Amusement,Plaisir,Spectacle,Jeu,Détendre
+Liberté de la presse,B2,Noun,Journaliste,Dire,Droit,Écrire,Censure
+Médiatisé,B2,Adj,Télévision,Journal,Connu,Parler,Public
+Objectivité,B2,Noun,Vrai,Journaliste,Neutre,Opinion,Fait
+Influenceur,B2,Noun,Internet,Instagram,Vidéo,Suivre,Marque
+Désinformation,B2,Noun,Faux,Mensonge,Internet,Information,Tromper
+Portable,A1,Noun,Téléphone,Appeler,Mobile,SMS,Poche
+Star,A2,Noun,Célèbre,Connu,Acteur,Chanteur,Idole
+Interview,A2,Noun,Parler,Question,Réponse,Journaliste,Micro
+Article,A2,Noun,Écrire,Journal,Lire,Texte,Information
+Actualité,B1,Noun,Nouvelles,Journal,Information,Aujourd'hui,Monde
+Série,B1,Noun,Épisodes,Saison,Télévision,Netflix,Regarder
+Célébrité,B1,Noun,Star,Connu,Personne,Fameux,Public
+Vidéaste,B1,Noun,YouTube,Vidéo,Caméra,Créateur,Internet
+Sensationnel,B2,Adj,Choc,Étonnant,Journal,Impressionnant,Fort
+Censure,B2,Noun,Interdire,Couper,Liberté,Dire,État
+Audience,B2,Noun,Gens,Regarder,Télévision,Score,Public
+Interactif,B2,Adj,Participer,Répondre,Jeu,Échange,Action
+Viral,B2,Adj,Internet,Partager,Rapide,Vidéo,Succès
+Animateur,B1,Noun,Télévision,Parler,Présenter,Émission,Radio
+Direct (En),B1,Adj,Temps,Réel,Maintenant,Télévision,Radio
+Reportage,B1,Noun,Journalisme,Vidéo,Information,Sujet,Terrain
+Post,A2,Noun,Internet,Écrire,Message,Réseaux,Partager
+Commentaire,A2,Noun,Écrire,Répondre,Avis,Texte,Internet
+Affiche,A2,Noun,Mur,Publicité,Image,Voir,Rue
+Caméra,A2,Noun,Filmer,Vidéo,Image,Cinéma,Appareil
+Presse,B1,Noun,Journal,Magazine,Écrire,Information,Papier
+Média,B1,Noun,Télévision,Information,Radio,Internet,Moyen
+Documentaire,B1,Noun,Film,Réalité,Apprendre,Sujet,Histoire
+Chroniqueur,B2,Noun,Journal,Écrire,Émission,Avis,Régulier
+Plagiat,B2,Noun,Copier,Voler,Idée,Écrit,Faux
+Voter,A1,Verb,Élection,Papier,Choisir,Président,Voix
+Président,A1,Noun,Chef,Pays,République,Élysée,Diriger
+Droit,A2,Noun,Loi,Liberté,Autorisation,Justice,Devoir
+Élection,B1,Noun,Voter,Candidat,Résultats,Campagne,Urne
+Candidat,B1,Noun,Élection,Choisir,Personne,Poste,Campagne
+Citoyen,B1,Noun,Habitant,Pays,Voter,Droit,Nationalité
+Politique,B1,Noun/Adj,Gouvernement,Parti,Idée,État,Élection
+République,B1,Noun,France,Démocratie,État,Président,Régime
+Manifestation,B2,Noun,Rue,Grève,Protester,Gens,Pancarte
+Souveraineté,B2,Noun,Pouvoir,Indépendance,Pays,État,Contrôle
+Réforme,B2,Noun,Changer,Loi,Nouveau,Améliorer,Gouvernement
+Corruption,B2,Noun,Argent,Malhonnête,Politique,Voler,Scandale
+Diplomatie,B2,Noun,Pays,Discussion,Étranger,Paix,Relations
+Mandat,B2,Noun,Temps,Président,Durée,Élection,Fonction
+Constitution,B2,Noun,Lois,Texte,État,Fondamental,Pays
+Idéologie,B2,Noun,Idées,Pensée,Politique,Croyance,Vision
+Maire,A2,Noun,Chef,Ville,Municipal,Mairie,Élu
+Ministre,B1,Noun,Gouvernement,État,Travail,Chef,Ministère
+Débat,B1,Noun,Parler,Discussion,Opinion,Idées,Contre
+Justice,B1,Noun,Tribunal,Juge,Loi,Droit,Égalité
+Parlement,B2,Noun,Lois,Députés,Voter,Assemblée,État
+Député,B2,Noun,Parlement,Voter,Lois,Assemblée,Élu
+Sénat,B2,Noun,Parlement,Lois,Chambre,Vieux,Palais
+Dictature,B2,Noun,Roi,Peuple,Liberté,Chef,Tyrannie
+Scrutin,B2,Noun,Vote,Élection,Résultat,Urne,Tour
+Solidarité,B1,Noun,Aider,Ensemble,Gens,Partager,Soutien
+Engagement,B1,Noun,S'investir,Action,Politique,Cause,Promesse
+Opinion,B1,Noun,Avis,Pensée,Croire,Dire,Idée
+Fraternité,B1,Noun,Frère,Solidarité,France,Devise,Amis
+Majorité,B1,Noun,Plus,Gagner,Groupe,Moins,Nombre
+Minorité,B2,Noun,Moins,Groupe,Droits,Petite,Majorité
+Propagande,B2,Noun,Information,Faux,Convaincre,Politique,Cerveau
+Neutralité,B2,Noun,Choisir,Côté,Entre,Paix,Avis
+Allié,B1,Noun,Ami,Pays,Guerre,Avec,Ensemble
+Conflit,B1,Noun,Guerre,Problème,Dispute,Accord,Tension
+Budget,B1,Noun,Argent,État,Dépenser,Économie,Finances
+Impôts,B1,Noun,Argent,Payer,État,Revenu,Travail
+Sondage,B1,Noun,Question,Opinion,Gens,Résultat,Pourcentage
+Légiférer,B2,Verb,Lois,Faire,Parlement,État,Voter
+Famille,A1,Noun,Parents,Enfants,Maison,Maman,Groupe
+Mère,A1,Noun,Maman,Femme,Parents,Enfant,Père
+Père,A1,Noun,Papa,Homme,Parents,Enfant,Mère
+Ami,A1,Noun,Copain,Sympa,Connaître,École,Fidèle
+Amour,A1,Noun,Cœur,Aimer,Sentiment,Couple,Passion
+Mariage,A2,Noun,Marier,Église,Femme,Bague,Fête
+Rencontrer,A2,Verb,Voir,Premier,Gens,Connaître,Nouveau
+Enfant,A1,Noun,Petit,Parents,Bébé,École,Fils
+Frère,A1,Noun,Sœur,Famille,Garçon,Parents,Même
+Petit-ami,B1,Noun,Copain,Amour,Sortir,Garçon,Relation
+Se disputer,B1,Verb,Colère,Parler,Désaccord,Crier,Problème
+Fidèle,B1,Adj,Ami,Toujours,Trahir,Amour,Chien
+Divorcer,B1,Verb,Séparer,Mariage,Fin,Quitter,Justice
+Confiance,B1,Noun,Croire,Secret,Ami,Trahir,Sûr
+Complicité,B2,Noun,Ensemble,Amis,Comprendre,Lien,Secret
+Réconcilier,B2,Verb,Après,Dispute,Paix,Pardon,Ami
+Affinité,B2,Noun,Goût,Commun,Ressemblance,Sympa,Relation
+Rupture,B2,Noun,Fin,Séparer,Triste,Amour,Quitter
+Sœur,A1,Noun,Frère,Famille,Fille,Parents,Même
+Grand-père,A1,Noun,Papy,Vieux,Parents,Famille,Mamie
+Grand-mère,A1,Noun,Mamie,Vieille,Parents,Famille,Papy
+Cadeau,A2,Noun,Anniversaire,Noël,Donner,Plaisir,Paquet
+Inviter,A2,Verb,Venir,Maison,Fête,Soirée,Ami
+S'occuper de,A2,Verb,Aider,Garder,Enfant,Faire,Attention
+Promettre,B1,Verb,Dire,Parole,Jurer,Vérité,Futur
+Épouser,B1,Verb,Marier,Femme,Mari,Oui,Église
+Fréquenter,B1,Verb,Voir,Aller,Sortir,Amis,Lieu
+Solitude,B2,Noun,Seul,Triste,Personne,Sans,Isolement
+Sincérité,B2,Noun,Vérité,Honnête,Dire,Coeur,Franc
+Trahir,B2,Verb,Mentir,Confiance,Ami,Tromper,Secret
+Coup de foudre,B2,Noun,Amour,Premier,Regard,Vite,Coeur
+Lien,B2,Noun,Relation,Famille,Attacher,Entre,Connecter
+Éduquer,B1,Verb,Enfant,École,Apprendre,Parents,Grandir
+Fils,A1,Noun,Enfant,Garçon,Père,Mère,Parents
+Fille,A1,Noun,Enfant,Femme,Père,Mère,Parents
+Oncle,A1,Noun,Frère,Père,Mère,Famille,Tante
+Tante,A1,Noun,Sœur,Père,Mère,Famille,Oncle
+Cousin,A1,Noun,Famille,Oncle,Tante,Enfant,Parents
+Mari,A2,Noun,Femme,Mariage,Époux,Homme,Maison
+Femme,A2,Noun,Mari,Mariage,Épouse,Dame,Maison
+Bébé,A1,Noun,Petit,Enfant,Naître,Dormir,Pleurer
+Émotion,B1,Noun,Sentiment,Coeur,Ressentir,Triste,Heureux
+Matin,A1,Noun,Jour,Réveiller,Petit-déjeuner,Soleil,Lever
+Soir,A1,Noun,Nuit,Coucher,Dîner,Lune,Fin
+Se réveiller,A2,Verb,Matin,Dormir,Yeux,Ouvrir,Lit
+Se brosser,A2,Verb,Dents,Cheveux,Brosse,Propre,Matin
+Se laver,A1,Verb,Douche,Eau,Savon,Propre,Corps
+Habitude,B1,Noun,Toujours,Routine,Faire,Vie,Régulier
+Se dépêcher,B1,Verb,Vite,Retard,Temps,Courir,Rapide
+Quotidien,B1,Adj/Noun,Jour,Vie,Routine,Tous,Habituel
+Se reposer,B1,Verb,Calme,Fatigue,Dormir,Rien,Détendre
+Équilibre,B2,Noun,Vie,Travail,Santé,Stable,Bien
+Hygiène,B2,Noun,Propre,Santé,Corps,Laver,Propreté
+Insomnie,B2,Noun,Dormir,Nuit,Sommeil,Impossible,Fatigué
+Productivité,B2,Noun,Travail,Faire,Efficace,Temps,Résultat
+Café,A1,Noun,Boire,Matin,Noir,Tasse,Réveiller
+Midi,A1,Noun,Déjeuner,Heure,Soleil,Douze,Repas
+Minuit,A1,Noun,Nuit,Douze,Heure,Noir,Dormir
+Savon,A1,Noun,Laver,Douche,Mains,Propre,Odeur
+Se raser,A2,Verb,Barbe,Visage,Homme,Couper,Poils
+Se maquiller,A2,Verb,Visage,Femme,Beauté,Yeux,Rouge à lèvres
+Préparer,A2,Verb,Faire,Cuisine,Sac,Avant,Prêt
+Rentrer,A2,Verb,Maison,Arriver,Soir,Travail,Fin
+Brosse à dents,B1,Noun,Laver,Bouche,Dentifrice,Matin,Nettoyer
+Serviette,B1,Noun,Douche,Bain,Essuyer,Corps,Mouillé
+Sieste,B1,Noun,Dormir,Après-midi,Petit,Repos,Lit
+Rangement,B1,Noun,Maison,Place,Ordonné,Nettoyer,Chambre
+S'étirer,B1,Verb,Matin,Sport,Corps,Bras,Jambes
+Rythme,B2,Noun,Vie,Temps,Rapide,Lent,Musique
+Somnolence,B2,Noun,Dormir,Fatigue,Jour,Envie,Yeux
+Soin,B2,Noun,Corps,Beauté,Faire,Attention,Santé
+Linge,B1,Noun,Vêtements,Laver,Machine,Propre,Sale
+Tâche,B2,Noun,Faire,Travail,Devoir,Chose,Mission
+Repas,A1,Noun,Manger,Déjeuner,Dîner,Cuisine,Faim
+Regarder,A1,Verb,Télévision,Yeux,Voir,Écran,Film
+Écouter,A1,Verb,Musique,Oreilles,Radio,Entendre,Son
+Nettoyer,A2,Verb,Sale,Propre,Maison,Eau,Laver
+Balayer,A2,Verb,Sol,Propre,Balai,Poussière,Maison
+Bavarder,B1,Verb,Parler,Amis,Discussion,Dire,Temps
+S'isoler,B2,Verb,Seul,Personne,Calme,Loin,Retirer
+Boucher,A2,Noun,Viande,Magasin,Couper,Boeuf,Alimentation
+Boulanger,A2,Noun,Pain,Baguette,Farine,Matin,Croissant
+Serveur,A2,Noun,Restaurant,Café,Boire,Apporter,Plateau
+Salaire,B1,Noun,Argent,Mois,Travail,Gagner,Paie
+Réunion,B1,Noun,Parler,Ensemble,Bureau,Discussion,Décider
+Syndicat,B2,Noun,Défendre,Travail,Droits,Grève,Groupe
+Hiérarchie,B2,Noun,Chef,Patron,Ordre,Niveau,Responsable
+Carrière,B2,Noun,Travail,Vie,Progrès,Futur,Chemin
+Policier,A1,Noun,Police,Rue,Loi,Uniforme,Sécurité
+Conducteur,A2,Noun,Voiture,Bus,Train,Chauffeur,Conduire
+Cuisinier,A2,Noun,Restaurant,Manger,Chef,Plat,Cuisine
+Vendeur,A2,Noun,Magasin,Client,Acheter,Article,Commerce
+Écrivain,A2,Noun,Livre,Écrire,Auteur,Roman,Histoire
+Ingénieur,B1,Noun,Science,Technique,Construction,Études,Calculer
+Informaticien,B1,Noun,Ordinateur,Logiciel,Internet,Technique,Écran
+Avocat,B1,Noun,Tribunal,Loi,Justice,Défendre,Juge
+Stage,B1,Noun,Apprendre,Étudiant,Entreprise,Travail,Période
+Retraite,B1,Noun,Vieux,Arrêter,Travail,Âge,Pension
+Patron,B1,Noun,Chef,Directeur,Entreprise,Commander,Travail
+Collègue,B1,Noun,Ami,Travail,Bureau,Ensemble,Personne
+Promouvoir,B2,Verb,Monter,Grade,Meilleur,Poste,Changement
+Facteur,A1,Noun,Lettre,Courrier,Maison,Poste,Sac
+Coiffeur,A1,Noun,Cheveux,Couper,Tête,Ciseaux,Salon
+Agriculteur,A2,Noun,Ferme,Terre,Animaux,Campagne,Légumes
+Chauffeur,A2,Noun,Taxi,Voiture,Conduire,Transport,Client
+Comptable,B1,Noun,Chiffres,Argent,Calculer,Entreprise,Impôts
+Architecte,B1,Noun,Maison,Dessiner,Plan,Construction,Bâtiment
+Épanouissement,B2,Noun,Heureux,Travail,Bien,Sentiment,Personnel
+Marianne,B1,Symbol,Femme,République,Liberté,Bonnet,Symbole
+La Marseillaise,A2,Music,Hymne,Chant,National,France,Musique
+Le Tricolore,A2,Symbol,Drapeau,Bleu,Blanc,Rouge,France
+Jeanne d'Arc,B1,Person,Pucelle,Guerre,Orléans,Feu,Histoire
+Airbus,A2,Brand,Avion,Toulouse,Voler,Transport,Industrie
+Le Mont-Saint-Michel,B1,Place,Normandie,Abbaye,Mer,Île,Tourisme
+L'Élysée,B1,Place,Président,Palais,Paris,Gouvernement,Pouvoir
+Cocorico,A2,Expression,Coq,Cri,France,Fier,Animal
+Zola,B2,Person,Écrivain,Germinal,Naturalisme,Auteur,J'accuse
+L'Occitane,B1,Brand,Provence,Savon,Parfum,Cosmétique,Sud
+Lacoste,A2,Brand,Crocodile,Sport,Tennis,Polo,Vêtement
+Daft Punk,B1,Music,Électro,Casque,Musique,Duo,Français
+Le Figaro,B1,Media,Journal,Lire,Presse,Quotidien,Information
+Evian,A1,Brand,Eau,Boire,Bouteille,Alpes,Soif
+Le Panthéon,B2,Place,Paris,Grands Hommes,Tombe,Monument,Quartier Latin
+Mylène Farmer,B1,Person,Chanteuse,Musique,Concert,Icone,Rousse
+L'Abbé Pierre,B2,Person,Emmaüs,Pauvres,Logement,Hiver,Charité
+Toulouse,A2,City,Rose,Sud,Airbus,Ville,Occitanie
+Lille,A2,City,Nord,Belgique,Braderie,Ville,Flandres
+Montaigne,B2,Person,Essais,Philosophie,Écrivain,Renaissance,Auteur
+Le Moulin Rouge,A2,Place,Paris,Cabaret,Danse,Pigalle,Spectacle
+Sempé,B1,Person,Dessin,Petit Nicolas,Illustration,Artiste,Humour
+Agnès Varda,B2,Person,Cinéma,Réalisatrice,Nouvelle Vague,Film,Femme
+Le Trocadéro,B1,Place,Paris,Tour Eiffel,Vue,Monument,Jardins
+Peugeot,A2,Brand,Voiture,Lion,Auto,Marque,Français
+Alain Ducasse,B2,Person,Chef,Cuisine,Étoiles,Restaurant,Gastronomie
+La Sorbonne,B1,Place,Université,Paris,Étudiants,École,Études
+Balthazar,B2,Name,Roi,Mage,Noël,Bébé,Prénom
+L'Hermès,B1,Brand,Luxe,Sac,Carré,Cheval,Mode
+Omar Sy,A2,Person,Acteur,Intouchables,Lupin,Cinéma,Humour
+Baudelaire,B2,Person,Poète,Fleurs du Mal,Poésie,Spleen,Écrivain
+Le Corbusier,B2,Person,Architecte,Maison,Bâtiment,Moderne,Design
+Giverny,B1,Place,Monet,Jardin,Peintre,Maison,Normandie
+Carla Bruni,B1,Person,Chanteuse,Mannequin,Sarkozy,Femme,Musique
+Le Galeries Lafayette,A2,Brand,Magasin,Paris,Shopping,Coupole,Mode
+Jacques Brel,B1,Person,Chanteur,Belgique,Musique,Plat Pays,Amsterdam
+Le Petit Prince,A2,Fiction,Saint-Exupéry,Livre,Rose,Enfant,Mouton
+Stromae,A1,Person,Chanteur,Belgique,Formidable,Musique,Papaoutai
+Brigitte Bardot,B1,Person,Actrice,Animaux,Cinéma,Icône,Blonde
+Le Canal du Midi,B2,Place,Eau,Bateau,Sud,Toulouse,Canal
+La Côte d'Azur,A2,Region,Mer,Sud,Nice,Cannes,Plage
+Proust,B2,Person,Écrivain,Madeleine,Temps perdu,Recherche,Roman
+Le Puy du Fou,B1,Place,Parc,Histoire,Spectacle,Vendée,Attraction
+Truffaut,B2,Person,Cinéma,Nouvelle Vague,Réalisateur,Film,400 Coups
+Le Quai d'Orsay,B2,Place,Ministère,Affaires Étrangères,Diplomatie,Gouvernement,Paris
+Jean-Paul Sartre,B2,Person,Philosophe,Existentialisme,Écrivain,Beauvoir,Café de Flore
+Paul Bocuse,B2,Person,Chef,Cuisine,Lyon,Restaurant,Gastronomie
+Cyrano de Bergerac,B1,Fiction,Nez,Rostand,Théâtre,Épée,Poésie
+Statue de la Liberté,A2,Place,New York,États-Unis,Île,Flambeau,Cadeau
+Albert Einstein,A2,Person,Physique,Science,Relativité,Génie,Cheveux
+Amazon,A1,Brand,Acheter,Internet,Colis,Jeff Bezos,Forêt
+La Muraille de Chine,A2,Place,Longue,Asie,Mur,Espace,Pierre
+Mickey Mouse,A1,Fiction,Disney,Souris,Dessin animé,Oreilles,Donald
+Coca-Cola,A1,Brand,Boire,Rouge,Soda,Sucre,Bouteille
+William Shakespeare,B1,Person,Écrivain,Théâtre,Hamlet,Anglais,Auteur
+Le Colisée,B1,Place,Rome,Italie,Gladiateurs,Arène,Histoire
+Leonardo da Vinci,B1,Person,Peintre,Joconde,Italie,Artiste,Inventeur
+Google,A1,Brand,Internet,Chercher,Moteur,Technologie,Site
+Le Taj Mahal,B1,Place,Inde,Tombeau,Blanc,Monument,Amour
+Harry Potter,A1,Fiction,Sorcier,Magie,Lunettes,Livre,Cicatrice
+Nelson Mandela,B1,Person,Afrique du Sud,Prison,Paix,Président,Apartheid
+Apple,A1,Brand,iPhone,Steve Jobs,Ordinateur,Technologie,Pomme
+Le Mont Everest,B1,Place,Montagne,Haut,Himalaya,Sommet,Neige
+Sherlock Holmes,B1,Fiction,Détective,Londres,Watson,Loupe,Mystère
+Ferrari,A2,Brand,Voiture,Rouge,Italie,Course,Sport
+La Tour de Pise,A2,Place,Italie,Penchée,Monument,Tourisme,Pierre
+Bill Gates,B1,Person,Microsoft,Riche,Ordinateur,Argent,Fondation
+Nike,A1,Brand,Chaussures,Sport,Virgule,Vêtements,Just do it
+Le Nil,A2,Place,Égypte,Fleuve,Eau,Afrique,Pyramides
+Barack Obama,A2,Person,Président,États-Unis,Politique,Noir,Yes we can
+James Bond,A2,Fiction,Espion,7,Agent,Film,Cinéma
+Le Grand Canyon,B1,Place,États-Unis,Arizona,Roche,Fleuve,Nature
+Starbucks,A2,Brand,Café,Boire,Tasse,Sirène,Amérique
+Pablo Picasso,B1,Person,Peintre,Art,Cubisme,Espagne,Tableau
+IKEA,A2,Brand,Meubles,Suède,Magasin,Maison,Montage
+Le Vatican,B1,Place,Pape,Rome,Église,Religion,Petit
+Superman,A1,Fiction,Héros,Voler,Cape,Rouge,Bleu
+Cleopâtre,B1,Person,Égypte,Reine,Nez,César,Antiquité
+Adidas,A2,Brand,Sport,Chaussures,Marque,Trois bandes,Allemagne
+Machu Picchu,B2,Place,Pérou,Incas,Montagne,Ruines,Histoire
+Martin Luther King,B2,Person,Rêve,Droits,Noir,États-Unis,Discours
+Lego,A1,Brand,Jouet,Briques,Enfant,Construire,Danemark
+Londres,A1,City,Angleterre,Big Ben,Tamise,Capitale,Reine
+Berlin,A2,City,Allemagne,Mur,Capitale,Europe,Histoire
+Tokyo,A2,City,Japon,Asie,Ville,Capitale,Japonais
+McDonald's,A1,Brand,Burger,Manger,Rapide,Frites,Clown
+Batman,A1,Fiction,Héros,Noir,Chauve-souris,Gotham,Joker
+Galilée,B2,Person,Science,Terre,Étoiles,Astronomie,Tourner
+Le Sahara,A2,Place,Désert,Sable,Afrique,Chaud,Soleil
+Samsung,A1,Brand,Téléphone,Corée,Écran,Télévision,Technologie
+Christophe Colomb,B1,Person,Amérique,Découvrir,Bateau,Espagne,Explorateur
+Le Parthénon,B2,Place,Grèce,Athènes,Temple,Acropole,Histoire
+Instagram,A1,Brand,Photos,Internet,Réseau,Filtre,Partager
+Mozart,A2,Person,Musique,Compositeur,Classique,Piano,Autriche
+Big Ben,A2,Place,Londres,Cloche,Tour,Heure,Monument
+Charlie Chaplin,B1,Person,Cinéma,Muet,Chapeau,Canne,Acteur
+Rivière,A1,Noun,Eau,Fleuve,Courant,Mer,Poisson
+Ville,A1,Noun,Village,Rue,Habiter,Capitale,Immeuble
+Île,A2,Noun,Eau,Terre,Autour,Mer,Bateau
+Désert,A2,Noun,Sable,Chaud,Sahara,Eau,Sec
+Capitale,A2,Noun,Ville,Pays,Paris,Gouvernement,Principal
+Région,A2,Noun,Zone,Province,France,Département,Endroit
+Continent,B1,Noun,Monde,Afrique,Europe,Terre,Géographie
+Océan,B1,Noun,Mer,Atlantique,Eau,Grand,Planète
+Hémisphère,B2,Noun,Nord,Sud,Terre,Équateur,Globe
+Densité,B2,Noun,Population,Gens,Ville,Nombre,Espace
+Littoral,B2,Noun,Côte,Mer,Plage,Bord,Bordure
+Rural,B2,Adj,Campagne,Ville,Village,Ferme,Agriculture
+Lac,A1,Noun,Eau,Montagne,Baigner,Calme,Poisson
+Monde,A1,Noun,Terre,Planète,Pays,Carte,Gens
+Sud,A1,Noun,Nord,Est,Ouest,Direction,Soleil
+Nord,A1,Noun,Sud,Est,Ouest,Froid,Direction
+Est,A1,Noun,Ouest,Nord,Sud,Soleil,Direction
+Ouest,A1,Noun,Est,Nord,Sud,Direction,Vent
+Colline,A2,Noun,Montagne,Petit,Monter,Haut,Paysage
+Volcan,A2,Noun,Feu,Lave,Montagne,Chaud,Éruption
+Altitude,B1,Noun,Haut,Montagne,Mètres,Niveau,Air
+Archipel,B1,Noun,Îles,Mer,Groupe,Japon,Eau
+Vallée,B1,Noun,Montagne,Bas,Entre,Rivière,Paysage
+Canal,B1,Noun,Eau,Bateau,Ville,Passage,Artificiel
+Province,B2,Noun,Région,Ville,Campagne,Territoire,Administration
+Méridien,B2,Noun,Ligne,Temps,Terre,Géographie,Greenwich
+Relief,B2,Noun,Montagne,Forme,Sol,Géographie,Terrain
+Péninsule,B2,Noun,Terre,Mer,Presqu'île,Italie,Eau
+Équateur,B2,Noun,Terre,Ligne,Milieu,Chaud,Hémisphère
+Village,A1,Noun,Petit,Ville,Campagne,Habiter,Maison
+Route,A1,Noun,Voiture,Chemin,Ville,Goudron,Aller
+Grotte,A2,Noun,Pierre,Terre,Noir,Montagne,Entrer
+Champ,A2,Noun,Terre,Agriculture,Ferme,Légumes,Fleurs
+Horizon,B1,Noun,Loin,Vue,Ciel,Terre,Regarder
+Glacier,B1,Noun,Glace,Froid,Montagne,Eau,Fondre
+Baie,B1,Noun,Mer,Côte,Eau,Port,Entrée
+Mondialisation,B2,Noun,Monde,Économie,Échanges,Pays,International
+Noël,A1,Noun,Sapin,Cadeau,Décembre,Fête,Père
+Pâques,A1,Noun,Chocolat,Œufs,Lapin,Printemps,Dimanche
+Fête,A1,Noun,Célébrer,Musique,Amis,Soirée,Danser
+Bougie,A1,Noun,Feu,Lumière,Anniversaire,Gâteau,Brûler
+Anniversaire,A2,Noun,Âge,Naissance,Gâteau,Cadeau,Fête
+Tradition,A2,Noun,Coutume,Habitude,Culture,Toujours,Famille
+Défilé,A2,Noun,Marcher,Rue,Militaire,14 juillet,Drapeau
+Janvier,A1,Noun,Premier,Mois,Année,Froid,Hiver
+Chandeleur,B1,Noun,Crêpes,Février,Manger,Sauter,Poêle
+Épiphanie,B1,Noun,Galette,Rois,Fève,Janvier,Couronne
+14 Juillet,B1,Noun,National,Fête,Bastille,Feu d'artifice,France
+Réveillon,B1,Noun,Soirée,Noël,Nouvel An,Manger,Nuit
+Férié,B1,Adj,Travail,École,Jour,Repos,Calendrier
+Laïcité,B2,Noun,État,Religion,Église,École,France
+Patrimoine,B2,Noun,Culture,Histoire,Vieux,Monument,France
+Convivial,B2,Adj,Sympa,Ensemble,Repas,Amis,Partager
+Solennel,B2,Adj,Grave,Sérieux,Cérémonie,Officiel,Respect
+Sapin,A1,Noun,Noël,Arbre,Vert,Décorer,Maison
+Crêpe,A1,Noun,Manger,Sucre,Chandeleur,Poêle,Farine
+Bal,A2,Noun,Danser,Musique,Soirée,Populaire,Pompiers
+Invitation,A2,Noun,Venir,Fête,Carte,Recevoir,Ami
+Vœux,B1,Noun,Souhaiter,Année,Bonne,Dire,Janvier
+Armistice,B1,Noun,Guerre,Paix,11 novembre,Fin,Soldat
+Toussaint,B1,Noun,Novembre,Morts,Cimetière,Fleurs,Vacances
+Carnaval,B1,Noun,Costume,Déguisement,Fête,Masque,Rue
+Muguet,B1,Noun,Fleur,Premier Mai,Travail,Clochette,Chance
+Pèlerinage,B2,Noun,Voyage,Religion,Église,Lieu,Marcher
+Rite,B2,Noun,Religion,Cérémonie,Habitude,Social,Passage
+Gastronomique,B2,Adj,Manger,Cuisine,Luxe,Repas,Chef
+Hymne,B1,Noun,Chant,National,Musique,Marseillaise,Pays
+Déguiser (Se),B1,Verb,Costume,Carnaval,Porter,Changer,Vêtement
+Feu d'artifice,A2,Noun,Ciel,Lumière,Nuit,14 juillet,Couleur
+Bûche,B1,Noun,Noël,Gâteau,Dessert,Bois,Manger
+Fête des Mères,A2,Noun,Maman,Fleurs,Mai,Cadeau,Parents
+Fête de la Musique,A2,Noun,Juin,Chanter,Concert,Rue,Instrument
+Poisson d'avril,B1,Noun,Premier,Blague,Rire,Dos,Papier
+Messe,B1,Noun,Église,Religion,Dimanche,Prêtre,Prier
+Gratuit,A2,Adj,Argent,Payer,Prix,Offert,Zéro
+Lendemain,B1,Noun,Après,Jour,Suite,Hier,Demain
+Automne,A1,Noun,Saison,Feuilles,Pluie,Septembre,Froid
+Hiver,A1,Noun,Saison,Neige,Froid,Décembre,Ski
+Printemps,A1,Noun,Saison,Fleurs,Vert,Mars,Soleil
+Été,A1,Noun,Saison,Chaud,Soleil,Juillet,Vacances
+Ascension,B2,Noun,Jeudi,Mai,Religion,Pont,Férié
+Pentecôte,B2,Noun,Lundi,Férié,Juin,Religion,Esprit
