@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Taboo Français Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap');
+
+        :root {
+            --pastel-bg: #f8fafc;
+            --primary-pop: #ec4899;
+            --secondary-pop: #ef4444;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--pastel-bg);
+            touch-action: manipulation;
+            overflow-x: hidden;
+            height: 100dvh;
+        }
+
+        .btn-3d {
+            transition: all 0.1s ease-in-out;
+            box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-3d:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .buzzer-button {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000);
+            border-radius: 50%;
+            border: 6px solid #660000;
+            box-shadow: 0 10px 0 0 #4d0000, 0 15px 15px rgba(0,0,0,0.3);
+            transition: all 0.05s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 1rem;
+            user-select: none;
+            margin: 0 auto;
+        }
+
+        .buzzer-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 0 #4d0000, 0 8px 8px rgba(0,0,0,0.2);
+        }
+
+        .level-btn {
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .level-btn.selected {
+            border-color: var(--primary-pop);
+            transform: scale(1.05);
+            background-color: #fdf2f8;
+        }
+
+        .overlay {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        .pulse-timer {
+            animation: pulse 1s infinite !important;
+            color: #ef4444 !important;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .buzz-flash {
+            animation: flashRed 0.3s ease-out;
+        }
+
+        @keyframes flashRed {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(239, 68, 68, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .word-link {
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .word-link:hover {
+            color: #ec4899;
+            text-decoration: underline;
+        }
+
+        #word-review-list {
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body id="main-body" class="flex flex-col items-center justify-center p-4 transition-colors">
+
+    <!-- HUD -->
+    <div id="game-hud" class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-10 opacity-0 transition-opacity pointer-events-none">
+        <div class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block leading-none">Score</span>
+            <div id="score-display" class="text-xl font-black text-pink-500">0</div>
+        </div>
+        
+        <div id="timer-box" class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 flex items-center gap-2 pointer-events-auto">
+            <span id="timer-display" class="text-xl font-black text-slate-700">60</span>
+        </div>
+    </div>
+
+    <main class="w-full max-w-md">
+        <!-- START SCREEN -->
+        <div id="screen-start" class="text-center">
+            <div class="text-6xl mb-4">🇫🇷</div>
+            <h1 class="text-3xl font-black text-slate-800 mb-2">Taboo Français</h1>
+            <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">Loading...</p>
+            
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button onclick="game.setLevel('A1', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                    <div class="font-black text-pink-500 text-xl">A1</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
+                </button>
+                <button onclick="game.setLevel('A2', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                    <div class="font-black text-blue-500 text-xl">A2</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
+                </button>
+                <button onclick="game.setLevel('B1', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                    <div class="font-black text-purple-500 text-xl">B1</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
+                </button>
+                <button onclick="game.setLevel('B2', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                    <div class="font-black text-orange-500 text-xl">B2</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
+                </button>
+            </div>
+
+            <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-8">
+                Select a Level
+            </button>
+
+            <div class="flex flex-col items-center">
+                <div onmousedown="game.playObnoxiousBuzzer()" class="buzzer-button">BUZZ!</div>
+            </div>
+        </div>
+
+        <!-- ACTIVE GAME SCREEN -->
+        <div id="screen-game" class="hidden flex flex-col items-center">
+            <div id="card-container" class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-pink-100 p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
+                <div>
+                    <div id="card-level-tag" class="inline-block px-3 py-1 rounded-full bg-pink-50 text-pink-500 text-[10px] font-black mb-4 uppercase">Level A1</div>
+                    <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">...</h2>
+                    <ul id="taboo-words" class="space-y-2"></ul>
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full">
+                <button id="btn-skip" onclick="game.skipCard()" class="btn-3d flex-1 bg-slate-200 text-slate-500 py-4 rounded-2xl font-bold">
+                    Skip (1/1)
+                </button>
+                <button onclick="game.nextCard(true)" class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
+                    Correct! ✅
+                </button>
+            </div>
+        </div>
+
+        <!-- SUMMARY SCREEN -->
+        <div id="screen-summary" class="hidden text-center flex flex-col items-center">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 id="summary-title" class="text-3xl font-black text-slate-800 mb-2">Round Finished</h2>
+            <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-4 w-full shadow-sm">
+                <div id="round-score-val" class="text-6xl font-black text-pink-500 mb-2">0</div>
+                <div class="text-xs text-slate-400 uppercase font-black tracking-widest mb-6">Points this round</div>
+                
+                <div class="flex flex-col items-center py-4">
+                    <div onmousedown="game.playObnoxiousBuzzer()" class="buzzer-button">BUZZ!</div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Buzz the Others!</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-3 w-full">
+                <button onclick="game.startRound()" class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
+                    Next Round
+                </button>
+                <button onclick="game.showEndGame()" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+                    Final Score & Breakdown
+                </button>
+            </div>
+        </div>
+
+        <!-- END GAME SCREEN -->
+        <div id="screen-endgame" class="hidden text-center flex flex-col items-center w-full">
+            <h2 class="text-3xl font-black text-slate-800 mb-2">Session Recap</h2>
+            <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
+                <div class="flex justify-around mb-6 pb-6 border-b border-slate-100">
+                    <div class="text-center">
+                        <div id="total-final-score" class="text-4xl font-black text-pink-500">0</div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase">Total Points</div>
+                    </div>
+                    <div class="text-center">
+                        <div id="total-rounds-count" class="text-4xl font-black text-slate-800">0</div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase">Rounds</div>
+                    </div>
+                </div>
+                
+                <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Round Breakdown</h3>
+                <div id="round-history-list" class="space-y-2 mb-6"></div>
+
+                <button id="btn-show-review" onclick="game.showWordReview()" class="w-full bg-pink-100 text-pink-600 py-3 rounded-2xl font-black text-sm">
+                    Review Guessed Words?
+                </button>
+
+                <div id="review-section" class="hidden mt-6 text-left">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3">Word Review (Click for Definition)</h3>
+                    <div id="word-review-list" class="space-y-2"></div>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
+                Main Menu
+            </button>
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    <div id="modal-end-turn" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
+        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
+            <div class="text-4xl mb-4">🔔</div>
+            <h3 class="text-xl font-black mb-2">Buzzer!</h3>
+            <p class="text-slate-500 mb-6 text-sm">Did they get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?</p>
+            <div class="flex gap-3">
+                <button onclick="game.finishRound(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
+                <button onclick="game.finishRound(true)" class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const REMOTE_URL = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/word-list.csv';
+
+        class TabooPro {
+            constructor() {
+                this.db = [];
+                this.availableCards = [];
+                this.selectedLevel = null;
+                this.score = 0;
+                this.roundScore = 0;
+                this.roundNumber = 1;
+                this.roundHistory = [];
+                this.wordLog = [];
+
+                this.timeLeft = 60;
+                this.skips = 1;
+                this.timer = null;
+                this.currentCard = null;
+                this.audio = null;
+                this.levels = ['A1', 'A2', 'B1', 'B2'];
+
+                this.fetchData();
+            }
+
+            async fetchData() {
+                try {
+                    const response = await fetch(REMOTE_URL + '?t=' + Date.now());
+                    const text = await response.text();
+                    this.loadData(text);
+                } catch (e) {
+                    document.getElementById('total-card-count').textContent = `Error Loading List`;
+                }
+            }
+
+            loadData(csvText) {
+                const lines = csvText.trim().split('\n');
+                const results = [];
+                for(let i=1; i<lines.length; i++) {
+                    const cols = lines[i].split(',');
+                    if(cols.length < 8) continue;
+                    results.push({
+                        id: i + '-' + Math.random(),
+                        word: cols[0].trim(),
+                        level: cols[1].trim(),
+                        type: cols[2].trim(),
+                        taboo: [cols[3], cols[4], cols[5], cols[6], cols[7]].map(s => s.trim())
+                    });
+                }
+                this.db = results;
+                this.availableCards = [...results];
+                document.getElementById('total-card-count').textContent = `${this.db.length} Cards Loaded`;
+            }
+
+            initAudio() {
+                if(!this.audio) this.audio = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            playObnoxiousBuzzer() {
+                this.initAudio();
+                document.getElementById('main-body').classList.add('buzz-flash');
+                setTimeout(() => document.getElementById('main-body').classList.remove('buzz-flash'), 300);
+                
+                const duration = 1.5; 
+                const frequencies = [150, 165, 190]; 
+                
+                frequencies.forEach(freq => {
+                    const osc = this.audio.createOscillator();
+                    const gain = this.audio.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, this.audio.currentTime);
+                    
+                    gain.gain.setValueAtTime(0.08, this.audio.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.08, this.audio.currentTime + 1.0);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.audio.currentTime + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(this.audio.destination);
+                    osc.start();
+                    osc.stop(this.audio.currentTime + duration);
+                });
+            }
+
+            getRefUrl(word, type) {
+                const normalizedType = (type || "").trim().toLowerCase();
+                const wiktionaryTypes = ['noun', 'adj', 'verb', 'adj/noun', 'noun/adj', 'nom', 'verbe', 'adjectif'];
+                const isWiktionary = wiktionaryTypes.includes(normalizedType);
+                
+                if (isWiktionary) {
+                    // Wiktionary needs lowercase for general words to resolve correctly
+                    const lowercaseWord = word.toLowerCase().replace(/\s+/g, '_');
+                    return `https://fr.wiktionary.org/wiki/${encodeURIComponent(lowercaseWord)}`;
+                }
+
+                // Wikipedia generally handles capitalized titles better
+                const encodedWord = encodeURIComponent(word.replace(/\s+/g, '_'));
+                return `https://fr.wikipedia.org/wiki/${encodedWord}`;
+            }
+
+            setLevel(lvl, btn) {
+                this.selectedLevel = lvl;
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                const startBtn = document.getElementById('btn-start-round');
+                startBtn.disabled = false;
+                startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black mb-8";
+                const maxIdx = this.levels.indexOf(lvl);
+                const poolSize = this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx).length;
+                startBtn.textContent = `Start Round (${poolSize} words)`;
+            }
+
+            startRound() {
+                this.initAudio();
+                this.roundScore = 0;
+                this.timeLeft = 60;
+                this.skips = 1;
+                this.nextCard(false);
+                this.showScreen('game');
+                
+                this.timer = setInterval(() => {
+                    this.timeLeft--;
+                    document.getElementById('timer-display').textContent = this.timeLeft;
+                    if(this.timeLeft <= 10) document.getElementById('timer-display').classList.add('pulse-timer');
+                    if(this.timeLeft <= 0) {
+                        clearInterval(this.timer);
+                        this.playObnoxiousBuzzer();
+                        document.getElementById('last-word-hint').textContent = `"${this.currentCard.word}"`;
+                        document.getElementById('modal-end-turn').classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+
+            nextCard(scored, skipAction = false) {
+                if(this.currentCard) {
+                    this.wordLog.push({
+                        word: this.currentCard.word,
+                        type: this.currentCard.type,
+                        level: this.currentCard.level,
+                        status: scored ? 'correct' : (skipAction ? 'skipped' : 'timeout')
+                    });
+                }
+
+                if(scored) {
+                    this.availableCards = this.availableCards.filter(c => c.id !== this.currentCard.id);
+                    this.roundScore++;
+                    this.score++;
+                }
+
+                const maxIdx = this.levels.indexOf(this.selectedLevel);
+                const pool = this.availableCards.filter(c => this.levels.indexOf(c.level) <= maxIdx);
+
+                if(pool.length === 0) {
+                    this.finishRound(false);
+                    return;
+                }
+
+                this.currentCard = pool[Math.floor(Math.random() * pool.length)];
+                document.getElementById('word-to-guess').textContent = this.currentCard.word;
+                document.getElementById('card-level-tag').textContent = `Level ${this.currentCard.level}`;
+                const list = document.getElementById('taboo-words');
+                list.innerHTML = '';
+                this.currentCard.taboo.forEach(t => {
+                    const li = document.createElement('li');
+                    li.className = "bg-slate-50 py-3 rounded-xl font-bold text-slate-600 border border-slate-100";
+                    li.textContent = t;
+                    list.appendChild(li);
+                });
+                
+                document.getElementById('score-display').textContent = this.score;
+                document.getElementById('btn-skip').textContent = `Skip (${this.skips}/1)`;
+                document.getElementById('btn-skip').disabled = this.skips <= 0;
+            }
+
+            skipCard() {
+                if(this.skips > 0) {
+                    this.skips--;
+                    this.nextCard(false, true);
+                }
+            }
+
+            finishRound(lastCorrect) {
+                if(this.currentCard) {
+                    const lastLogIdx = this.wordLog.length - 1;
+                    if(lastLogIdx >= 0 && this.wordLog[lastLogIdx].word === this.currentCard.word) {
+                        this.wordLog[lastLogIdx].status = lastCorrect ? 'correct' : 'timeout';
+                    } else {
+                        this.wordLog.push({
+                            word: this.currentCard.word,
+                            type: this.currentCard.type,
+                            level: this.currentCard.level,
+                            status: lastCorrect ? 'correct' : 'timeout'
+                        });
+                    }
+                }
+
+                if(lastCorrect) {
+                    this.availableCards = this.availableCards.filter(c => c.id !== (this.currentCard ? this.currentCard.id : ''));
+                    this.roundScore++;
+                    this.score++;
+                }
+
+                clearInterval(this.timer);
+                this.roundHistory.push({ round: this.roundNumber, score: this.roundScore });
+                document.getElementById('modal-end-turn').classList.add('hidden');
+                document.getElementById('round-score-val').textContent = this.roundScore;
+                document.getElementById('summary-title').textContent = `Round ${this.roundNumber} Done!`;
+                this.roundNumber++;
+                this.currentCard = null;
+                this.showScreen('summary');
+            }
+
+            showEndGame() {
+                document.getElementById('total-final-score').textContent = this.score;
+                document.getElementById('total-rounds-count').textContent = this.roundHistory.length;
+                const histList = document.getElementById('round-history-list');
+                histList.innerHTML = '';
+                this.roundHistory.forEach(h => {
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center bg-slate-50 p-3 rounded-xl";
+                    div.innerHTML = `
+                        <span class="text-xs font-bold text-slate-500 uppercase">Round ${h.round}</span>
+                        <span class="font-black text-slate-800">${h.score} pts</span>
+                    `;
+                    histList.appendChild(div);
+                });
+                this.showScreen('endgame');
+            }
+
+            showWordReview() {
+                document.getElementById('btn-show-review').classList.add('hidden');
+                const reviewSection = document.getElementById('review-section');
+                reviewSection.classList.remove('hidden');
+                const list = document.getElementById('word-review-list');
+                list.innerHTML = '';
+                if (this.wordLog.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-slate-400 italic">No words played this session.</p>`;
+                    return;
+                }
+                this.wordLog.forEach(item => {
+                    const statusColors = { correct: 'bg-green-100 text-green-700', skipped: 'bg-yellow-100 text-yellow-700', timeout: 'bg-red-100 text-red-700' };
+                    const statusLabels = { correct: 'Correct', skipped: 'Skipped', timeout: 'Buzzed' };
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center p-3 border-b border-slate-50 last:border-0";
+                    const url = this.getRefUrl(item.word, item.type);
+                    div.innerHTML = `
+                        <div class="flex flex-col">
+                            <a href="${url}" target="_blank" class="word-link font-black text-slate-700">
+                                ${item.word} <span class="text-[8px] opacity-30">↗</span>
+                            </a>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold">${item.level} • ${item.type || 'N/A'}</span>
+                        </div>
+                        <span class="text-[9px] font-black uppercase px-2 py-1 rounded-md ${statusColors[item.status]}">${statusLabels[item.status]}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+
+            showScreen(id) {
+                ['start', 'game', 'summary', 'endgame'].forEach(s => document.getElementById('screen-'+s).classList.add('hidden'));
+                document.getElementById('screen-'+id).classList.remove('hidden');
+                document.getElementById('game-hud').style.opacity = (id === 'game') ? '1' : '0';
+            }
+        }
+
+        let game;
+        window.onload = () => { game = new TabooPro(); };
+    </script>
+</body>
+</html>
