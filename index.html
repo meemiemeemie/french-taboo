@@ -6,6 +6,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗃️</text></svg>">
     <title>Taboo Français Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap');
 
@@ -112,6 +115,38 @@
             max-height: 50vh;
             overflow-y: auto;
         }
+
+        .player-color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .room-code-display {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.2em;
+        }
+
+        .team-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .team-a {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .team-b {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
     </style>
 </head>
 <body id="main-body" class="flex flex-col items-center justify-center p-4 transition-colors">
@@ -157,15 +192,20 @@
                 </button>
             </div>
 
-            <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-4">
-                Select a Level
-            </button>
+            <div class="flex gap-3 mb-4">
+                <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d flex-1 bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
+                    Select a Level
+                </button>
+                <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()" class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
+                    Multiplayer
+                </button>
+            </div>
             <button id="btn-reset-cards" onclick="game.resetAllCards()" class="w-full py-2 text-slate-400 font-bold text-sm underline mb-8">
                 Put all cards back in play
             </button>
 
             <div class="flex flex-col items-center">
-                <div onmousedown="game.playObnoxiousBuzzer()" class="buzzer-button">BUZZ!</div>
+                <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
             </div>
         </div>
 
@@ -179,9 +219,42 @@
                 </div>
             </div>
 
+            <!-- Multiplayer turn indicator -->
+            <div id="multiplayer-turn-indicator" class="hidden w-full mb-4 bg-blue-50 border-2 border-blue-200 rounded-2xl p-4">
+                <div class="text-sm font-bold text-blue-700 mb-1" id="turn-indicator-text">Your turn!</div>
+                <div class="text-xs text-blue-500" id="turn-indicator-subtext"></div>
+            </div>
+
+            <!-- Start round button for active player -->
+            <div id="multiplayer-start-round" class="hidden w-full mb-4">
+                <button onclick="game.startMultiplayerRound()" class="btn-3d w-full bg-green-500 text-white py-4 rounded-2xl font-black text-lg">
+                    Start Your Round
+                </button>
+            </div>
+
+            <!-- Waiting for player message -->
+            <div id="multiplayer-waiting" class="hidden w-full mb-4 bg-slate-50 border-2 border-slate-200 rounded-2xl p-4">
+                <div class="text-sm font-bold text-slate-600" id="waiting-text">Waiting for player to start...</div>
+            </div>
+
+            <!-- Player list (multiplayer) -->
+            <div id="multiplayer-player-list" class="hidden w-full mb-4 bg-white rounded-2xl p-4 border-2 border-slate-100">
+                <div class="text-xs text-slate-400 font-bold uppercase mb-2">Players</div>
+                <div id="game-players-list" class="space-y-1"></div>
+            </div>
+
+            <!-- Multiplayer buzzer for opposing players -->
+            <div id="multiplayer-buzzer-container" class="hidden w-full mb-4">
+                <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
+                <p class="text-[10px] text-slate-400 font-bold uppercase mt-2 text-center">Buzz if they use a taboo word!</p>
+            </div>
+
             <div class="flex gap-4 w-full">
                 <button id="btn-skip" onclick="game.skipCard()" class="btn-3d flex-1 bg-slate-200 text-slate-500 py-4 rounded-2xl font-bold">
                     Skip (1/1)
+                </button>
+                <button id="btn-buzzed" onclick="game.markBuzzed()" class="btn-3d flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold hidden">
+                    Buzzed
                 </button>
                 <button onclick="game.nextCard(true)" class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
                     Correct! ✅
@@ -211,6 +284,90 @@
                     Final Score & Breakdown
                 </button>
             </div>
+        </div>
+
+        <!-- MULTIPLAYER OPTIONS SCREEN -->
+        <div id="screen-multiplayer-options" class="hidden text-center flex flex-col items-center">
+            <div class="text-6xl mb-4">👥</div>
+            <h2 class="text-3xl font-black text-slate-800 mb-6">Multiplayer Mode</h2>
+            <div class="flex flex-col gap-4 w-full">
+                <button onclick="game.createRoom()" class="btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black">
+                    Create Room
+                </button>
+                <button onclick="game.showJoinRoom()" class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
+                    Join Room
+                </button>
+                <button onclick="game.showScreen('start')" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+                    Back to Main Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- JOIN ROOM SCREEN -->
+        <div id="screen-join-room" class="hidden text-center flex flex-col items-center">
+            <div class="text-6xl mb-4">🔗</div>
+            <h2 class="text-3xl font-black text-slate-800 mb-4">Join Room</h2>
+            <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
+                <label class="block text-left text-sm font-bold text-slate-600 mb-2">Room Code</label>
+                <input id="input-room-code" type="text" maxlength="4" placeholder="AB12" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-2xl font-black room-code-display uppercase mb-4" style="letter-spacing: 0.2em;">
+                <label class="block text-left text-sm font-bold text-slate-600 mb-2">Your Name</label>
+                <input id="input-player-name" type="text" maxlength="20" placeholder="Enter your name" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold mb-4">
+                <button onclick="game.joinRoom()" class="btn-3d w-full bg-blue-500 text-white py-3 rounded-xl font-black">
+                    Join
+                </button>
+            </div>
+            <button onclick="game.showMultiplayerOptions()" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+                Back
+            </button>
+        </div>
+
+        <!-- LOBBY SCREEN -->
+        <div id="screen-lobby" class="hidden text-center flex flex-col items-center">
+            <div class="text-6xl mb-4">🏠</div>
+            <h2 class="text-3xl font-black text-slate-800 mb-4">Room Lobby</h2>
+            <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
+                <div class="mb-6">
+                    <div class="text-xs text-slate-400 font-bold uppercase mb-2">Room Code</div>
+                    <div id="lobby-room-code" class="text-4xl font-black room-code-display text-pink-500 mb-2">----</div>
+                    <button id="btn-copy-code" onclick="game.copyRoomCode()" class="text-xs text-blue-500 font-bold underline">
+                        Copy Code
+                    </button>
+                </div>
+                <div class="mb-6">
+                    <div class="text-xs text-slate-400 font-bold uppercase mb-3 text-left">Players</div>
+                    <div id="lobby-players-list" class="space-y-2 text-left"></div>
+                </div>
+                <div id="lobby-host-controls" class="hidden">
+                    <label class="block text-left text-sm font-bold text-slate-600 mb-2">Select Level</label>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <button onclick="game.setMultiplayerLevel('A1', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                            <div class="font-black text-pink-500 text-lg">A1</div>
+                            <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
+                        </button>
+                        <button onclick="game.setMultiplayerLevel('A2', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                            <div class="font-black text-blue-500 text-lg">A2</div>
+                            <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
+                        </button>
+                        <button onclick="game.setMultiplayerLevel('B1', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                            <div class="font-black text-purple-500 text-lg">B1</div>
+                            <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
+                        </button>
+                        <button onclick="game.setMultiplayerLevel('B2', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                            <div class="font-black text-orange-500 text-lg">B2</div>
+                            <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
+                        </button>
+                    </div>
+                    <button id="btn-start-game" disabled onclick="game.startMultiplayerGame()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
+                        Select Level to Start
+                    </button>
+                </div>
+                <div id="lobby-waiting" class="text-slate-500 text-sm">
+                    Waiting for host to start the game...
+                </div>
+            </div>
+            <button onclick="game.leaveRoom()" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+                Leave Room
+            </button>
         </div>
 
         <!-- END GAME SCREEN -->
@@ -251,16 +408,780 @@
         <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
             <div class="text-4xl mb-4">🔔</div>
             <h3 class="text-xl font-black mb-2">Buzzer!</h3>
-            <p class="text-slate-500 mb-6 text-sm">Did they get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?</p>
+            <p class="text-slate-500 mb-6 text-sm" id="buzz-modal-text">Did they get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?</p>
             <div class="flex gap-3">
-                <button onclick="game.finishRound(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
-                <button onclick="game.finishRound(true)" class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
+                <button onclick="game.handleBuzzResponse(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
+                <button onclick="game.handleBuzzResponse(true)" class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
             </div>
         </div>
     </div>
 
     <script>
         const REMOTE_URL = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/word-list.csv';
+
+        // Firebase configuration - Replace with your Firebase project config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwuX6WaTRSLAeDqdex0VyapFKYEJ5OGfQ",
+            authDomain: "french-taboo.firebaseapp.com",
+            databaseURL: "https://french-taboo-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "french-taboo",
+            storageBucket: "french-taboo.firebasestorage.app",
+            messagingSenderId: "876947251507",
+            appId: "1:876947251507:web:3a1712871ea0fa411e1e46",
+            measurementId: "G-LPCQEL2RXM"
+        };
+
+        class MultiplayerManager {
+            constructor(gameInstance) {
+                this.game = gameInstance;
+                this.db = null;
+                this.roomRef = null;
+                this.playerId = null;
+                this.roomCode = null;
+                this.isHost = false;
+                this.players = {};
+                this.gameState = null;
+                this.listeners = [];
+                this.reconnectAttempts = 0;
+                this.maxReconnectAttempts = 5;
+            }
+
+            initialize() {
+                try {
+                    // Check if Firebase is loaded
+                    if (typeof firebase === 'undefined') {
+                        alert('Firebase SDK not loaded. Please check your internet connection.');
+                        return false;
+                    }
+
+                    if (!firebase.apps || firebase.apps.length === 0) {
+                        // Check if config is valid
+                        if (!FIREBASE_CONFIG.apiKey || FIREBASE_CONFIG.apiKey === 'YOUR_API_KEY') {
+                            alert('Firebase not configured. Please add your Firebase configuration to the code.\n\nSee README.md for setup instructions.');
+                            return false;
+                        }
+                        firebase.initializeApp(FIREBASE_CONFIG);
+                    }
+                    this.db = firebase.database();
+                    this.playerId = this.generatePlayerId();
+                } catch (e) {
+                    console.error('Firebase initialization error:', e);
+                    alert('Firebase initialization failed. Please check your configuration.\n\nError: ' + e.message);
+                    return false;
+                }
+                return true;
+            }
+
+            generatePlayerId() {
+                return 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            generateRoomCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 4; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            }
+
+            async createRoom() {
+                try {
+                    if (!this.db) {
+                        if (!this.initialize()) return null;
+                    }
+
+                    let attempts = 0;
+                    let code;
+                    let roomExists = true;
+
+                    // Try to generate unique code (max 10 attempts)
+                    while (roomExists && attempts < 10) {
+                        code = this.generateRoomCode();
+                        const roomPath = `rooms/${code}`;
+                        const snapshot = await this.db.ref(roomPath).once('value');
+                        roomExists = snapshot.exists();
+                        attempts++;
+                    }
+
+                    if (roomExists) {
+                        alert('Failed to create room. Please try again.');
+                        return null;
+                    }
+
+                    this.roomCode = code;
+                    this.isHost = true;
+
+                    const roomPath = `rooms/${code}`;
+                    this.roomRef = this.db.ref(roomPath);
+
+                    // Create room with expiration (1 hour)
+                    const expirationTime = Date.now() + (60 * 60 * 1000);
+                    await this.roomRef.set({
+                        host: this.playerId,
+                        createdAt: firebase.database.ServerValue.TIMESTAMP,
+                        expiresAt: expirationTime,
+                        gameState: {
+                            status: 'lobby',
+                            level: null,
+                            currentPlayer: null,
+                            currentCard: null,
+                            timer: 60,
+                            roundActive: false
+                        },
+                        players: {}
+                    });
+
+                    // Add host as first player
+                    await this.joinRoomAsPlayer('Host');
+                    this.setupRoomListeners();
+
+                    // Set up room cleanup on disconnect
+                    this.roomRef.onDisconnect().remove();
+
+                    return code;
+                } catch (error) {
+                    console.error('Error creating room:', error);
+                    alert('Failed to create room. Please check your connection and try again.');
+                    return null;
+                }
+            }
+
+            async joinRoom(code, playerName) {
+                try {
+                    if (!this.db) {
+                        if (!this.initialize()) return false;
+                    }
+
+                    this.roomCode = code;
+                    const roomPath = `rooms/${code}`;
+                    this.roomRef = this.db.ref(roomPath);
+
+                    // Check if room exists
+                    const snapshot = await this.roomRef.once('value');
+                    if (!snapshot.exists()) {
+                        alert('Room not found. Please check the room code.');
+                        return false;
+                    }
+
+                    const roomData = snapshot.val();
+                    if (roomData.gameState && roomData.gameState.status === 'playing') {
+                        // Allow joining during game but show message
+                        const joinDuringGame = confirm('Game is already in progress. You can join as a spectator. Continue?');
+                        if (!joinDuringGame) return false;
+                    }
+
+                    // Check player limit (8 players max)
+                    const currentPlayers = Object.keys(roomData.players || {}).length;
+                    if (currentPlayers >= 8) {
+                        alert('Room is full (8 players maximum).');
+                        return false;
+                    }
+
+                    this.isHost = roomData.host === this.playerId;
+                    await this.joinRoomAsPlayer(playerName);
+                    this.setupRoomListeners();
+                    return true;
+                } catch (error) {
+                    console.error('Error joining room:', error);
+                    alert('Failed to join room. Please check your connection and try again.');
+                    return false;
+                }
+            }
+
+            async joinRoomAsPlayer(playerName) {
+                if (!this.roomRef) return;
+
+                // Sanitize player name
+                const sanitizedName = playerName.substring(0, 20).replace(/[<>]/g, '');
+
+                const playerData = {
+                    name: sanitizedName,
+                    joinedAt: firebase.database.ServerValue.TIMESTAMP,
+                    score: 0,
+                    team: null
+                };
+
+                await this.roomRef.child(`players/${this.playerId}`).set(playerData);
+            }
+
+            setupRoomListeners() {
+                if (!this.roomRef) return;
+
+                // Listen to players
+                this.roomRef.child('players').on('value', (snapshot) => {
+                    this.players = snapshot.val() || {};
+                    this.updatePlayersList();
+                });
+
+                // Listen to game state
+                this.roomRef.child('gameState').on('value', (snapshot) => {
+                    this.gameState = snapshot.val();
+                    if (this.gameState) {
+                        this.handleGameStateChange();
+                    }
+                });
+
+                // Listen to buzz events separately for better handling
+                this.roomRef.child('gameState/lastBuzz').on('value', (snapshot) => {
+                    const buzzData = snapshot.val();
+                    if (buzzData && this.gameState && this.gameState.roundActive) {
+                        const currentPlayerId = this.gameState.currentPlayer;
+                        if (buzzData.playerId !== currentPlayerId && currentPlayerId === this.playerId) {
+                            // Someone buzzed me - show modal
+                            this.showBuzzModal(buzzData);
+                        }
+                    }
+                });
+
+                // Handle connection state
+                const connectedRef = this.db.ref('.info/connected');
+                connectedRef.on('value', (snapshot) => {
+                    if (snapshot.val() === true) {
+                        // Connected
+                        this.reconnectAttempts = 0;
+                        this.hideConnectionError();
+                    } else {
+                        // Disconnected
+                        this.showConnectionError();
+                        this.attemptReconnect();
+                    }
+                });
+
+                // Handle disconnections
+                if (this.playerId) {
+                    this.roomRef.child(`players/${this.playerId}`).onDisconnect().remove();
+                }
+            }
+
+            showConnectionError() {
+                // Could show a banner or notification
+                console.warn('Connection lost. Attempting to reconnect...');
+            }
+
+            hideConnectionError() {
+                // Hide connection error if shown
+            }
+
+            async attemptReconnect() {
+                if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+                    alert('Connection lost. Please refresh the page.');
+                    return;
+                }
+
+                this.reconnectAttempts++;
+                setTimeout(async () => {
+                    if (this.roomCode && !this.db.ref('.info/connected').val()) {
+                        try {
+                            // Try to rejoin room
+                            const roomPath = `rooms/${this.roomCode}`;
+                            const snapshot = await this.db.ref(roomPath).once('value');
+                            if (snapshot.exists()) {
+                                this.roomRef = this.db.ref(roomPath);
+                                this.setupRoomListeners();
+                            }
+                        } catch (e) {
+                            console.error('Reconnection failed:', e);
+                            this.attemptReconnect();
+                        }
+                    }
+                }, 2000 * this.reconnectAttempts);
+            }
+
+            updatePlayersList() {
+                const listEl = document.getElementById('lobby-players-list');
+                const gameListEl = document.getElementById('game-players-list');
+                if (!listEl && !gameListEl) return;
+
+                const playerArray = Object.entries(this.players).map(([id, data]) => ({
+                    id,
+                    ...data
+                }));
+
+                const colors = ['#ec4899', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444', '#06b6d4', '#f97316'];
+                let colorIndex = 0;
+
+                const renderPlayer = (player, isGame = false) => {
+                    const color = colors[colorIndex % colors.length];
+                    colorIndex++;
+                    const isCurrentPlayer = player.id === this.playerId;
+                    const isHostPlayer = this.isHost && player.id === this.playerId;
+                    const hostBadge = isHostPlayer ? '<span class="text-[8px] bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full ml-2">HOST</span>' : '';
+                    const teamBadge = player.team ? `<span class="team-indicator ${player.team === 'A' ? 'team-a' : 'team-b'}">Team ${player.team}</span>` : '';
+                    
+                    const div = document.createElement('div');
+                    div.className = `flex justify-between items-center p-2 rounded-lg ${isCurrentPlayer ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'}`;
+                    div.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="player-color-dot" style="background-color: ${color}"></span>
+                            <span class="font-bold text-slate-700">${player.name}</span>
+                            ${hostBadge}
+                            ${teamBadge}
+                        </div>
+                        ${isGame ? `<span class="font-black text-slate-800">${player.score || 0}</span>` : ''}
+                    `;
+                    return div;
+                };
+
+                if (listEl) {
+                    listEl.innerHTML = '';
+                    playerArray.forEach(player => {
+                        listEl.appendChild(renderPlayer(player, false));
+                    });
+                }
+
+                if (gameListEl) {
+                    gameListEl.innerHTML = '';
+                    playerArray.forEach(player => {
+                        gameListEl.appendChild(renderPlayer(player, true));
+                    });
+                }
+
+                // Show/hide host controls
+                const hostControls = document.getElementById('lobby-host-controls');
+                const waitingMsg = document.getElementById('lobby-waiting');
+                if (hostControls && waitingMsg) {
+                    if (this.isHost) {
+                        hostControls.classList.remove('hidden');
+                        waitingMsg.classList.add('hidden');
+                    } else {
+                        hostControls.classList.add('hidden');
+                        waitingMsg.classList.remove('hidden');
+                    }
+                }
+            }
+
+            async startGame(level) {
+                if (!this.isHost || !this.roomRef) return;
+
+                const playerArray = Object.keys(this.players);
+                if (playerArray.length < 2) {
+                    alert('Need at least 2 players to start!');
+                    return;
+                }
+
+                // Form teams if 4+ players
+                let teams = null;
+                if (playerArray.length >= 4) {
+                    teams = this.formTeams(playerArray);
+                }
+
+                // Determine first player
+                const firstPlayer = playerArray[0];
+
+                await this.roomRef.child('gameState').set({
+                    status: 'playing',
+                    level: level,
+                    currentPlayer: firstPlayer,
+                    currentCard: null,
+                    timer: 60,
+                    roundActive: false,
+                    teams: teams,
+                    turnOrder: playerArray,
+                    currentTurnIndex: 0
+                });
+            }
+
+            formTeams(playerIds) {
+                const shuffled = [...playerIds].sort(() => Math.random() - 0.5);
+                const teams = { A: [], B: [] };
+                shuffled.forEach((id, index) => {
+                    const team = index % 2 === 0 ? 'A' : 'B';
+                    teams[team].push(id);
+                    // Update player team in database
+                    this.roomRef.child(`players/${id}/team`).set(team);
+                });
+                return teams;
+            }
+
+            async startRound() {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId !== this.playerId) return; // Not this player's turn
+
+                // Get a random card
+                const pool = this.game.getPool(this.gameState.level);
+                if (pool.length === 0) {
+                    await this.endGame();
+                    return;
+                }
+
+                const card = pool[Math.floor(Math.random() * pool.length)];
+                this.game.currentCard = card;
+                this.game.addPlayed(card.id); // Mark as played immediately
+
+                await this.roomRef.child('gameState').update({
+                    currentCard: card,
+                    timer: 60,
+                    roundActive: true,
+                    roundStartTime: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                // Display card immediately
+                this.game.displayCard(card);
+
+                // Start local timer
+                this.startLocalTimer();
+            }
+
+            startLocalTimer() {
+                if (this.game.timer) clearInterval(this.game.timer);
+                
+                this.game.timeLeft = 60;
+                this.game.timer = setInterval(async () => {
+                    this.game.timeLeft--;
+                    const timerEl = document.getElementById('timer-display');
+                    if (timerEl) {
+                        timerEl.textContent = this.game.timeLeft;
+                        if (this.game.timeLeft <= 10) {
+                            timerEl.classList.add('pulse-timer');
+                        }
+                    }
+
+                    // Update timer in Firebase (only active player)
+                    if (this.gameState && this.gameState.currentPlayer === this.playerId && this.gameState.roundActive) {
+                        await this.roomRef.child('gameState/timer').set(this.game.timeLeft);
+                    }
+
+                    if (this.game.timeLeft <= 0) {
+                        clearInterval(this.game.timer);
+                        await this.endRound(false);
+                    }
+                }, 1000);
+            }
+
+            async nextCard(scored) {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId !== this.playerId) return; // Not this player's turn
+                if (!this.gameState.roundActive) return; // Round not active
+
+                if (this.game.currentCard) {
+                    if (scored) {
+                        // Update score
+                        const currentScore = this.players[this.playerId]?.score || 0;
+                        await this.roomRef.child(`players/${this.playerId}/score`).set(currentScore + 1);
+                    }
+                    // Mark current card as played
+                    this.game.addPlayed(this.game.currentCard.id);
+                }
+
+                // Get next card
+                const pool = this.game.getPool(this.gameState.level);
+                if (pool.length === 0) {
+                    await this.endRound(false);
+                    return;
+                }
+
+                const card = pool[Math.floor(Math.random() * pool.length)];
+                this.game.currentCard = card;
+                this.game.addPlayed(card.id);
+
+                await this.roomRef.child('gameState/currentCard').set(card);
+                
+                // Display card immediately
+                this.game.displayCard(card);
+            }
+
+            async markBuzzed() {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId !== this.playerId) return;
+                if (!this.gameState.roundActive) return;
+
+                // Clear buzz event
+                await this.roomRef.child('gameState/lastBuzz').set(null);
+
+                // Mark card as buzzed (remove from play, no score)
+                if (this.game.currentCard) {
+                    this.game.addPlayed(this.game.currentCard.id);
+                }
+
+                // Get next card
+                await this.nextCard(false);
+            }
+
+            async skipCard() {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId !== this.playerId) return;
+
+                await this.nextCard(false);
+            }
+
+            async buzzPlayer() {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId === this.playerId) return; // Can't buzz yourself
+                if (!this.gameState.roundActive) return; // Round not active
+
+                // Send buzz event
+                await this.roomRef.child('gameState/lastBuzz').set({
+                    playerId: this.playerId,
+                    playerName: this.players[this.playerId]?.name || 'Unknown',
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                this.game.playObnoxiousBuzzer();
+            }
+
+            async endRound(lastCorrect) {
+                if (!this.roomRef || !this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                if (currentPlayerId !== this.playerId) return;
+
+                if (lastCorrect && this.game.currentCard) {
+                    const currentScore = this.players[this.playerId]?.score || 0;
+                    await this.roomRef.child(`players/${this.playerId}/score`).set(currentScore + 1);
+                }
+
+                if (this.game.timer) {
+                    clearInterval(this.game.timer);
+                    this.game.timer = null;
+                }
+
+                // Move to next player
+                const turnOrder = this.gameState.turnOrder || Object.keys(this.players);
+                const currentIndex = this.gameState.currentTurnIndex || 0;
+                const nextIndex = (currentIndex + 1) % turnOrder.length;
+                const nextPlayer = turnOrder[nextIndex];
+
+                await this.roomRef.child('gameState').update({
+                    currentPlayer: nextPlayer,
+                    currentCard: null,
+                    roundActive: false,
+                    timer: 60,
+                    currentTurnIndex: nextIndex
+                });
+            }
+
+            async endGame() {
+                if (!this.roomRef) return;
+                await this.roomRef.child('gameState/status').set('finished');
+            }
+
+            handleGameStateChange() {
+                if (!this.gameState) return;
+
+                // Update UI based on game state
+                if (this.gameState.status === 'playing') {
+                    this.game.showScreen('game');
+                    this.updateGameUI();
+                } else if (this.gameState.status === 'lobby') {
+                    this.game.showScreen('lobby');
+                } else if (this.gameState.status === 'finished') {
+                    // Game finished - could show summary
+                    this.game.showScreen('summary');
+                }
+
+                // Sync timer
+                if (this.gameState.timer !== undefined) {
+                    this.game.timeLeft = this.gameState.timer;
+                    const timerEl = document.getElementById('timer-display');
+                    if (timerEl) {
+                        timerEl.textContent = this.gameState.timer;
+                        if (this.gameState.timer <= 10 && this.gameState.roundActive) {
+                            timerEl.classList.add('pulse-timer');
+                        } else {
+                            timerEl.classList.remove('pulse-timer');
+                        }
+                    }
+                }
+
+                // Sync current card
+                if (this.gameState.currentCard && this.gameState.roundActive) {
+                    this.game.currentCard = this.gameState.currentCard;
+                    this.game.displayCard(this.gameState.currentCard);
+                } else {
+                    // Clear card display if round not active
+                    if (!this.gameState.roundActive) {
+                        const wordEl = document.getElementById('word-to-guess');
+                        const tabooEl = document.getElementById('taboo-words');
+                        if (wordEl) wordEl.textContent = '...';
+                        if (tabooEl) tabooEl.innerHTML = '';
+                    }
+                }
+
+                // Handle buzz events
+                if (this.gameState.lastBuzz) {
+                    const buzzPlayerId = this.gameState.lastBuzz.playerId;
+                    const currentPlayerId = this.gameState.currentPlayer;
+                    if (buzzPlayerId !== currentPlayerId && this.gameState.roundActive) {
+                        // Someone buzzed - show modal to active player
+                        this.showBuzzModal(this.gameState.lastBuzz);
+                    }
+                }
+            }
+
+            showBuzzModal(buzzData) {
+                // Show modal asking if they got it correct
+                const modal = document.getElementById('modal-end-turn');
+                const hintEl = document.getElementById('last-word-hint');
+                if (hintEl && this.game.currentCard) {
+                    hintEl.textContent = `"${this.game.currentCard.word}"`;
+                }
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }
+
+            updateGameUI() {
+                if (!this.gameState) return;
+
+                const currentPlayerId = this.gameState.currentPlayer;
+                const isMyTurn = currentPlayerId === this.playerId;
+                const isTeamMode = this.gameState.teams && Object.keys(this.gameState.teams).length > 0;
+                const roundActive = this.gameState.roundActive;
+
+                // Show/hide multiplayer UI elements
+                const turnIndicator = document.getElementById('multiplayer-turn-indicator');
+                const startRoundBtn = document.getElementById('multiplayer-start-round');
+                const waitingMsg = document.getElementById('multiplayer-waiting');
+                const playerList = document.getElementById('multiplayer-player-list');
+                const buzzerContainer = document.getElementById('multiplayer-buzzer-container');
+
+                if (turnIndicator) turnIndicator.classList.remove('hidden');
+                if (playerList) playerList.classList.remove('hidden');
+
+                const currentPlayer = this.players[currentPlayerId];
+                const currentPlayerName = currentPlayer?.name || 'Unknown';
+
+                if (isMyTurn) {
+                    if (roundActive) {
+                        if (startRoundBtn) startRoundBtn.classList.add('hidden');
+                        if (waitingMsg) waitingMsg.classList.add('hidden');
+                    } else {
+                        if (startRoundBtn) startRoundBtn.classList.remove('hidden');
+                        if (waitingMsg) waitingMsg.classList.add('hidden');
+                    }
+                    if (turnIndicator) {
+                        turnIndicator.querySelector('#turn-indicator-text').textContent = roundActive ? 'Your Turn!' : 'Your Turn!';
+                        turnIndicator.querySelector('#turn-indicator-subtext').textContent = roundActive ? 'Describe the word!' : 'Start your round when ready';
+                    }
+                } else {
+                    if (startRoundBtn) startRoundBtn.classList.add('hidden');
+                    if (waitingMsg) {
+                        waitingMsg.classList.remove('hidden');
+                        waitingMsg.querySelector('#waiting-text').textContent = roundActive ? 
+                            `${currentPlayerName} is describing...` : 
+                            `Waiting for ${currentPlayerName} to start their round...`;
+                    }
+                    if (turnIndicator) {
+                        turnIndicator.querySelector('#turn-indicator-text').textContent = `${currentPlayerName}'s Turn`;
+                        turnIndicator.querySelector('#turn-indicator-subtext').textContent = isTeamMode ? 
+                            `Team ${currentPlayer?.team || ''}` : '';
+                    }
+                }
+
+                // Show/hide buttons based on role
+                const skipBtn = document.getElementById('btn-skip');
+                const buzzedBtn = document.getElementById('btn-buzzed');
+                const correctBtn = document.querySelector('button[onclick="game.nextCard(true)"]');
+                const myTeam = this.players[this.playerId]?.team;
+                const currentPlayerTeam = currentPlayer?.team;
+                const isOpposingTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam !== currentPlayerTeam;
+                const isSameTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam === currentPlayerTeam;
+
+                if (isMyTurn && roundActive) {
+                    // Active player during their round: show skip, buzzed, and correct buttons
+                    if (skipBtn) skipBtn.classList.remove('hidden');
+                    if (buzzedBtn) buzzedBtn.classList.remove('hidden');
+                    if (correctBtn) correctBtn.classList.remove('hidden');
+                    if (buzzerContainer) buzzerContainer.classList.add('hidden');
+                } else if (!isMyTurn && roundActive) {
+                    // Other players during active round
+                    if (isOpposingTeam || !isTeamMode) {
+                        // Opposing team or non-team mode: show buzzer, hide skip/correct/buzzed
+                        if (skipBtn) skipBtn.classList.add('hidden');
+                        if (buzzedBtn) buzzedBtn.classList.add('hidden');
+                        if (correctBtn) correctBtn.classList.add('hidden');
+                        if (buzzerContainer) buzzerContainer.classList.remove('hidden');
+                    } else if (isSameTeam) {
+                        // Same team (guessing): hide everything except timer
+                        if (skipBtn) skipBtn.classList.add('hidden');
+                        if (buzzedBtn) buzzedBtn.classList.add('hidden');
+                        if (correctBtn) correctBtn.classList.add('hidden');
+                        if (buzzerContainer) buzzerContainer.classList.add('hidden');
+                    }
+                } else {
+                    // Round not active
+                    if (skipBtn) skipBtn.classList.add('hidden');
+                    if (buzzedBtn) buzzedBtn.classList.add('hidden');
+                    if (correctBtn) correctBtn.classList.add('hidden');
+                    if (buzzerContainer) buzzerContainer.classList.add('hidden');
+                }
+
+                // Show card only to active player and opposing team
+                const cardContainer = document.getElementById('card-container');
+                if (cardContainer && roundActive) {
+                    if (isMyTurn) {
+                        cardContainer.classList.remove('hidden');
+                    } else {
+                        if (isOpposingTeam || !isTeamMode) {
+                            cardContainer.classList.remove('hidden');
+                        } else {
+                            cardContainer.classList.add('hidden');
+                        }
+                    }
+                } else if (cardContainer && !roundActive) {
+                    cardContainer.classList.add('hidden');
+                }
+            }
+
+            async leaveRoom() {
+                try {
+                    if (this.roomRef && this.playerId) {
+                        await this.roomRef.child(`players/${this.playerId}`).remove();
+                        if (this.isHost) {
+                            // Host leaving - remove entire room
+                            await this.roomRef.remove();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error leaving room:', error);
+                } finally {
+                    this.cleanup();
+                    this.game.multiplayerMode = false;
+                    this.game.showScreen('start');
+                }
+            }
+
+            cleanup() {
+                if (this.roomRef) {
+                    this.roomRef.off();
+                }
+                this.roomRef = null;
+                this.roomCode = null;
+                this.isHost = false;
+                this.players = {};
+                this.gameState = null;
+                if (this.game.timer) {
+                    clearInterval(this.game.timer);
+                    this.game.timer = null;
+                }
+            }
+
+            copyRoomCode() {
+                if (this.roomCode) {
+                    navigator.clipboard.writeText(this.roomCode).then(() => {
+                        const btn = document.getElementById('btn-copy-code');
+                        if (btn) {
+                            const originalText = btn.textContent;
+                            btn.textContent = 'Copied!';
+                            setTimeout(() => {
+                                btn.textContent = originalText;
+                            }, 2000);
+                        }
+                    });
+                }
+            }
+        }
 
         class TabooPro {
             constructor() {
@@ -279,6 +1200,9 @@
                 this.currentCard = null;
                 this.audio = null;
                 this.levels = ['A1', 'A2', 'B1', 'B2'];
+
+                this.multiplayerMode = false;
+                this.multiplayer = new MultiplayerManager(this);
 
                 this.fetchData();
             }
@@ -421,6 +1345,12 @@
             }
 
             startRound() {
+                if (this.multiplayerMode) {
+                    // Multiplayer rounds are started by individual players
+                    return;
+                }
+
+                // Single-player logic
                 const pool = this.getPool(this.selectedLevel);
                 if (pool.length === 0) {
                     this.showScreen('start');
@@ -496,7 +1426,13 @@
                 }
             }
 
-            finishRound(lastCorrect, fromExhaust = false) {
+            async finishRound(lastCorrect, fromExhaust = false) {
+                if (this.multiplayerMode) {
+                    await this.multiplayer.endRound(lastCorrect);
+                    return;
+                }
+
+                // Single-player logic
                 if (this.currentCard) {
                     const lastLogIdx = this.wordLog.length - 1;
                     if (lastLogIdx >= 0 && this.wordLog[lastLogIdx].word === this.currentCard.word) {
@@ -574,9 +1510,208 @@
             }
 
             showScreen(id) {
-                ['start', 'game', 'summary', 'endgame'].forEach(s => document.getElementById('screen-'+s).classList.add('hidden'));
-                document.getElementById('screen-'+id).classList.remove('hidden');
-                document.getElementById('game-hud').style.opacity = (id === 'game') ? '1' : '0';
+                const screens = ['start', 'game', 'summary', 'endgame', 'multiplayer-options', 'join-room', 'lobby'];
+                screens.forEach(s => {
+                    const el = document.getElementById('screen-'+s);
+                    if (el) el.classList.add('hidden');
+                });
+                const targetEl = document.getElementById('screen-'+id);
+                if (targetEl) targetEl.classList.remove('hidden');
+                const hud = document.getElementById('game-hud');
+                if (hud) hud.style.opacity = (id === 'game') ? '1' : '0';
+            }
+
+            // Multiplayer methods
+            showMultiplayerOptions() {
+                this.showScreen('multiplayer-options');
+            }
+
+            showJoinRoom() {
+                this.showScreen('join-room');
+            }
+
+            async createRoom() {
+                const code = await this.multiplayer.createRoom();
+                if (code) {
+                    document.getElementById('lobby-room-code').textContent = code;
+                    this.showScreen('lobby');
+                } else {
+                    alert('Failed to create room. Please check Firebase configuration.');
+                }
+            }
+
+            async joinRoom() {
+                const codeInput = document.getElementById('input-room-code');
+                const nameInput = document.getElementById('input-player-name');
+                const code = codeInput.value.trim().toUpperCase();
+                const name = nameInput.value.trim();
+
+                if (!code || code.length !== 4) {
+                    alert('Please enter a valid 4-character room code.');
+                    return;
+                }
+
+                if (!name || name.length === 0) {
+                    alert('Please enter your name.');
+                    return;
+                }
+
+                const success = await this.multiplayer.joinRoom(code, name);
+                if (success) {
+                    document.getElementById('lobby-room-code').textContent = code;
+                    this.showScreen('lobby');
+                }
+            }
+
+            async leaveRoom() {
+                await this.multiplayer.leaveRoom();
+            }
+
+            setMultiplayerLevel(level, btn) {
+                this.selectedLevel = level;
+                document.querySelectorAll('#screen-lobby .level-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                const startBtn = document.getElementById('btn-start-game');
+                if (startBtn) {
+                    startBtn.disabled = false;
+                    startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black";
+                    startBtn.textContent = `Start Game (Level ${level})`;
+                }
+            }
+
+            async startMultiplayerGame() {
+                if (!this.selectedLevel) {
+                    alert('Please select a level first.');
+                    return;
+                }
+                this.multiplayerMode = true;
+                await this.multiplayer.startGame(this.selectedLevel);
+            }
+
+            async startMultiplayerRound() {
+                await this.multiplayer.startRound();
+            }
+
+            displayCard(card) {
+                if (!card) return;
+                document.getElementById('word-to-guess').textContent = card.word;
+                document.getElementById('card-level-tag').textContent = `Level ${card.level}`;
+                const list = document.getElementById('taboo-words');
+                if (list) {
+                    list.innerHTML = '';
+                    card.taboo.forEach(t => {
+                        const li = document.createElement('li');
+                        li.className = "bg-slate-50 py-3 rounded-xl font-bold text-slate-600 border border-slate-100";
+                        li.textContent = t;
+                        list.appendChild(li);
+                    });
+                }
+            }
+
+            async markBuzzed() {
+                if (this.multiplayerMode) {
+                    await this.multiplayer.markBuzzed();
+                }
+            }
+
+            async nextCard(scored) {
+                if (this.multiplayerMode) {
+                    await this.multiplayer.nextCard(scored);
+                } else {
+                    // Original single-player logic
+                    if (this.currentCard) {
+                        this.wordLog.push({
+                            word: this.currentCard.word,
+                            type: this.currentCard.type,
+                            level: this.currentCard.level,
+                            status: scored ? 'correct' : 'timeout'
+                        });
+                        this.addPlayed(this.currentCard.id);
+                    }
+
+                    if (scored) {
+                        this.roundScore++;
+                        this.score++;
+                    }
+
+                    const pool = this.getPool(this.selectedLevel);
+                    this.updateStackDisplay();
+
+                    if (pool.length === 0) {
+                        this.finishRound(false, true);
+                        return;
+                    }
+
+                    this.currentCard = pool[Math.floor(Math.random() * pool.length)];
+                    document.getElementById('word-to-guess').textContent = this.currentCard.word;
+                    document.getElementById('card-level-tag').textContent = `Level ${this.currentCard.level}`;
+                    const list = document.getElementById('taboo-words');
+                    list.innerHTML = '';
+                    this.currentCard.taboo.forEach(t => {
+                        const li = document.createElement('li');
+                        li.className = "bg-slate-50 py-3 rounded-xl font-bold text-slate-600 border border-slate-100";
+                        li.textContent = t;
+                        list.appendChild(li);
+                    });
+
+                    document.getElementById('score-display').textContent = this.score;
+                    document.getElementById('btn-skip').textContent = `Skip (${this.skips}/1)`;
+                    document.getElementById('btn-skip').disabled = this.skips <= 0;
+                }
+            }
+
+            async skipCard() {
+                if (this.multiplayerMode) {
+                    await this.multiplayer.skipCard();
+                } else {
+                    // Original single-player logic
+                    if(this.skips > 0) {
+                        this.skips--;
+                        this.nextCard(false, true);
+                    }
+                }
+            }
+
+            copyRoomCode() {
+                this.multiplayer.copyRoomCode();
+            }
+
+            handleBuzzer() {
+                if (this.multiplayerMode && this.multiplayer.gameState) {
+                    const currentPlayerId = this.multiplayer.gameState.currentPlayer;
+                    const isMyTurn = currentPlayerId === this.multiplayer.playerId;
+                    if (!isMyTurn && this.multiplayer.gameState.roundActive) {
+                        // Buzzing another player
+                        this.multiplayer.buzzPlayer();
+                    } else {
+                        // Just play sound if it's your turn or round not active
+                        this.playObnoxiousBuzzer();
+                    }
+                } else {
+                    // Single player mode
+                    this.playObnoxiousBuzzer();
+                }
+            }
+
+            async handleBuzzResponse(correct) {
+                const modal = document.getElementById('modal-end-turn');
+                if (modal) modal.classList.add('hidden');
+
+                if (this.multiplayerMode) {
+                    // Clear buzz event
+                    if (this.multiplayer.roomRef) {
+                        await this.multiplayer.roomRef.child('gameState/lastBuzz').set(null);
+                    }
+                    // If correct, mark as scored, otherwise mark as buzzed
+                    if (correct) {
+                        await this.multiplayer.nextCard(true);
+                    } else {
+                        await this.multiplayer.markBuzzed();
+                    }
+                } else {
+                    // Single player mode
+                    await this.finishRound(correct);
+                }
             }
         }
 
