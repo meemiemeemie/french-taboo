@@ -117,12 +117,15 @@
 <body id="main-body" class="flex flex-col items-center justify-center p-4 transition-colors">
 
     <!-- HUD -->
-    <div id="game-hud" class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-10 opacity-0 transition-opacity pointer-events-none">
+        <div id="game-hud" class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-10 opacity-0 transition-opacity pointer-events-none">
         <div class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
             <span class="text-[10px] uppercase font-bold text-slate-400 block leading-none">Score</span>
             <div id="score-display" class="text-xl font-black text-pink-500">0</div>
         </div>
-        
+        <div id="stack-box" class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block leading-none">Stack</span>
+            <div id="stack-display" class="text-xl font-black text-slate-700">0</div>
+        </div>
         <div id="timer-box" class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 flex items-center gap-2 pointer-events-auto">
             <span id="timer-display" class="text-xl font-black text-slate-700">60</span>
         </div>
@@ -154,8 +157,11 @@
                 </button>
             </div>
 
-            <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-8">
+            <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-4">
                 Select a Level
+            </button>
+            <button id="btn-reset-cards" onclick="game.resetAllCards()" class="w-full py-2 text-slate-400 font-bold text-sm underline mb-8">
+                Put all cards back in play
             </button>
 
             <div class="flex flex-col items-center">
@@ -259,7 +265,7 @@
         class TabooPro {
             constructor() {
                 this.db = [];
-                this.availableCards = [];
+                this.playedIds = new Set();
                 this.selectedLevel = null;
                 this.score = 0;
                 this.roundScore = 0;
@@ -283,7 +289,8 @@
                     const text = await response.text();
                     this.loadData(text);
                 } catch (e) {
-                    document.getElementById('total-card-count').textContent = `Error Loading List`;
+                    const el = document.getElementById('total-card-count');
+                    if (el) el.textContent = 'Error loading list';
                 }
             }
 
@@ -293,17 +300,72 @@
                 for(let i=1; i<lines.length; i++) {
                     const cols = lines[i].split(',');
                     if(cols.length < 8) continue;
+                    const word = cols[0].trim();
+                    const level = cols[1].trim();
                     results.push({
-                        id: i + '-' + Math.random(),
-                        word: cols[0].trim(),
-                        level: cols[1].trim(),
+                        id: word + '|' + level,
+                        word,
+                        level: level,
                         type: cols[2].trim(),
                         taboo: [cols[3], cols[4], cols[5], cols[6], cols[7]].map(s => s.trim())
                     });
                 }
                 this.db = results;
-                this.availableCards = [...results];
-                document.getElementById('total-card-count').textContent = `${this.db.length} Cards Loaded`;
+                const stored = [];
+                try {
+                    const raw = localStorage.getItem('taboo_played');
+                    if (raw) stored.push(...JSON.parse(raw));
+                } catch (_) {}
+                this.playedIds = new Set(stored);
+                this.updateStartUI();
+            }
+
+            getPool(level) {
+                if (!level || !this.db.length) return [];
+                const maxIdx = this.levels.indexOf(level);
+                return this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx && !this.playedIds.has(c.id));
+            }
+
+            addPlayed(id) {
+                if (!id) return;
+                this.playedIds.add(id);
+                try {
+                    localStorage.setItem('taboo_played', JSON.stringify([...this.playedIds]));
+                } catch (_) {}
+            }
+
+            resetAllCards() {
+                this.playedIds.clear();
+                try { localStorage.removeItem('taboo_played'); } catch (_) {}
+                this.updateStartUI();
+            }
+
+            updateStartUI() {
+                const el = document.getElementById('total-card-count');
+                if (!el) return;
+                if (!this.selectedLevel) {
+                    el.textContent = `${this.db.length} cards total · Select a level`;
+                    return;
+                }
+                const pool = this.getPool(this.selectedLevel);
+                el.textContent = `${pool.length} cards in stack`;
+                const startBtn = document.getElementById('btn-start-round');
+                if (!startBtn) return;
+                if (pool.length === 0) {
+                    startBtn.disabled = true;
+                    startBtn.className = "btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-4";
+                    startBtn.textContent = 'No cards left — Reset to play again';
+                } else {
+                    startBtn.disabled = false;
+                    startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black mb-4";
+                    startBtn.textContent = `Start Round (${pool.length} in stack)`;
+                }
+            }
+
+            updateStackDisplay() {
+                const pool = this.getPool(this.selectedLevel);
+                const el = document.getElementById('stack-display');
+                if (el) el.textContent = pool.length;
             }
 
             initAudio() {
@@ -355,22 +417,24 @@
                 this.selectedLevel = lvl;
                 document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                const startBtn = document.getElementById('btn-start-round');
-                startBtn.disabled = false;
-                startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black mb-8";
-                const maxIdx = this.levels.indexOf(lvl);
-                const poolSize = this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx).length;
-                startBtn.textContent = `Start Round (${poolSize} words)`;
+                this.updateStartUI();
             }
 
             startRound() {
+                const pool = this.getPool(this.selectedLevel);
+                if (pool.length === 0) {
+                    this.showScreen('start');
+                    this.updateStartUI();
+                    return;
+                }
                 this.initAudio();
                 this.roundScore = 0;
                 this.timeLeft = 60;
                 this.skips = 1;
+                this.updateStackDisplay();
                 this.nextCard(false);
                 this.showScreen('game');
-                
+
                 this.timer = setInterval(() => {
                     this.timeLeft--;
                     document.getElementById('timer-display').textContent = this.timeLeft;
@@ -385,26 +449,26 @@
             }
 
             nextCard(scored, skipAction = false) {
-                if(this.currentCard) {
+                if (this.currentCard) {
                     this.wordLog.push({
                         word: this.currentCard.word,
                         type: this.currentCard.type,
                         level: this.currentCard.level,
                         status: scored ? 'correct' : (skipAction ? 'skipped' : 'timeout')
                     });
+                    this.addPlayed(this.currentCard.id);
                 }
 
-                if(scored) {
-                    this.availableCards = this.availableCards.filter(c => c.id !== this.currentCard.id);
+                if (scored) {
                     this.roundScore++;
                     this.score++;
                 }
 
-                const maxIdx = this.levels.indexOf(this.selectedLevel);
-                const pool = this.availableCards.filter(c => this.levels.indexOf(c.level) <= maxIdx);
+                const pool = this.getPool(this.selectedLevel);
+                this.updateStackDisplay();
 
-                if(pool.length === 0) {
-                    this.finishRound(false);
+                if (pool.length === 0) {
+                    this.finishRound(false, true);
                     return;
                 }
 
@@ -419,7 +483,7 @@
                     li.textContent = t;
                     list.appendChild(li);
                 });
-                
+
                 document.getElementById('score-display').textContent = this.score;
                 document.getElementById('btn-skip').textContent = `Skip (${this.skips}/1)`;
                 document.getElementById('btn-skip').disabled = this.skips <= 0;
@@ -432,10 +496,10 @@
                 }
             }
 
-            finishRound(lastCorrect) {
-                if(this.currentCard) {
+            finishRound(lastCorrect, fromExhaust = false) {
+                if (this.currentCard) {
                     const lastLogIdx = this.wordLog.length - 1;
-                    if(lastLogIdx >= 0 && this.wordLog[lastLogIdx].word === this.currentCard.word) {
+                    if (lastLogIdx >= 0 && this.wordLog[lastLogIdx].word === this.currentCard.word) {
                         this.wordLog[lastLogIdx].status = lastCorrect ? 'correct' : 'timeout';
                     } else {
                         this.wordLog.push({
@@ -445,10 +509,10 @@
                             status: lastCorrect ? 'correct' : 'timeout'
                         });
                     }
+                    if (!fromExhaust) this.addPlayed(this.currentCard.id);
                 }
 
-                if(lastCorrect) {
-                    this.availableCards = this.availableCards.filter(c => c.id !== (this.currentCard ? this.currentCard.id : ''));
+                if (lastCorrect) {
                     this.roundScore++;
                     this.score++;
                 }
