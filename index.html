@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗃️</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗃️</text></svg>">
     <title>Taboo Français Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase SDK -->
@@ -28,12 +30,12 @@
 
         .btn-3d {
             transition: all 0.1s ease-in-out;
-            box-shadow: 0 4px 0 0 rgba(0,0,0,0.1);
+            box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.1);
         }
 
         .btn-3d:active:not(:disabled) {
             transform: translateY(2px);
-            box-shadow: 0 1px 0 0 rgba(0,0,0,0.1);
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
         }
 
         .btn-3d:disabled {
@@ -47,7 +49,7 @@
             background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000);
             border-radius: 50%;
             border: 6px solid #660000;
-            box-shadow: 0 10px 0 0 #4d0000, 0 15px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 0 0 #4d0000, 0 15px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.05s;
             cursor: pointer;
             display: flex;
@@ -62,7 +64,7 @@
 
         .buzzer-button:active {
             transform: translateY(6px);
-            box-shadow: 0 4px 0 0 #4d0000, 0 8px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 0 0 #4d0000, 0 8px 8px rgba(0, 0, 0, 0.2);
         }
 
         .level-btn {
@@ -87,9 +89,17 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .buzz-flash {
@@ -97,15 +107,24 @@
         }
 
         @keyframes flashRed {
-            0% { background-color: transparent; }
-            50% { background-color: rgba(239, 68, 68, 0.3); }
-            100% { background-color: transparent; }
+            0% {
+                background-color: transparent;
+            }
+
+            50% {
+                background-color: rgba(239, 68, 68, 0.3);
+            }
+
+            100% {
+                background-color: transparent;
+            }
         }
 
         .word-link {
             text-decoration: none;
             transition: color 0.2s;
         }
+
         .word-link:hover {
             color: #ec4899;
             text-decoration: underline;
@@ -149,20 +168,29 @@
         }
     </style>
 </head>
+
 <body id="main-body" class="flex flex-col items-center justify-center p-4 transition-colors">
 
     <!-- HUD -->
-        <div id="game-hud" class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-10 opacity-0 transition-opacity pointer-events-none">
+    <div id="game-hud"
+        class="fixed top-0 left-0 w-full p-4 flex justify-between items-center z-10 opacity-0 transition-opacity pointer-events-none">
         <div class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
             <span class="text-[10px] uppercase font-bold text-slate-400 block leading-none">Score</span>
             <div id="score-display" class="text-xl font-black text-pink-500">0</div>
         </div>
-        <div id="stack-box" class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
+        <div id="stack-box"
+            class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 pointer-events-auto">
             <span class="text-[10px] uppercase font-bold text-slate-400 block leading-none">Stack</span>
             <div id="stack-display" class="text-xl font-black text-slate-700">0</div>
         </div>
-        <div id="timer-box" class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 flex items-center gap-2 pointer-events-auto">
+        <div id="timer-box"
+            class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 flex items-center gap-2 pointer-events-auto">
             <span id="timer-display" class="text-xl font-black text-slate-700">60</span>
+        </div>
+        <div id="connection-status"
+            class="fixed bottom-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur px-3 py-1.5 rounded-full border border-slate-200 text-[10px] font-bold text-slate-400 z-50">
+            <span id="connection-dot" class="w-2 h-2 rounded-full bg-slate-300"></span>
+            <span id="connection-text">Offline</span>
         </div>
     </div>
 
@@ -171,36 +199,44 @@
         <div id="screen-start" class="text-center">
             <div class="text-6xl mb-4">🇫🇷</div>
             <h1 class="text-3xl font-black text-slate-800 mb-2">Taboo Français</h1>
-            <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">Loading...</p>
-            
+            <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">
+                Loading...</p>
+
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <button onclick="game.setLevel('A1', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                <button onclick="game.setLevel('A1', this)"
+                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
                     <div class="font-black text-pink-500 text-xl">A1</div>
                     <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
                 </button>
-                <button onclick="game.setLevel('A2', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                <button onclick="game.setLevel('A2', this)"
+                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
                     <div class="font-black text-blue-500 text-xl">A2</div>
                     <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
                 </button>
-                <button onclick="game.setLevel('B1', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                <button onclick="game.setLevel('B1', this)"
+                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
                     <div class="font-black text-purple-500 text-xl">B1</div>
                     <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
                 </button>
-                <button onclick="game.setLevel('B2', this)" class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
+                <button onclick="game.setLevel('B2', this)"
+                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
                     <div class="font-black text-orange-500 text-xl">B2</div>
                     <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
                 </button>
             </div>
 
             <div class="flex gap-3 mb-4">
-                <button id="btn-start-round" disabled onclick="game.startRound()" class="btn-3d flex-1 bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
+                <button id="btn-start-round" disabled onclick="game.startRound()"
+                    class="btn-3d flex-1 bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
                     Select a Level
                 </button>
-                <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()" class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
+                <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()"
+                    class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
                     Multiplayer
                 </button>
             </div>
-            <button id="btn-reset-cards" onclick="game.resetAllCards()" class="w-full py-2 text-slate-400 font-bold text-sm underline mb-8">
+            <button id="btn-reset-cards" onclick="game.resetAllCards()"
+                class="w-full py-2 text-slate-400 font-bold text-sm underline mb-8">
                 Put all cards back in play
             </button>
 
@@ -211,34 +247,42 @@
 
         <!-- ACTIVE GAME SCREEN -->
         <div id="screen-game" class="hidden flex flex-col items-center">
-            <div id="card-container" class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-pink-100 p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
+            <div id="card-container"
+                class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-pink-100 p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
                 <div>
-                    <div id="card-level-tag" class="inline-block px-3 py-1 rounded-full bg-pink-50 text-pink-500 text-[10px] font-black mb-4 uppercase">Level A1</div>
-                    <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">...</h2>
+                    <div id="card-level-tag"
+                        class="inline-block px-3 py-1 rounded-full bg-pink-50 text-pink-500 text-[10px] font-black mb-4 uppercase">
+                        Level A1</div>
+                    <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">...
+                    </h2>
                     <ul id="taboo-words" class="space-y-2"></ul>
                 </div>
             </div>
 
             <!-- Multiplayer turn indicator -->
-            <div id="multiplayer-turn-indicator" class="hidden w-full mb-4 bg-blue-50 border-2 border-blue-200 rounded-2xl p-4">
+            <div id="multiplayer-turn-indicator"
+                class="hidden w-full mb-4 bg-blue-50 border-2 border-blue-200 rounded-2xl p-4">
                 <div class="text-sm font-bold text-blue-700 mb-1" id="turn-indicator-text">Your turn!</div>
                 <div class="text-xs text-blue-500" id="turn-indicator-subtext"></div>
             </div>
 
             <!-- Start round button for active player -->
             <div id="multiplayer-start-round" class="hidden w-full mb-4">
-                <button onclick="game.startMultiplayerRound()" class="btn-3d w-full bg-green-500 text-white py-4 rounded-2xl font-black text-lg">
+                <button onclick="game.startMultiplayerRound()"
+                    class="btn-3d w-full bg-green-500 text-white py-4 rounded-2xl font-black text-lg">
                     Start Your Round
                 </button>
             </div>
 
             <!-- Waiting for player message -->
-            <div id="multiplayer-waiting" class="hidden w-full mb-4 bg-slate-50 border-2 border-slate-200 rounded-2xl p-4">
+            <div id="multiplayer-waiting"
+                class="hidden w-full mb-4 bg-slate-50 border-2 border-slate-200 rounded-2xl p-4">
                 <div class="text-sm font-bold text-slate-600" id="waiting-text">Waiting for player to start...</div>
             </div>
 
             <!-- Player list (multiplayer) -->
-            <div id="multiplayer-player-list" class="hidden w-full mb-4 bg-white rounded-2xl p-4 border-2 border-slate-100">
+            <div id="multiplayer-player-list"
+                class="hidden w-full mb-4 bg-white rounded-2xl p-4 border-2 border-slate-100">
                 <div class="text-xs text-slate-400 font-bold uppercase mb-2">Players</div>
                 <div id="game-players-list" class="space-y-1"></div>
             </div>
@@ -246,17 +290,21 @@
             <!-- Multiplayer buzzer for opposing players -->
             <div id="multiplayer-buzzer-container" class="hidden w-full mb-4">
                 <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
-                <p class="text-[10px] text-slate-400 font-bold uppercase mt-2 text-center">Buzz if they use a taboo word!</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase mt-2 text-center">Buzz if they use a taboo
+                    word!</p>
             </div>
 
             <div class="flex gap-4 w-full">
-                <button id="btn-skip" onclick="game.skipCard()" class="btn-3d flex-1 bg-slate-200 text-slate-500 py-4 rounded-2xl font-bold">
+                <button id="btn-skip" onclick="game.skipCard()"
+                    class="btn-3d flex-1 bg-slate-200 text-slate-500 py-4 rounded-2xl font-bold">
                     Skip (1/1)
                 </button>
-                <button id="btn-buzzed" onclick="game.markBuzzed()" class="btn-3d flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold hidden">
+                <button id="btn-buzzed" onclick="game.markBuzzed()"
+                    class="btn-3d flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold hidden">
                     Buzzed
                 </button>
-                <button onclick="game.nextCard(true)" class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
+                <button onclick="game.nextCard(true)"
+                    class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
                     Correct! ✅
                 </button>
             </div>
@@ -269,15 +317,16 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-4 w-full shadow-sm">
                 <div id="round-score-val" class="text-6xl font-black text-pink-500 mb-2">0</div>
                 <div class="text-xs text-slate-400 uppercase font-black tracking-widest mb-6">Points this round</div>
-                
+
                 <div class="flex flex-col items-center py-4">
                     <div onmousedown="game.playObnoxiousBuzzer()" class="buzzer-button">BUZZ!</div>
                     <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Buzz the Others!</p>
                 </div>
             </div>
-            
+
             <div class="flex flex-col gap-3 w-full">
-                <button onclick="game.startRound()" class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
+                <button onclick="game.startRound()"
+                    class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
                     Next Round
                 </button>
                 <button onclick="game.showEndGame()" class="w-full py-2 text-slate-400 font-bold text-sm underline">
@@ -291,13 +340,16 @@
             <div class="text-6xl mb-4">👥</div>
             <h2 class="text-3xl font-black text-slate-800 mb-6">Multiplayer Mode</h2>
             <div class="flex flex-col gap-4 w-full">
-                <button onclick="game.createRoom()" class="btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black">
+                <button onclick="game.createRoom()"
+                    class="btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black">
                     Create Room
                 </button>
-                <button onclick="game.showJoinRoom()" class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
+                <button onclick="game.showJoinRoom()"
+                    class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
                     Join Room
                 </button>
-                <button onclick="game.showScreen('start')" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+                <button onclick="game.showScreen('start')"
+                    class="w-full py-2 text-slate-400 font-bold text-sm underline">
                     Back to Main Menu
                 </button>
             </div>
@@ -309,14 +361,19 @@
             <h2 class="text-3xl font-black text-slate-800 mb-4">Join Room</h2>
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
                 <label class="block text-left text-sm font-bold text-slate-600 mb-2">Room Code</label>
-                <input id="input-room-code" type="text" maxlength="4" placeholder="AB12" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-2xl font-black room-code-display uppercase mb-4" style="letter-spacing: 0.2em;">
+                <input id="input-room-code" type="text" maxlength="4" placeholder="AB12"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-2xl font-black room-code-display uppercase mb-4"
+                    style="letter-spacing: 0.2em;">
                 <label class="block text-left text-sm font-bold text-slate-600 mb-2">Your Name</label>
-                <input id="input-player-name" type="text" maxlength="20" placeholder="Enter your name" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold mb-4">
-                <button onclick="game.joinRoom()" class="btn-3d w-full bg-blue-500 text-white py-3 rounded-xl font-black">
+                <input id="input-player-name" type="text" maxlength="20" placeholder="Enter your name"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold mb-4">
+                <button onclick="game.joinRoom()"
+                    class="btn-3d w-full bg-blue-500 text-white py-3 rounded-xl font-black">
                     Join
                 </button>
             </div>
-            <button onclick="game.showMultiplayerOptions()" class="w-full py-2 text-slate-400 font-bold text-sm underline">
+            <button onclick="game.showMultiplayerOptions()"
+                class="w-full py-2 text-slate-400 font-bold text-sm underline">
                 Back
             </button>
         </div>
@@ -328,8 +385,10 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
                 <div class="mb-6">
                     <div class="text-xs text-slate-400 font-bold uppercase mb-2">Room Code</div>
-                    <div id="lobby-room-code" class="text-4xl font-black room-code-display text-pink-500 mb-2">----</div>
-                    <button id="btn-copy-code" onclick="game.copyRoomCode()" class="text-xs text-blue-500 font-bold underline">
+                    <div id="lobby-room-code" class="text-4xl font-black room-code-display text-pink-500 mb-2">----
+                    </div>
+                    <button id="btn-copy-code" onclick="game.copyRoomCode()"
+                        class="text-xs text-blue-500 font-bold underline">
                         Copy Code
                     </button>
                 </div>
@@ -340,24 +399,29 @@
                 <div id="lobby-host-controls" class="hidden">
                     <label class="block text-left text-sm font-bold text-slate-600 mb-2">Select Level</label>
                     <div class="grid grid-cols-2 gap-2 mb-4">
-                        <button onclick="game.setMultiplayerLevel('A1', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                        <button onclick="game.setMultiplayerLevel('A1', this)"
+                            class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
                             <div class="font-black text-pink-500 text-lg">A1</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
                         </button>
-                        <button onclick="game.setMultiplayerLevel('A2', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                        <button onclick="game.setMultiplayerLevel('A2', this)"
+                            class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
                             <div class="font-black text-blue-500 text-lg">A2</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
                         </button>
-                        <button onclick="game.setMultiplayerLevel('B1', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                        <button onclick="game.setMultiplayerLevel('B1', this)"
+                            class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
                             <div class="font-black text-purple-500 text-lg">B1</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
                         </button>
-                        <button onclick="game.setMultiplayerLevel('B2', this)" class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
+                        <button onclick="game.setMultiplayerLevel('B2', this)"
+                            class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
                             <div class="font-black text-orange-500 text-lg">B2</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
                         </button>
                     </div>
-                    <button id="btn-start-game" disabled onclick="game.startMultiplayerGame()" class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
+                    <button id="btn-start-game" disabled onclick="game.startMultiplayerGame()"
+                        class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
                         Select Level to Start
                     </button>
                 </div>
@@ -384,20 +448,23 @@
                         <div class="text-[10px] text-slate-400 font-black uppercase">Rounds</div>
                     </div>
                 </div>
-                
+
                 <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Round Breakdown</h3>
                 <div id="round-history-list" class="space-y-2 mb-6"></div>
 
-                <button id="btn-show-review" onclick="game.showWordReview()" class="w-full bg-pink-100 text-pink-600 py-3 rounded-2xl font-black text-sm">
+                <button id="btn-show-review" onclick="game.showWordReview()"
+                    class="w-full bg-pink-100 text-pink-600 py-3 rounded-2xl font-black text-sm">
                     Review Guessed Words?
                 </button>
 
                 <div id="review-section" class="hidden mt-6 text-left">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3">Word Review (Click for Definition)</h3>
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3">Word Review (Click for Definition)
+                    </h3>
                     <div id="word-review-list" class="space-y-2"></div>
                 </div>
             </div>
-            <button onclick="location.reload()" class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
+            <button onclick="location.reload()"
+                class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
                 Main Menu
             </button>
         </div>
@@ -408,10 +475,13 @@
         <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
             <div class="text-4xl mb-4">🔔</div>
             <h3 class="text-xl font-black mb-2">Buzzer!</h3>
-            <p class="text-slate-500 mb-6 text-sm" id="buzz-modal-text">Did they get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?</p>
+            <p class="text-slate-500 mb-6 text-sm" id="buzz-modal-text">Did they get <span id="last-word-hint"
+                    class="font-bold text-pink-500"></span> correctly?</p>
             <div class="flex gap-3">
-                <button onclick="game.handleBuzzResponse(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
-                <button onclick="game.handleBuzzResponse(true)" class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
+                <button onclick="game.handleBuzzResponse(false)"
+                    class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
+                <button onclick="game.handleBuzzResponse(true)"
+                    class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
             </div>
         </div>
     </div>
@@ -450,23 +520,32 @@
                 try {
                     // Check if Firebase is loaded
                     if (typeof firebase === 'undefined') {
-                        alert('Firebase SDK not loaded. Please check your internet connection.');
+                        console.error('Firebase SDK not loaded');
                         return false;
                     }
 
                     if (!firebase.apps || firebase.apps.length === 0) {
                         // Check if config is valid
-                        if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY') {
-                            alert('Firebase not configured. Please add your Firebase configuration to the code.\n\nSee README.md for setup instructions.');
+                        if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('YOUR_API_KEY')) {
+                            console.warn('Firebase configuration is incomplete.');
                             return false;
                         }
                         firebase.initializeApp(firebaseConfig);
                     }
                     this.db = firebase.database();
                     this.playerId = this.generatePlayerId();
+
+                    // Add presence logic
+                    const connectedRef = this.db.ref('.info/connected');
+                    connectedRef.on('value', (snap) => {
+                        if (snap.val() === true && this.roomRef) {
+                            const pRef = this.roomRef.child(`players/${this.playerId}`);
+                            pRef.onDisconnect().remove();
+                        }
+                    });
+
                 } catch (e) {
                     console.error('Firebase initialization error:', e);
-                    alert('Firebase initialization failed. Please check your configuration.\n\nError: ' + e.message);
                     return false;
                 }
                 return true;
@@ -593,16 +672,19 @@
                 if (!this.roomRef) return;
 
                 // Sanitize player name
-                const sanitizedName = playerName.substring(0, 20).replace(/[<>]/g, '');
+                const sanitizedName = playerName.substring(0, 20).replace(/[<>]/g, '') || 'Player';
 
                 const playerData = {
                     name: sanitizedName,
                     joinedAt: firebase.database.ServerValue.TIMESTAMP,
                     score: 0,
-                    team: null
+                    team: null,
+                    online: true
                 };
 
                 await this.roomRef.child(`players/${this.playerId}`).set(playerData);
+                // Keep online status synced
+                this.roomRef.child(`players/${this.playerId}/online`).onDisconnect().set(false);
             }
 
             setupRoomListeners() {
@@ -655,12 +737,18 @@
             }
 
             showConnectionError() {
-                // Could show a banner or notification
+                const dot = document.getElementById('connection-dot');
+                const text = document.getElementById('connection-text');
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
+                if (text) text.textContent = 'Disconnected';
                 console.warn('Connection lost. Attempting to reconnect...');
             }
 
             hideConnectionError() {
-                // Hide connection error if shown
+                const dot = document.getElementById('connection-dot');
+                const text = document.getElementById('connection-text');
+                if (dot) dot.className = 'w-2 h-2 rounded-full bg-green-500';
+                if (text) text.textContent = 'Connected';
             }
 
             async attemptReconnect() {
@@ -708,15 +796,17 @@
                     const isHostPlayer = this.isHost && player.id === this.playerId;
                     const hostBadge = isHostPlayer ? '<span class="text-[8px] bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full ml-2">HOST</span>' : '';
                     const teamBadge = player.team ? `<span class="team-indicator ${player.team === 'A' ? 'team-a' : 'team-b'}">Team ${player.team}</span>` : '';
-                    
+                    const onlineStatus = player.online === false ? '<span class="text-[8px] text-slate-300 ml-2 italic">(offline)</span>' : '';
+
                     const div = document.createElement('div');
-                    div.className = `flex justify-between items-center p-2 rounded-lg ${isCurrentPlayer ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'}`;
+                    div.className = `flex justify-between items-center p-2 rounded-lg ${isCurrentPlayer ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'} ${player.online === false ? 'opacity-50' : ''}`;
                     div.innerHTML = `
                         <div class="flex items-center">
-                            <span class="player-color-dot" style="background-color: ${color}"></span>
+                            <span class="player-color-dot" style="background-color: ${player.online === false ? '#cbd5e1' : color}"></span>
                             <span class="font-bold text-slate-700">${player.name}</span>
                             ${hostBadge}
                             ${teamBadge}
+                            ${onlineStatus}
                         </div>
                         ${isGame ? `<span class="font-black text-slate-800">${player.score || 0}</span>` : ''}
                     `;
@@ -827,7 +917,7 @@
 
             startLocalTimer() {
                 if (this.game.timer) clearInterval(this.game.timer);
-                
+
                 this.game.timeLeft = 60;
                 this.game.timer = setInterval(async () => {
                     this.game.timeLeft--;
@@ -880,7 +970,7 @@
                 this.game.addPlayed(card.id);
 
                 await this.roomRef.child('gameState/currentCard').set(card);
-                
+
                 // Display card immediately
                 this.game.displayCard(card);
             }
@@ -1068,13 +1158,13 @@
                     if (startRoundBtn) startRoundBtn.classList.add('hidden');
                     if (waitingMsg) {
                         waitingMsg.classList.remove('hidden');
-                        waitingMsg.querySelector('#waiting-text').textContent = roundActive ? 
-                            `${currentPlayerName} is describing...` : 
+                        waitingMsg.querySelector('#waiting-text').textContent = roundActive ?
+                            `${currentPlayerName} is describing...` :
                             `Waiting for ${currentPlayerName} to start their round...`;
                     }
                     if (turnIndicator) {
                         turnIndicator.querySelector('#turn-indicator-text').textContent = `${currentPlayerName}'s Turn`;
-                        turnIndicator.querySelector('#turn-indicator-subtext').textContent = isTeamMode ? 
+                        turnIndicator.querySelector('#turn-indicator-subtext').textContent = isTeamMode ?
                             `Team ${currentPlayer?.team || ''}` : '';
                     }
                 }
@@ -1221,9 +1311,9 @@
             loadData(csvText) {
                 const lines = csvText.trim().split('\n');
                 const results = [];
-                for(let i=1; i<lines.length; i++) {
+                for (let i = 1; i < lines.length; i++) {
                     const cols = lines[i].split(',');
-                    if(cols.length < 8) continue;
+                    if (cols.length < 8) continue;
                     const word = cols[0].trim();
                     const level = cols[1].trim();
                     results.push({
@@ -1239,7 +1329,7 @@
                 try {
                     const raw = localStorage.getItem('taboo_played');
                     if (raw) stored.push(...JSON.parse(raw));
-                } catch (_) {}
+                } catch (_) { }
                 this.playedIds = new Set(stored);
                 this.updateStartUI();
             }
@@ -1255,12 +1345,12 @@
                 this.playedIds.add(id);
                 try {
                     localStorage.setItem('taboo_played', JSON.stringify([...this.playedIds]));
-                } catch (_) {}
+                } catch (_) { }
             }
 
             resetAllCards() {
                 this.playedIds.clear();
-                try { localStorage.removeItem('taboo_played'); } catch (_) {}
+                try { localStorage.removeItem('taboo_played'); } catch (_) { }
                 this.updateStartUI();
             }
 
@@ -1293,27 +1383,27 @@
             }
 
             initAudio() {
-                if(!this.audio) this.audio = new (window.AudioContext || window.webkitAudioContext)();
+                if (!this.audio) this.audio = new (window.AudioContext || window.webkitAudioContext)();
             }
 
             playObnoxiousBuzzer() {
                 this.initAudio();
                 document.getElementById('main-body').classList.add('buzz-flash');
                 setTimeout(() => document.getElementById('main-body').classList.remove('buzz-flash'), 300);
-                
-                const duration = 1.5; 
-                const frequencies = [150, 165, 190]; 
-                
+
+                const duration = 1.5;
+                const frequencies = [150, 165, 190];
+
                 frequencies.forEach(freq => {
                     const osc = this.audio.createOscillator();
                     const gain = this.audio.createGain();
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(freq, this.audio.currentTime);
-                    
+
                     gain.gain.setValueAtTime(0.08, this.audio.currentTime);
                     gain.gain.linearRampToValueAtTime(0.08, this.audio.currentTime + 1.0);
                     gain.gain.exponentialRampToValueAtTime(0.001, this.audio.currentTime + duration);
-                    
+
                     osc.connect(gain);
                     gain.connect(this.audio.destination);
                     osc.start();
@@ -1325,7 +1415,7 @@
                 const normalizedType = (type || "").trim().toLowerCase();
                 const wiktionaryTypes = ['noun', 'adj', 'verb', 'adj/noun', 'noun/adj', 'nom', 'verbe', 'adjectif'];
                 const isWiktionary = wiktionaryTypes.includes(normalizedType);
-                
+
                 if (isWiktionary) {
                     // Wiktionary needs lowercase for general words to resolve correctly
                     const lowercaseWord = word.toLowerCase().replace(/\s+/g, '_');
@@ -1368,8 +1458,8 @@
                 this.timer = setInterval(() => {
                     this.timeLeft--;
                     document.getElementById('timer-display').textContent = this.timeLeft;
-                    if(this.timeLeft <= 10) document.getElementById('timer-display').classList.add('pulse-timer');
-                    if(this.timeLeft <= 0) {
+                    if (this.timeLeft <= 10) document.getElementById('timer-display').classList.add('pulse-timer');
+                    if (this.timeLeft <= 0) {
                         clearInterval(this.timer);
                         this.playObnoxiousBuzzer();
                         document.getElementById('last-word-hint').textContent = `"${this.currentCard.word}"`;
@@ -1420,7 +1510,7 @@
             }
 
             skipCard() {
-                if(this.skips > 0) {
+                if (this.skips > 0) {
                     this.skips--;
                     this.nextCard(false, true);
                 }
@@ -1512,10 +1602,10 @@
             showScreen(id) {
                 const screens = ['start', 'game', 'summary', 'endgame', 'multiplayer-options', 'join-room', 'lobby'];
                 screens.forEach(s => {
-                    const el = document.getElementById('screen-'+s);
+                    const el = document.getElementById('screen-' + s);
                     if (el) el.classList.add('hidden');
                 });
-                const targetEl = document.getElementById('screen-'+id);
+                const targetEl = document.getElementById('screen-' + id);
                 if (targetEl) targetEl.classList.remove('hidden');
                 const hud = document.getElementById('game-hud');
                 if (hud) hud.style.opacity = (id === 'game') ? '1' : '0';
@@ -1665,7 +1755,7 @@
                     await this.multiplayer.skipCard();
                 } else {
                     // Original single-player logic
-                    if(this.skips > 0) {
+                    if (this.skips > 0) {
                         this.skips--;
                         this.nextCard(false, true);
                     }
@@ -1719,4 +1809,5 @@
         window.onload = () => { game = new TabooPro(); };
     </script>
 </body>
+
 </html>
