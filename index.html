@@ -227,8 +227,10 @@
 
             <div class="flex gap-3 mb-4">
                 <button id="btn-start-round" disabled onclick="game.startRound()"
-                    class="btn-3d flex-1 bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
-                    Select a Level
+                    class="btn-3d flex-1 bg-slate-200 text-slate-400 py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight">
+                    <span id="start-btn-main" class="text-xl">Select a Level</span>
+                    <span id="start-btn-sub"
+                        class="text-[10px] uppercase tracking-widest opacity-80 mt-1 hidden"></span>
                 </button>
                 <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()"
                     class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
@@ -1357,22 +1359,39 @@
             updateStartUI() {
                 const el = document.getElementById('total-card-count');
                 if (!el) return;
+
+                const startBtn = document.getElementById('btn-start-round');
+                const mainText = document.getElementById('start-btn-main');
+                const subText = document.getElementById('start-btn-sub');
+
                 if (!this.selectedLevel) {
                     el.textContent = `${this.db.length} cards total · Select a level`;
+                    if (mainText) mainText.textContent = 'Select a Level';
+                    if (subText) subText.classList.add('hidden');
                     return;
                 }
+
                 const pool = this.getPool(this.selectedLevel);
                 el.textContent = `${pool.length} cards in stack`;
-                const startBtn = document.getElementById('btn-start-round');
+
                 if (!startBtn) return;
+
                 if (pool.length === 0) {
                     startBtn.disabled = true;
-                    startBtn.className = "btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black mb-4";
-                    startBtn.textContent = 'No cards left — Reset to play again';
+                    startBtn.className = "btn-3d flex-1 bg-slate-200 text-slate-400 py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight";
+                    if (mainText) mainText.textContent = 'No cards left';
+                    if (subText) {
+                        subText.textContent = 'Reset to play';
+                        subText.classList.remove('hidden');
+                    }
                 } else {
                     startBtn.disabled = false;
-                    startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black mb-4";
-                    startBtn.textContent = `Start Round (${pool.length} in stack)`;
+                    startBtn.className = "btn-3d flex-1 bg-pink-500 text-white py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight";
+                    if (mainText) mainText.textContent = 'Start Round';
+                    if (subText) {
+                        subText.textContent = `${pool.length} IN STACK`;
+                        subText.classList.remove('hidden');
+                    }
                 }
             }
 
