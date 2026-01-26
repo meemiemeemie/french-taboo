@@ -854,14 +854,23 @@
                     return;
                 }
 
-                // Form teams if 4+ players
+                // Check for team mode conditions: 4+ players AND even number
                 let teams = null;
-                if (playerArray.length >= 4) {
-                    teams = this.formTeams(playerArray);
+                let turnOrder = [];
+
+                if (playerArray.length >= 4 && playerArray.length % 2 === 0) {
+                    // Team Mode
+                    const teamData = this.formTeams(playerArray);
+                    teams = teamData.teams;
+                    turnOrder = teamData.turnOrder;
+                } else {
+                    // Free-for-all Mode (2, 3, 5, 7, etc.)
+                    // Use random shuffle for turn order
+                    turnOrder = [...playerArray].sort(() => Math.random() - 0.5);
                 }
 
                 // Determine first player
-                const firstPlayer = playerArray[0];
+                const firstPlayer = turnOrder[0];
 
                 await this.roomRef.child('gameState').set({
                     status: 'playing',
@@ -871,21 +880,43 @@
                     timer: 60,
                     roundActive: false,
                     teams: teams,
-                    turnOrder: playerArray,
+                    turnOrder: turnOrder,
                     currentTurnIndex: 0
                 });
             }
 
             formTeams(playerIds) {
+                // Shuffle players first
                 const shuffled = [...playerIds].sort(() => Math.random() - 0.5);
                 const teams = { A: [], B: [] };
-                shuffled.forEach((id, index) => {
-                    const team = index % 2 === 0 ? 'A' : 'B';
-                    teams[team].push(id);
-                    // Update player team in database
-                    this.roomRef.child(`players/${id}/team`).set(team);
+
+                // Distribute players and build interleaved turn order
+                // A1, B1, A2, B2, ...
+                const turnOrder = [];
+
+                // Split into two halves
+                const midpoint = Math.floor(shuffled.length / 2);
+                const teamA = shuffled.slice(0, midpoint);
+                const teamB = shuffled.slice(midpoint);
+
+                // Assign to team objects and update DB
+                teamA.forEach(id => {
+                    teams.A.push(id);
+                    this.roomRef.child(`players/${id}/team`).set('A');
                 });
-                return teams;
+
+                teamB.forEach(id => {
+                    teams.B.push(id);
+                    this.roomRef.child(`players/${id}/team`).set('B');
+                });
+
+                // Create interleaved order
+                for (let i = 0; i < midpoint; i++) {
+                    if (teamA[i]) turnOrder.push(teamA[i]);
+                    if (teamB[i]) turnOrder.push(teamB[i]);
+                }
+
+                return { teams, turnOrder };
             }
 
             async startRound() {
