@@ -515,6 +515,7 @@
                 this.isHost = false;
                 this.players = {};
                 this.gameState = null;
+                this.sessionPlayedIds = new Set();
                 this.listeners = [];
                 this.reconnectAttempts = 0;
                 this.maxReconnectAttempts = 5;
@@ -610,7 +611,8 @@
                             currentPlayer: null,
                             currentCard: null,
                             timer: 60,
-                            roundActive: false
+                            roundActive: false,
+                            playedIds: {}
                         },
                         players: {}
                     });
@@ -704,6 +706,12 @@
                 this.roomRef.child('gameState').on('value', (snapshot) => {
                     this.gameState = snapshot.val();
                     if (this.gameState) {
+                        // Sync played card IDs
+                        if (this.gameState.playedIds) {
+                            this.sessionPlayedIds = new Set(Object.keys(this.gameState.playedIds));
+                        } else {
+                            this.sessionPlayedIds = new Set();
+                        }
                         this.handleGameStateChange();
                     }
                 });
@@ -738,6 +746,12 @@
                 if (this.playerId) {
                     this.roomRef.child(`players/${this.playerId}`).onDisconnect().remove();
                 }
+            }
+
+            async addSessionPlayed(id) {
+                if (!this.roomRef || !id) return;
+                // Add to Firebase (roomCode/gameState/playedIds/ID = true)
+                await this.roomRef.child(`gameState/playedIds/${id}`).set(true);
             }
 
             showConnectionError() {
@@ -934,7 +948,7 @@
 
                 const card = pool[Math.floor(Math.random() * pool.length)];
                 this.game.currentCard = card;
-                this.game.addPlayed(card.id); // Mark as played immediately
+                await this.addSessionPlayed(card.id); // Mark as played immediately in session
 
                 await this.roomRef.child('gameState').update({
                     currentCard: card,
@@ -990,7 +1004,7 @@
                         await this.roomRef.child(`players/${this.playerId}/score`).set(currentScore + 1);
                     }
                     // Mark current card as played
-                    this.game.addPlayed(this.game.currentCard.id);
+                    await this.addSessionPlayed(this.game.currentCard.id);
                 }
 
                 // Get next card
@@ -1002,7 +1016,7 @@
 
                 const card = pool[Math.floor(Math.random() * pool.length)];
                 this.game.currentCard = card;
-                this.game.addPlayed(card.id);
+                await this.addSessionPlayed(card.id);
 
                 await this.roomRef.child('gameState/currentCard').set(card);
 
@@ -1022,7 +1036,7 @@
 
                 // Mark card as buzzed (remove from play, no score)
                 if (this.game.currentCard) {
-                    this.game.addPlayed(this.game.currentCard.id);
+                    await this.addSessionPlayed(this.game.currentCard.id);
                 }
 
                 // Get next card
@@ -1372,11 +1386,13 @@
             getPool(level) {
                 if (!level || !this.db.length) return [];
                 const maxIdx = this.levels.indexOf(level);
-                return this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx && !this.playedIds.has(c.id));
+                const playedSource = this.multiplayerMode ? this.multiplayer.sessionPlayedIds : this.playedIds;
+                return this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx && !playedSource.has(c.id));
             }
 
             addPlayed(id) {
                 if (!id) return;
+                if (this.multiplayerMode) return; // Session history is handled in Firebase
                 this.playedIds.add(id);
                 try {
                     localStorage.setItem('taboo_played', JSON.stringify([...this.playedIds]));
