@@ -448,15 +448,25 @@
 
             initialize() {
                 try {
+                    console.log('Initializing MultiplayerManager...');
                     // Check if Firebase is loaded
                     if (typeof firebase === 'undefined') {
+                        console.error('Firebase SDK not loaded');
                         alert('Firebase SDK not loaded. Please check your internet connection.');
                         return false;
                     }
 
                     if (!firebase.apps || firebase.apps.length === 0) {
+                        console.log('Initializing Firebase App...');
                         // Check if config is valid
+                        if (typeof firebaseConfig === 'undefined') {
+                             console.error('firebaseConfig is undefined');
+                             alert('Configuration Error: firebaseConfig variable is missing.');
+                             return false;
+                        }
+
                         if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY') {
+                            console.error('Invalid API Key');
                             alert('Firebase not configured. Please add your Firebase configuration to the code.\n\nSee README.md for setup instructions.');
                             return false;
                         }
@@ -464,6 +474,7 @@
                     }
                     this.db = firebase.database();
                     this.playerId = this.generatePlayerId();
+                    console.log('Firebase initialized successfully. Player ID:', this.playerId);
                 } catch (e) {
                     console.error('Firebase initialization error:', e);
                     alert('Firebase initialization failed. Please check your configuration.\n\nError: ' + e.message);
@@ -1531,12 +1542,14 @@
             }
 
             async createRoom() {
+                console.log('Attempting to create room...');
                 const code = await this.multiplayer.createRoom();
                 if (code) {
                     document.getElementById('lobby-room-code').textContent = code;
                     this.showScreen('lobby');
                 } else {
-                    alert('Failed to create room. Please check Firebase configuration.');
+                    console.error('Room creation returned null/false');
+                    // Alert is already handled by MultiplayerManager for specific errors
                 }
             }
 
