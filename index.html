@@ -342,6 +342,8 @@
             <div class="text-6xl mb-4">👥</div>
             <h2 class="text-3xl font-black text-slate-800 mb-6">Multiplayer Mode</h2>
             <div class="flex flex-col gap-4 w-full">
+                <input id="input-host-name" type="text" maxlength="20" placeholder="Your Name (Optional)"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold">
                 <button onclick="game.createRoom()"
                     class="btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black">
                     Create Room
@@ -566,7 +568,7 @@
                 return code;
             }
 
-            async createRoom() {
+            async createRoom(hostName) {
                 try {
                     if (!this.db) {
                         if (!this.initialize()) return null;
@@ -614,7 +616,7 @@
                     });
 
                     // Add host as first player
-                    await this.joinRoomAsPlayer('Host');
+                    await this.joinRoomAsPlayer(hostName || 'Host');
                     this.setupRoomListeners();
 
                     // Set up room cleanup on disconnect
@@ -1215,7 +1217,7 @@
                     if (isMyTurn) {
                         cardContainer.classList.remove('hidden');
                     } else {
-                        if (isOpposingTeam || !isTeamMode) {
+                        if (isTeamMode && isOpposingTeam) {
                             cardContainer.classList.remove('hidden');
                         } else {
                             cardContainer.classList.add('hidden');
@@ -1640,7 +1642,9 @@
             }
 
             async createRoom() {
-                const code = await this.multiplayer.createRoom();
+                const nameInput = document.getElementById('input-host-name');
+                const hostName = nameInput ? nameInput.value.trim() : null;
+                const code = await this.multiplayer.createRoom(hostName);
                 if (code) {
                     document.getElementById('lobby-room-code').textContent = code;
                     this.showScreen('lobby');
