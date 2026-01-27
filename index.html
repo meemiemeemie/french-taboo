@@ -224,7 +224,7 @@
     </style>
 </head>
 
-<body id="main-body" class="flex flex-col items-center p-4 transition-colors min-h-screen">
+<body id="main-body" class="flex flex-col items-center justify-center p-4 pt-20 transition-colors min-h-screen">
 
     <!-- HUD -->
     <div id="game-hud"
@@ -1227,6 +1227,10 @@
                 const currentPlayerId = this.gameState.currentPlayer;
                 if (currentPlayerId !== this.playerId) return;
 
+                // Prevent multiple calls
+                if (this.endingRound) return;
+                this.endingRound = true;
+
                 if (this.game.currentCard) {
                     this.game.wordLog.push({
                         word: this.game.currentCard.word,
@@ -1259,6 +1263,11 @@
                     timer: 60,
                     currentTurnIndex: nextIndex
                 });
+
+                // Reset flag after a delay
+                setTimeout(() => {
+                    this.endingRound = false;
+                }, 1000);
             }
 
             async endGame() {
@@ -2202,9 +2211,9 @@
                 if (modal) modal.classList.add('hidden');
 
                 if (this.pendingLeaveAction === 'endAll') {
-                    // End game for all players
+                    // End game for all players - set status to finished
+                    // Don't leave the room, let players see the end game screen
                     await this.multiplayer.endGame();
-                    await this.multiplayer.leaveRoom();
                 } else {
                     // Just leave the room
                     await this.multiplayer.leaveRoom();
