@@ -746,6 +746,26 @@
                 if (this.playerId) {
                     this.roomRef.child(`players/${this.playerId}`).onDisconnect().remove();
                 }
+
+                // Start host timer if applicable
+                this.startHostTimer();
+            }
+
+            startHostTimer() {
+                if (!this.isHost || this.hostTimer) return;
+
+                this.hostTimer = setInterval(async () => {
+                    if (this.gameState && this.gameState.roundActive && this.gameState.timer > 0) {
+                        const newTimer = this.gameState.timer - 1;
+                        await this.roomRef.child('gameState/timer').set(newTimer);
+
+                        if (newTimer === 0) {
+                            // Round finished by time - active player will handle the endRound call
+                            // via the local timer expiry or we can trigger it from host too
+                            // Let's let the local timer of the active player trigger the end turn modal
+                        }
+                    }
+                }, 1000);
             }
 
             sanitizeKey(key) {
@@ -1166,27 +1186,35 @@
                 }
 
                 // Sync current card
+                const currentPlayerId = this.gameState.currentPlayer;
+                const isMyTurn = currentPlayerId === this.playerId;
+                const isTeamMode = !!this.gameState.teams;
+                const myTeam = this.players[this.playerId]?.team;
+                const currentPlayerTeam = this.players[currentPlayerId]?.team;
+                const isOpposingTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam !== currentPlayerTeam;
+                const shouldSee = isMyTurn || (isTeamMode && isOpposingTeam);
+
                 if (this.gameState.currentCard && this.gameState.roundActive) {
                     this.game.currentCard = this.gameState.currentCard;
-                    this.game.displayCard(this.gameState.currentCard);
-                } else {
-                    // Clear card display if round not active
-                    if (!this.gameState.roundActive) {
+                    if (shouldSee) {
+                        this.game.displayCard(this.gameState.currentCard);
+                    } else {
+                        // Explicitly redact if not allowed to see
                         const wordEl = document.getElementById('word-to-guess');
                         const tabooEl = document.getElementById('taboo-words');
-                        if (wordEl) wordEl.textContent = '...';
-                        if (tabooEl) tabooEl.innerHTML = '';
+                        if (wordEl) wordEl.textContent = '???';
+                        if (tabooEl) tabooEl.innerHTML = '<li class="text-slate-300 italic">Hidden from guesser</li>';
                     }
-                }
+                } else if (!this.gameState.roundActive) {
+                    // Clear card display if round not active
+                    const wordEl = document.getElementById('word-to-guess');
+                    const tabooEl = document.getElementById('taboo-words');
+                    if (wordEl) wordEl.textContent = '...';
+                    if (tabooEl) tabooEl.innerHTML = '';
 
-                // Handle buzz events
-                if (this.gameState.lastBuzz) {
-                    const buzzPlayerId = this.gameState.lastBuzz.playerId;
-                    const currentPlayerId = this.gameState.currentPlayer;
-                    if (buzzPlayerId !== currentPlayerId && this.gameState.roundActive) {
-                        // Someone buzzed - show modal to active player
-                        this.showBuzzModal(this.gameState.lastBuzz);
-                    }
+                    // Hide buzzer modal if round ended
+                    const modal = document.getElementById('modal-end-turn');
+                    if (modal) modal.classList.add('hidden');
                 }
             }
 
@@ -1207,7 +1235,7 @@
 
                 const currentPlayerId = this.gameState.currentPlayer;
                 const isMyTurn = currentPlayerId === this.playerId;
-                const isTeamMode = this.gameState.teams && Object.keys(this.gameState.teams).length > 0;
+                const isTeamMode = !!this.gameState.teams;
                 const roundActive = this.gameState.roundActive;
 
                 // Show/hide multiplayer UI elements
@@ -1288,23 +1316,15 @@
                     if (buzzerContainer) buzzerContainer.classList.add('hidden');
                 }
 
-                // Show card only to active player and opposing team/opponents
+                // Show card only to active player and opposing team
                 const cardContainer = document.getElementById('card-container');
-                if (cardContainer && roundActive) {
-                    // Decide if current player should see the card:
-                    // 1. If it's my turn
-                    // 2. If it's team mode AND I'm on the opposing team
-                    // 3. If it's NOT team mode (3-player, etc.) AND it's NOT my turn 
-                    //    (because in free-for-all, everyone else is an opponent)
-                    const shouldSee = isMyTurn || (isTeamMode && isOpposingTeam) || (!isTeamMode && !isMyTurn);
-
+                if (cardContainer) {
+                    const shouldSee = roundActive && (isMyTurn || (isTeamMode && isOpposingTeam));
                     if (shouldSee) {
                         cardContainer.classList.remove('hidden');
                     } else {
                         cardContainer.classList.add('hidden');
                     }
-                } else if (cardContainer && !roundActive) {
-                    cardContainer.classList.add('hidden');
                 }
             }
 
@@ -1753,6 +1773,7 @@
 
                 const success = await this.multiplayer.joinRoom(code, name);
                 if (success) {
+                    this.multiplayerMode = true;
                     document.getElementById('lobby-room-code').textContent = code;
                     this.showScreen('lobby');
                 }
@@ -1903,6 +1924,8 @@
                     } else {
                         await this.multiplayer.markBuzzed();
                     }
+                    // Stay on game screen, just clear modal
+                    this.showScreen('game');
                 } else {
                     // Single player mode
                     await this.finishRound(correct);
