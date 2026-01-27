@@ -25,7 +25,7 @@
             background-color: var(--pastel-bg);
             touch-action: manipulation;
             overflow-x: hidden;
-            height: 100dvh;
+            min-height: 100dvh;
         }
 
         .btn-3d {
@@ -233,8 +233,7 @@
     </style>
 </head>
 
-<body id="main-body"
-    class="flex flex-col items-center justify-start md:justify-center p-4 pt-24 transition-colors min-h-screen">
+<body id="main-body" class="flex flex-col items-center justify-start p-4 pt-20 transition-colors min-h-screen">
 
     <!-- HUD -->
     <div id="game-hud"
@@ -279,7 +278,7 @@
         </div>
     </div>
 
-    <main class="w-full max-w-md">
+    <main class="w-full max-w-md my-auto">
         <!-- START SCREEN -->
         <div id="screen-start" class="text-center">
             <div class="text-6xl mb-4">🇫🇷</div>
@@ -598,6 +597,27 @@
         </div>
     </div>
 
+    <!-- Finish Game Prompt Modal (Conditional Leave Logic) -->
+    <div id="modal-finish-game-prompt"
+        class="hidden fixed inset-0 z-[110] flex items-center justify-center p-6 overlay">
+        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center">
+            <div class="text-4xl mb-4">🏆</div>
+            <h3 class="text-xl font-black mb-2">Finish the Game?</h3>
+            <p id="finish-prompt-text" class="text-slate-500 mb-6 text-sm">A player left, making the teams unbalanced.
+                Would you like to finish and see results?</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="game.executeFinishGame()"
+                    class="w-full bg-pink-500 text-white py-3 rounded-xl font-bold">
+                    Finish and See Results
+                </button>
+                <button onclick="game.hideFinishPrompt()"
+                    class="w-full bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">
+                    Continue Anyway
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Leave Game Modal - Step 1: Choose action -->
     <div id="modal-leave-game" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
         <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
@@ -848,6 +868,12 @@
                     this.updatePlayersList();
                 });
 
+                this.roomRef.child('players').on('child_removed', (snapshot) => {
+                    if (this.isHost && this.gameState && this.gameState.status === 'playing') {
+                        this.handlePlayerDeparture(snapshot.key);
+                    }
+                });
+
                 // Listen to game state
                 this.roomRef.child('gameState').on('value', (snapshot) => {
                     this.gameState = snapshot.val();
@@ -1069,7 +1095,8 @@
                     roundActive: false,
                     teams: teams,
                     turnOrder: turnOrder,
-                    currentTurnIndex: 0
+                    currentTurnIndex: 0,
+                    initialPlayerCount: playerArray.length
                 });
             }
 
@@ -1350,6 +1377,12 @@
                 const isOpposingTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam !== currentPlayerTeam;
                 const shouldSee = isMyTurn || (isTeamMode && isOpposingTeam);
 
+                // Handle Finish Game prompt (New Conditional Leave Logic)
+                if (this.gameState.promptFinish) {
+                    const modal = document.getElementById('modal-finish-game-prompt');
+                    if (modal) modal.classList.remove('hidden');
+                }
+
                 if (this.gameState.currentCard && this.gameState.roundActive) {
                     this.game.currentCard = this.gameState.currentCard;
                     if (shouldSee) {
@@ -1598,6 +1631,72 @@
                         });
                     }
                 }
+            }
+
+            async handlePlayerDeparture(removedPlayerId) {
+                if (!this.gameState || this.gameState.status !== 'playing') return;
+
+                const initialCount = this.gameState.initialPlayerCount || 4;
+                const turnOrder = this.gameState.turnOrder || [];
+                const newTurnOrder = turnOrder.filter(id => id !== removedPlayerId);
+
+                // 1. Remove from Turn Order immediately to prevent "Ghost Turns" logic in nextCard/endRound
+                if (newTurnOrder.length !== turnOrder.length) {
+                    await this.roomRef.child('gameState/turnOrder').set(newTurnOrder);
+                }
+
+                // If the removed player was the current player, advance to the next turn immediately
+                if (this.gameState.currentPlayer === removedPlayerId) {
+                    // We need to pass the updated turn order to get the correct next player
+                    await this.forceSkipGhostTurn(newTurnOrder);
+                }
+
+                // 2. Check thresholds for "Finish Game" prompt
+                const currentPlayers = Object.keys(this.players).filter(id => id !== removedPlayerId);
+                const playerCount = currentPlayers.length;
+
+                // Threshold logic
+                let shouldFinish = false;
+
+                if (initialCount === 4 && playerCount === 3) {
+                    // Start 4 -> Player left -> 3 players (2v1) -> Option 3
+                    shouldFinish = true;
+                } else if (initialCount >= 5 && initialCount <= 8) {
+                    // Start 5-8 -> check for 1vn or nv1
+                    const teamA = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'A');
+                    const teamB = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'B');
+
+                    if (teamA.length === 1 || teamB.length === 1) {
+                        shouldFinish = true;
+                    }
+                    if (teamA.length === 0 || teamB.length === 0) {
+                        // Total collapse
+                        await this.endGame();
+                        return;
+                    }
+                }
+
+                if (shouldFinish) {
+                    await this.roomRef.child('gameState/promptFinish').set(true);
+                }
+            }
+
+            async forceSkipGhostTurn(newTurnOrder) {
+                if (newTurnOrder.length === 0) {
+                    await this.endGame();
+                    return;
+                }
+                const currentIndex = this.gameState.currentTurnIndex || 0;
+                const nextIndex = currentIndex % newTurnOrder.length;
+                const nextPlayer = newTurnOrder[nextIndex];
+
+                await this.roomRef.child('gameState').update({
+                    currentPlayer: nextPlayer,
+                    currentCard: null,
+                    roundActive: false,
+                    timer: 60,
+                    currentTurnIndex: nextIndex
+                });
             }
 
             async leaveRoom() {
@@ -2203,18 +2302,45 @@
                 if (!this.multiplayerMode) return;
 
                 const modal = document.getElementById('modal-leave-game');
+                const leaveBtn = modal.querySelector('button[onclick*="confirmLeaveAction(\'leave\')"]');
                 const endForAllBtn = document.getElementById('end-for-all-btn');
+                const initialCount = this.multiplayer.gameState?.initialPlayerCount || 4;
 
-                // Only show "End for All Players" option if user is the host
-                if (endForAllBtn) {
-                    if (this.multiplayer.isHost) {
+                // Rule 1: 2-Player Match (initialCount === 2) -> No individual Leave
+                if (initialCount === 2) {
+                    if (leaveBtn) leaveBtn.classList.add('hidden');
+                    if (endForAllBtn) {
                         endForAllBtn.classList.remove('hidden');
-                    } else {
-                        endForAllBtn.classList.add('hidden');
+                        endForAllBtn.textContent = 'End Game for All';
+                    }
+                } else {
+                    if (leaveBtn) leaveBtn.classList.remove('hidden');
+                    // Only show "End for All Players" option if user is the host
+                    if (endForAllBtn) {
+                        if (this.multiplayer.isHost) {
+                            endForAllBtn.classList.remove('hidden');
+                            endForAllBtn.textContent = 'End for All Players';
+                        } else {
+                            endForAllBtn.classList.add('hidden');
+                        }
                     }
                 }
 
                 if (modal) modal.classList.remove('hidden');
+            }
+
+            async executeFinishGame() {
+                this.hideFinishPrompt();
+                await this.multiplayer.endGame();
+            }
+
+            hideFinishPrompt() {
+                const modal = document.getElementById('modal-finish-game-prompt');
+                if (modal) modal.classList.add('hidden');
+                // Also clear the flag in DB so it doesn't pop up again for anyone else immediately
+                if (this.multiplayer.isHost && this.multiplayer.roomRef) {
+                    this.multiplayer.roomRef.child('gameState/promptFinish').set(null);
+                }
             }
 
             hideLeaveGameModal() {
