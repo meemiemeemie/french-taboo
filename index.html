@@ -987,6 +987,9 @@
                     roundStartTime: firebase.database.ServerValue.TIMESTAMP
                 });
 
+                // Reset skip limit for the round
+                this.game.skips = 1;
+
                 // Display card immediately
                 this.game.displayCard(card);
 
@@ -1092,7 +1095,10 @@
                 const currentPlayerId = this.gameState.currentPlayer;
                 if (currentPlayerId !== this.playerId) return;
 
-                await this.nextCard(false);
+                if (this.game.skips > 0) {
+                    this.game.skips--;
+                    await this.nextCard(false);
+                }
             }
 
             async buzzPlayer() {
@@ -1163,6 +1169,11 @@
                 // Update UI based on game state
                 if (this.gameState.status === 'playing') {
                     this.game.showScreen('game');
+                    // Sync level and update stack count
+                    if (this.gameState.level) {
+                        this.game.selectedLevel = this.gameState.level;
+                        this.game.updateStackDisplay();
+                    }
                     this.updateGameUI();
                 } else if (this.gameState.status === 'lobby') {
                     this.game.showScreen('lobby');
@@ -1221,9 +1232,20 @@
             showBuzzModal(buzzData) {
                 // Show modal asking if they got it correct
                 const modal = document.getElementById('modal-end-turn');
+                const textEl = document.getElementById('buzz-modal-text');
                 const hintEl = document.getElementById('last-word-hint');
-                if (hintEl && this.game.currentCard) {
-                    hintEl.textContent = `"${this.game.currentCard.word}"`;
+
+                if (textEl) {
+                    const isMyTurn = this.gameState.currentPlayer === this.playerId;
+                    textEl.innerHTML = isMyTurn ?
+                        `Did you get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?` :
+                        `Did they get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?`;
+                }
+
+                // Re-fetch hintEl as it might have been replaced by innerHTML
+                const newHintEl = document.getElementById('last-word-hint');
+                if (newHintEl && this.game.currentCard) {
+                    newHintEl.textContent = `"${this.game.currentCard.word}"`;
                 }
                 if (modal) {
                     modal.classList.remove('hidden');
@@ -1237,6 +1259,12 @@
                 const isMyTurn = currentPlayerId === this.playerId;
                 const isTeamMode = !!this.gameState.teams;
                 const roundActive = this.gameState.roundActive;
+
+                // Update HUD score with player's total score
+                const scoreEl = document.getElementById('score-display');
+                if (scoreEl && this.players[this.playerId]) {
+                    scoreEl.textContent = this.players[this.playerId].score || 0;
+                }
 
                 // Show/hide multiplayer UI elements
                 const turnIndicator = document.getElementById('multiplayer-turn-indicator');
@@ -1314,6 +1342,12 @@
                     if (buzzedBtn) buzzedBtn.classList.add('hidden');
                     if (correctBtn) correctBtn.classList.add('hidden');
                     if (buzzerContainer) buzzerContainer.classList.add('hidden');
+                }
+
+                // Sync skip button state with limit
+                if (skipBtn && isMyTurn && roundActive) {
+                    skipBtn.textContent = `Skip (${this.game.skips}/1)`;
+                    skipBtn.disabled = this.game.skips <= 0;
                 }
 
                 // Show card only to active player and opposing team
