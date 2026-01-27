@@ -993,34 +993,8 @@
                 // Display card immediately
                 this.game.displayCard(card);
 
-                // Start local timer
-                this.startLocalTimer();
-            }
-
-            startLocalTimer() {
-                if (this.game.timer) clearInterval(this.game.timer);
-
-                this.game.timeLeft = 60;
-                this.game.timer = setInterval(async () => {
-                    this.game.timeLeft--;
-                    const timerEl = document.getElementById('timer-display');
-                    if (timerEl) {
-                        timerEl.textContent = this.game.timeLeft;
-                        if (this.game.timeLeft <= 10) {
-                            timerEl.classList.add('pulse-timer');
-                        }
-                    }
-
-                    // Update timer in Firebase (only active player)
-                    if (this.gameState && this.gameState.currentPlayer === this.playerId && this.gameState.roundActive) {
-                        await this.roomRef.child('gameState/timer').set(this.game.timeLeft);
-                    }
-
-                    if (this.game.timeLeft <= 0) {
-                        clearInterval(this.game.timer);
-                        await this.endRound(false);
-                    }
-                }, 1000);
+                // Display card immediately
+                this.game.displayCard(card);
             }
 
             async nextCard(scored) {
@@ -1193,6 +1167,11 @@
                         } else {
                             timerEl.classList.remove('pulse-timer');
                         }
+                    }
+
+                    // Active player handles end of round when timer hits zero
+                    if (this.gameState.timer === 0 && this.gameState.roundActive && isMyTurn) {
+                        this.endRound(false);
                     }
                 }
 
