@@ -166,10 +166,65 @@
             background-color: #fef3c7;
             color: #92400e;
         }
+
+        .winner-animation {
+            animation: celebrate 1s ease-in-out infinite;
+        }
+
+        @keyframes celebrate {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            25% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+
+            75% {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+
+        .loser-animation {
+            animation: console 2s ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes console {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #ec4899;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
-<body id="main-body" class="flex flex-col items-center justify-center p-4 transition-colors">
+<body id="main-body" class="flex flex-col items-center p-4 transition-colors min-h-screen">
 
     <!-- HUD -->
     <div id="game-hud"
@@ -187,6 +242,10 @@
             class="bg-white px-4 py-2 rounded-2xl shadow-sm border-2 border-slate-100 flex items-center gap-2 pointer-events-auto">
             <span id="timer-display" class="text-xl font-black text-slate-700">60</span>
         </div>
+        <button id="leave-game-btn" onclick="game.showLeaveGameModal()"
+            class="hidden bg-red-500 text-white px-3 py-2 rounded-2xl shadow-sm border-2 border-red-600 pointer-events-auto text-xs font-bold">
+            Leave
+        </button>
         <div id="connection-status"
             class="fixed bottom-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur px-3 py-1.5 rounded-full border border-slate-200 text-[10px] font-bold text-slate-400 z-50">
             <span id="connection-dot" class="w-2 h-2 rounded-full bg-slate-300"></span>
@@ -472,6 +531,29 @@
                 Main Menu
             </button>
         </div>
+
+        <!-- MULTIPLAYER END GAME SCREEN -->
+        <div id="screen-multiplayer-endgame" class="hidden text-center flex flex-col items-center w-full">
+            <div id="winner-indicator" class="mb-4">
+                <div id="winner-emoji" class="text-6xl mb-2"></div>
+                <h2 id="winner-title" class="text-3xl font-black text-slate-800 mb-2"></h2>
+                <p id="winner-subtitle" class="text-sm text-slate-500 mb-4"></p>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Final Scores</h3>
+                <div id="final-scores-list" class="space-y-2 mb-6"></div>
+
+                <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Your Words</h3>
+                <p class="text-xs text-slate-500 mb-3 text-left">All the words you had to describe:</p>
+                <div id="my-words-list" class="space-y-2 mb-6"></div>
+            </div>
+
+            <button onclick="location.reload()"
+                class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
+                Main Menu
+            </button>
+        </div>
     </main>
 
     <!-- MODALS -->
@@ -486,6 +568,44 @@
                     class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
                 <button onclick="game.handleBuzzResponse(true)"
                     class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Game Modal - Step 1: Choose action -->
+    <div id="modal-leave-game" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
+        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
+            <div class="text-4xl mb-4">👋</div>
+            <h3 class="text-xl font-black mb-2">Leave Game?</h3>
+            <p class="text-slate-500 mb-6 text-sm">What would you like to do?</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="game.confirmLeaveAction('leave')"
+                    class="w-full bg-orange-500 text-white py-3 rounded-xl font-bold">
+                    Leave Game
+                </button>
+                <button id="end-for-all-btn" onclick="game.confirmLeaveAction('endAll')"
+                    class="w-full bg-red-500 text-white py-3 rounded-xl font-bold">
+                    End for All Players
+                </button>
+                <button onclick="game.hideLeaveGameModal()"
+                    class="w-full bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Game Modal - Step 2: Confirm action -->
+    <div id="modal-confirm-leave" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
+        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
+            <div class="text-4xl mb-4">⚠️</div>
+            <h3 class="text-xl font-black mb-2">Are you sure?</h3>
+            <p id="confirm-leave-text" class="text-slate-500 mb-6 text-sm">This action cannot be undone.</p>
+            <div class="flex gap-3">
+                <button onclick="game.cancelLeaveConfirm()"
+                    class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">Cancel</button>
+                <button id="confirm-leave-btn" onclick="game.executeLeaveAction()"
+                    class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold">Yes, I'm sure</button>
             </div>
         </div>
     </div>
@@ -760,9 +880,8 @@
                         await this.roomRef.child('gameState/timer').set(newTimer);
 
                         if (newTimer === 0) {
-                            // Round finished by time - active player will handle the endRound call
-                            // via the local timer expiry or we can trigger it from host too
-                            // Let's let the local timer of the active player trigger the end turn modal
+                            // Timer expired - end the round
+                            // The active player will handle this via the handleGameStateChange
                         }
                     }
                 }, 1000);
@@ -898,19 +1017,18 @@
                     return;
                 }
 
-                // Check for team mode conditions: 4+ players AND even number
+                // Determine game mode based on player count
                 let teams = null;
                 let turnOrder = [];
 
-                if (playerArray.length >= 4 && playerArray.length % 2 === 0) {
-                    // Team Mode
+                if (playerArray.length === 2 || playerArray.length === 3) {
+                    // Free-for-all Mode for 2-3 players
+                    turnOrder = [...playerArray].sort(() => Math.random() - 0.5);
+                } else {
+                    // Team Mode for 4+ players (including 5, 7 with uneven teams)
                     const teamData = this.formTeams(playerArray);
                     teams = teamData.teams;
                     turnOrder = teamData.turnOrder;
-                } else {
-                    // Free-for-all Mode (2, 3, 5, 7, etc.)
-                    // Use random shuffle for turn order
-                    turnOrder = [...playerArray].sort(() => Math.random() - 0.5);
                 }
 
                 // Determine first player
@@ -938,10 +1056,20 @@
                 // A1, B1, A2, B2, ...
                 const turnOrder = [];
 
-                // Split into two halves
-                const midpoint = Math.floor(shuffled.length / 2);
-                const teamA = shuffled.slice(0, midpoint);
-                const teamB = shuffled.slice(midpoint);
+                // Split into two teams (can be uneven for 5, 7 players)
+                // For odd numbers, randomly decide which team gets the extra player
+                const totalPlayers = shuffled.length;
+                const teamASize = Math.floor(totalPlayers / 2);
+                const teamBSize = totalPlayers - teamASize;
+
+                // Randomly decide which team gets the extra player for odd counts
+                const teamAGetsExtra = Math.random() < 0.5;
+                const teamA = teamAGetsExtra && totalPlayers % 2 === 1
+                    ? shuffled.slice(0, teamASize + 1)
+                    : shuffled.slice(0, teamASize);
+                const teamB = teamAGetsExtra && totalPlayers % 2 === 1
+                    ? shuffled.slice(teamASize + 1)
+                    : shuffled.slice(teamASize);
 
                 // Assign to team objects and update DB
                 teamA.forEach(id => {
@@ -954,8 +1082,9 @@
                     this.roomRef.child(`players/${id}/team`).set('B');
                 });
 
-                // Create interleaved order
-                for (let i = 0; i < midpoint; i++) {
+                // Create interleaved order (A1, B1, A2, B2, ...)
+                const maxTeamSize = Math.max(teamA.length, teamB.length);
+                for (let i = 0; i < maxTeamSize; i++) {
                     if (teamA[i]) turnOrder.push(teamA[i]);
                     if (teamB[i]) turnOrder.push(teamB[i]);
                 }
@@ -1152,9 +1281,13 @@
                 } else if (this.gameState.status === 'lobby') {
                     this.game.showScreen('lobby');
                 } else if (this.gameState.status === 'finished') {
-                    // Game finished - could show summary
-                    this.game.showScreen('summary');
+                    // Game finished - show multiplayer end game screen
+                    this.showMultiplayerEndGame();
                 }
+
+                // Determine if it's my turn (needed for timer logic below)
+                const currentPlayerId = this.gameState.currentPlayer;
+                const isMyTurn = currentPlayerId === this.playerId;
 
                 // Sync timer
                 if (this.gameState.timer !== undefined) {
@@ -1176,8 +1309,6 @@
                 }
 
                 // Sync current card
-                const currentPlayerId = this.gameState.currentPlayer;
-                const isMyTurn = currentPlayerId === this.playerId;
                 const isTeamMode = !!this.gameState.teams;
                 const myTeam = this.players[this.playerId]?.team;
                 const currentPlayerTeam = this.players[currentPlayerId]?.team;
@@ -1238,6 +1369,12 @@
                 const isMyTurn = currentPlayerId === this.playerId;
                 const isTeamMode = !!this.gameState.teams;
                 const roundActive = this.gameState.roundActive;
+
+                // Show/hide Leave Game button
+                const leaveBtn = document.getElementById('leave-game-btn');
+                if (leaveBtn) {
+                    leaveBtn.classList.remove('hidden');
+                }
 
                 // Update HUD score with player's total score
                 const scoreEl = document.getElementById('score-display');
@@ -1337,6 +1474,95 @@
                         cardContainer.classList.remove('hidden');
                     } else {
                         cardContainer.classList.add('hidden');
+                    }
+                }
+            }
+
+            showMultiplayerEndGame() {
+                this.game.showScreen('multiplayer-endgame');
+
+                // Determine winner(s)
+                const playerArray = Object.entries(this.players).map(([id, data]) => ({
+                    id,
+                    ...data
+                }));
+
+                // Sort by score descending
+                playerArray.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+                const highestScore = playerArray[0]?.score || 0;
+                const winners = playerArray.filter(p => p.score === highestScore);
+                const isWinner = winners.some(w => w.id === this.playerId);
+
+                // Update winner indicator
+                const emojiEl = document.getElementById('winner-emoji');
+                const titleEl = document.getElementById('winner-title');
+                const subtitleEl = document.getElementById('winner-subtitle');
+                const indicatorEl = document.getElementById('winner-indicator');
+
+                if (isWinner) {
+                    if (emojiEl) {
+                        emojiEl.textContent = '🎉';
+                        emojiEl.classList.add('winner-animation');
+                    }
+                    if (titleEl) titleEl.textContent = winners.length > 1 ? 'You Tied!' : 'You Won!';
+                    if (subtitleEl) subtitleEl.textContent = 'Congratulations! 🏆';
+                    if (indicatorEl) indicatorEl.classList.add('winner-animation');
+                } else {
+                    if (emojiEl) {
+                        emojiEl.textContent = '😔';
+                        emojiEl.classList.add('loser-animation');
+                    }
+                    if (titleEl) titleEl.textContent = 'Better Luck Next Time';
+                    if (subtitleEl) subtitleEl.textContent = 'Keep practicing! You\'ll get \'em next time.';
+                    if (indicatorEl) indicatorEl.classList.add('loser-animation');
+                }
+
+                // Display final scores
+                const scoresListEl = document.getElementById('final-scores-list');
+                if (scoresListEl) {
+                    scoresListEl.innerHTML = '';
+                    playerArray.forEach((player, index) => {
+                        const div = document.createElement('div');
+                        const isMe = player.id === this.playerId;
+                        const isTopScore = player.score === highestScore;
+                        div.className = `flex justify-between items-center p-3 rounded-xl ${isMe ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'}`;
+                        div.innerHTML = `
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg font-black ${isTopScore ? 'text-yellow-500' : 'text-slate-400'}">${index + 1}</span>
+                                <span class="font-bold text-slate-700">${player.name}${isMe ? ' (You)' : ''}</span>
+                                ${isTopScore ? '<span class="text-lg">👑</span>' : ''}
+                            </div>
+                            <span class="font-black text-slate-800 text-lg">${player.score || 0}</span>
+                        `;
+                        scoresListEl.appendChild(div);
+                    });
+                }
+
+                // Display my words
+                const myWordsListEl = document.getElementById('my-words-list');
+                if (myWordsListEl) {
+                    myWordsListEl.innerHTML = '';
+                    if (this.game.wordLog.length === 0) {
+                        myWordsListEl.innerHTML = '<p class="text-xs text-slate-400 italic">You didn\'t describe any words this game.</p>';
+                    } else {
+                        this.game.wordLog.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = "flex justify-between items-center p-3 border-b border-slate-50 last:border-0";
+                            const url = this.game.getRefUrl(item.word, item.type);
+                            const statusColors = { correct: 'bg-green-100 text-green-700', skipped: 'bg-yellow-100 text-yellow-700', timeout: 'bg-red-100 text-red-700' };
+                            const statusLabels = { correct: '✓', skipped: 'Skip', timeout: 'Time' };
+                            div.innerHTML = `
+                                <div class="flex flex-col">
+                                    <a href="${url}" target="_blank" class="word-link font-bold text-slate-700">
+                                        ${item.word} <span class="text-[8px] opacity-30">↗</span>
+                                    </a>
+                                    <span class="text-[9px] text-slate-400 uppercase font-bold">${item.level}</span>
+                                </div>
+                                <span class="text-[9px] font-black uppercase px-2 py-1 rounded-md ${statusColors[item.status]}">${statusLabels[item.status]}</span>
+                            `;
+                            myWordsListEl.appendChild(div);
+                        });
                     }
                 }
             }
@@ -1736,7 +1962,7 @@
             }
 
             showScreen(id) {
-                const screens = ['start', 'game', 'summary', 'endgame', 'multiplayer-options', 'join-room', 'lobby'];
+                const screens = ['start', 'game', 'summary', 'endgame', 'multiplayer-options', 'join-room', 'lobby', 'multiplayer-endgame'];
                 screens.forEach(s => {
                     const el = document.getElementById('screen-' + s);
                     if (el) el.classList.add('hidden');
@@ -1920,6 +2146,71 @@
                     // Single player mode
                     this.playObnoxiousBuzzer();
                 }
+            }
+
+            showLeaveGameModal() {
+                if (!this.multiplayerMode) return;
+
+                const modal = document.getElementById('modal-leave-game');
+                const endForAllBtn = document.getElementById('end-for-all-btn');
+
+                // Only show "End for All Players" option if user is the host
+                if (endForAllBtn) {
+                    if (this.multiplayer.isHost) {
+                        endForAllBtn.classList.remove('hidden');
+                    } else {
+                        endForAllBtn.classList.add('hidden');
+                    }
+                }
+
+                if (modal) modal.classList.remove('hidden');
+            }
+
+            hideLeaveGameModal() {
+                const modal = document.getElementById('modal-leave-game');
+                if (modal) modal.classList.add('hidden');
+            }
+
+            confirmLeaveAction(action) {
+                // Store the action to execute later
+                this.pendingLeaveAction = action;
+
+                // Hide first modal
+                this.hideLeaveGameModal();
+
+                // Show confirmation modal with appropriate text
+                const confirmModal = document.getElementById('modal-confirm-leave');
+                const confirmText = document.getElementById('confirm-leave-text');
+
+                if (action === 'endAll') {
+                    confirmText.textContent = 'This will end the game for all players. Are you sure?';
+                } else {
+                    confirmText.textContent = 'You will leave the game. Are you sure?';
+                }
+
+                if (confirmModal) confirmModal.classList.remove('hidden');
+            }
+
+            cancelLeaveConfirm() {
+                const modal = document.getElementById('modal-confirm-leave');
+                if (modal) modal.classList.add('hidden');
+                this.pendingLeaveAction = null;
+            }
+
+            async executeLeaveAction() {
+                const modal = document.getElementById('modal-confirm-leave');
+                if (modal) modal.classList.add('hidden');
+
+                if (this.pendingLeaveAction === 'endAll') {
+                    // End game for all players
+                    await this.multiplayer.endGame();
+                    await this.multiplayer.leaveRoom();
+                } else {
+                    // Just leave the room
+                    await this.multiplayer.leaveRoom();
+                }
+
+                this.pendingLeaveAction = null;
             }
 
             async handleBuzzResponse(correct) {
