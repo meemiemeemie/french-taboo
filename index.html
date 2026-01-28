@@ -883,8 +883,8 @@
                     await this.joinRoomAsPlayer(hostName || 'Host');
                     this.setupRoomListeners();
 
-                    // Set up room cleanup on disconnect
-                    this.roomRef.onDisconnect().remove();
+                    // Set up individual player cleanup on disconnect
+                    this.roomRef.child(`players/${this.playerId}`).onDisconnect().remove();
 
                     return code;
                 } catch (error) {
@@ -959,14 +959,53 @@
                 if (!this.roomRef) return;
 
                 // Listen to players
-                this.roomRef.child('players').on('value', (snapshot) => {
+                this.roomRef.child('players').on('value', async (snapshot) => {
                     this.players = snapshot.val() || {};
                     this.updatePlayersList();
+
+                    // Host Migration Logic
+                    if (this.roomRef && this.players) {
+                        const roomSnapshot = await this.roomRef.once('value');
+                        const roomData = roomSnapshot.val();
+                        const currentHostId = roomData?.host;
+
+                        // If host is missing or offline
+                        if (!currentHostId || !this.players[currentHostId] || this.players[currentHostId].online === false) {
+                            // Find next available player (sorted by joinedAt)
+                            const playerArray = Object.entries(this.players)
+                                .map(([id, data]) => ({ id, ...data }))
+                                .filter(p => p.online !== false)
+                                .sort((a, b) => (a.joinedAt || 0) - (b.joinedAt || 0));
+
+                            if (playerArray.length > 0) {
+                                const nextHostId = playerArray[0].id;
+                                // If I am the next in line, nominate myself as host
+                                if (nextHostId === this.playerId && currentHostId !== this.playerId) {
+                                    console.log("Promoting self to Host...");
+                                    await this.roomRef.child('host').set(this.playerId);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Listen to Host changes
+                this.roomRef.child('host').on('value', (snapshot) => {
+                    const newHostId = snapshot.val();
+                    const wasHost = this.isHost;
+                    this.isHost = (newHostId === this.playerId);
+
+                    if (this.isHost && !wasHost) {
+                        console.log("I am the new Host! Starting timer authority...");
+                        this.startHostTimer();
+                        this.validateRoomState(); // Immediate check after promotion
+                        this.updatePlayersList();
+                    }
                 });
 
                 this.roomRef.child('players').on('child_removed', (snapshot) => {
                     if (this.isHost && this.gameState && this.gameState.status === 'playing') {
-                        this.handlePlayerDeparture(snapshot.key);
+                        this.validateRoomState();
                     }
                 });
 
@@ -1447,6 +1486,7 @@
                 } else if (this.gameState.status === 'finished') {
                     // Game finished - show multiplayer end game screen
                     this.showMultiplayerEndGame();
+                    return; // Stop processing other state updates
                 }
 
                 // Determine if it's my turn (needed for timer logic below)
@@ -1859,50 +1899,56 @@
                 }
             }
 
-            async handlePlayerDeparture(removedPlayerId) {
-                if (!this.gameState || this.gameState.status !== 'playing') return;
+            async validateRoomState() {
+                if (!this.isHost || !this.gameState || this.gameState.status !== 'playing') return;
 
-                const initialCount = this.gameState.initialPlayerCount || 4;
+                const initialCount = this.gameState.initialPlayerCount || 2;
                 const turnOrder = this.gameState.turnOrder || [];
-                const newTurnOrder = turnOrder.filter(id => id !== removedPlayerId);
+                const currentPlayers = Object.keys(this.players);
 
-                // 1. Remove from Turn Order immediately to prevent "Ghost Turns" logic in nextCard/endRound
+                // 1. Sync Turn Order: Remove any players who are no longer in the room
+                const newTurnOrder = turnOrder.filter(id => this.players[id]);
+
                 if (newTurnOrder.length !== turnOrder.length) {
+                    console.log("Syncing turn order after departure...");
                     await this.roomRef.child('gameState/turnOrder').set(newTurnOrder);
-                }
 
-                // If the removed player was the current player, advance to the next turn immediately
-                if (this.gameState.currentPlayer === removedPlayerId) {
-                    // We need to pass the updated turn order to get the correct next player
-                    await this.forceSkipGhostTurn(newTurnOrder);
-                }
-
-                // 2. Check thresholds for "Finish Game" prompt
-                const currentPlayers = Object.keys(this.players).filter(id => id !== removedPlayerId);
-                const playerCount = currentPlayers.length;
-
-                // Threshold logic
-                let shouldFinish = false;
-
-                if (initialCount === 4 && playerCount === 3) {
-                    // Start 4 -> Player left -> 3 players (2v1) -> Mandatory for 4p start 
-                    await this.roomRef.child('gameState/forcedFinish').set(true);
-                    return;
-                } else if (initialCount >= 5 && initialCount <= 8) {
-                    // Start 5-8 -> check for 1vn or nv1
-                    const teamA = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'A');
-                    const teamB = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'B');
-
-                    if (teamA.length <= 1 || teamB.length <= 1) {
-                        // 1vn or 0vn -> Mandatory end game
-                        await this.roomRef.child('gameState/forcedFinish').set(true);
-                        return;
+                    // If the active player is gone, skip their turn
+                    if (!this.players[this.gameState.currentPlayer]) {
+                        console.log("Current player left, skipping ghost turn...");
+                        await this.forceSkipGhostTurn(newTurnOrder);
                     }
                 }
 
-                if (shouldFinish) {
-                    await this.roomRef.child('gameState/promptFinish').set(true);
+                // 2. Check Balance Thresholds (1vN)
+                const playerCount = currentPlayers.length;
+                let shouldFinish = false;
+
+                if (initialCount === 4 && playerCount === 3) {
+                    // Start 4 -> 3 left (2v1) -> Mandatory end
+                    shouldFinish = true;
+                } else if (initialCount >= 5) {
+                    const teamA = currentPlayers.filter(id => this.players[id].team === 'A');
+                    const teamB = currentPlayers.filter(id => this.players[id].team === 'B');
+
+                    if (teamA.length <= 1 || teamB.length <= 1) {
+                        shouldFinish = true;
+                    }
+                } else if (initialCount < 4 && playerCount < 2) {
+                    // FFA mode needs at least 2
+                    shouldFinish = true;
                 }
+
+                if (shouldFinish && !this.gameState.forcedFinish && !this.gameState.promptFinish) {
+                    console.log("Teams unbalanced, forcing game end.");
+                    await this.roomRef.child('gameState/forcedFinish').set(true);
+                }
+            }
+
+            // Keep this for when someone explicitly leaves while current player
+            async handlePlayerDeparture(removedPlayerId) {
+                // Logic mostly moved to validateRoomState for robustness
+                if (this.isHost) await this.validateRoomState();
             }
 
             async forceSkipGhostTurn(newTurnOrder) {
@@ -1926,11 +1972,8 @@
             async leaveRoom() {
                 try {
                     if (this.roomRef && this.playerId) {
+                        // Just remove the individual player node
                         await this.roomRef.child(`players/${this.playerId}`).remove();
-                        if (this.isHost) {
-                            // Host leaving - remove entire room
-                            await this.roomRef.remove();
-                        }
                     }
                 } catch (error) {
                     console.error('Error leaving room:', error);
