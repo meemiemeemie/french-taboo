@@ -167,13 +167,87 @@
         }
 
         .team-a {
-            background-color: #dbeafe;
-            color: #1e40af;
+            background-color: #fce7f3;
+            /* Pink-100 */
+            color: #be185d;
+            /* Pink-700 */
         }
 
         .team-b {
-            background-color: #fef3c7;
-            color: #92400e;
+            background-color: #dbeafe;
+            /* Blue-100 */
+            color: #1d4ed8;
+            /* Blue-700 */
+        }
+
+        .team-score-card {
+            padding: 12px;
+            border-radius: 16px;
+            text-align: center;
+            flex: 1;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .team-winner-glow {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+            border: 2px solid #ec4899;
+        }
+
+        .team-winner-glow-b {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            border: 2px solid #3b82f6;
+        }
+
+        /* Team Themes for Game Board */
+        .team-a-theme {
+            border-color: #f472b6 !important;
+            /* Pink-400 */
+        }
+
+        .team-b-theme {
+            border-color: #60a5fa !important;
+            /* Blue-400 */
+        }
+
+        .your-team-pill {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 60;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            animation: pulse-role 2s infinite;
+        }
+
+        @keyframes pulse-role {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         .winner-animation {
@@ -234,6 +308,9 @@
 </head>
 
 <body id="main-body" class="flex flex-col items-center justify-start p-4 pt-20 transition-colors min-h-screen">
+
+    <!-- Persistent Team Badge -->
+    <div id="your-team-badge" class="hidden your-team-pill"></div>
 
     <!-- HUD -->
     <div id="game-hud"
@@ -377,9 +454,11 @@
 
             <!-- Multiplayer turn indicator -->
             <div id="multiplayer-turn-indicator"
-                class="hidden w-full mb-4 bg-blue-50 border-2 border-blue-200 rounded-2xl p-4">
-                <div class="text-sm font-bold text-blue-700 mb-1" id="turn-indicator-text">Your turn!</div>
-                <div class="text-xs text-blue-500" id="turn-indicator-subtext"></div>
+                class="hidden w-full mb-4 rounded-2xl p-4 border-2 transition-all duration-300">
+                <div id="turn-role-badge" class="role-badge hidden"></div>
+                <div class="text-lg font-black uppercase tracking-tight leading-none mb-1" id="turn-indicator-text">Your
+                    turn!</div>
+                <div class="text-xs font-bold opacity-80" id="turn-indicator-subtext"></div>
             </div>
 
             <!-- Waiting for player message -->
@@ -566,7 +645,24 @@
             </div>
 
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Final Scores</h3>
+                <!-- Team Scores Summary -->
+                <div id="team-scores-container" class="hidden mb-8">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Team Results</h3>
+                    <div class="flex gap-3">
+                        <div id="team-a-score-card" class="team-score-card team-a">
+                            <div class="text-[10px] font-black opacity-60">TEAM A</div>
+                            <div id="team-a-total-pts" class="text-3xl font-black">0</div>
+                            <div class="text-[9px] font-bold">TOTAL POINTS</div>
+                        </div>
+                        <div id="team-b-score-card" class="team-score-card team-b">
+                            <div class="text-[10px] font-black opacity-60">TEAM B</div>
+                            <div id="team-b-total-pts" class="text-3xl font-black">0</div>
+                            <div class="text-[9px] font-bold">TOTAL POINTS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Player Standings</h3>
                 <div id="final-scores-list" class="space-y-2 mb-6"></div>
 
                 <h3 class="text-[10px] font-black text-slate-400 uppercase text-left mb-3">Your Words</h3>
@@ -597,22 +693,22 @@
         </div>
     </div>
 
-    <!-- Finish Game Prompt Modal (Conditional Leave Logic) -->
+    <!-- FINISH GAME PROMPT MODAL -->
     <div id="modal-finish-game-prompt"
-        class="hidden fixed inset-0 z-[110] flex items-center justify-center p-6 overlay">
-        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center">
-            <div class="text-4xl mb-4">🏆</div>
-            <h3 class="text-xl font-black mb-2">Finish the Game?</h3>
-            <p id="finish-prompt-text" class="text-slate-500 mb-6 text-sm">A player left, making the teams unbalanced.
-                Would you like to finish and see results?</p>
-            <div class="flex flex-col gap-3">
-                <button onclick="game.executeFinishGame()"
-                    class="w-full bg-pink-500 text-white py-3 rounded-xl font-bold">
-                    Finish and See Results
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+            <div class="text-4xl mb-4">⚖️</div>
+            <h3 class="text-2xl font-black text-slate-800 mb-2">Teams Unbalanced</h3>
+            <p id="finish-game-msg" class="text-slate-500 mb-8 leading-relaxed">Too many players have left. The game
+                must end to keep it fair for everyone.</p>
+            <div class="space-y-3">
+                <button id="finish-and-see-results-btn" onclick="game.multiplayer.endGame()"
+                    class="w-full bg-slate-800 text-white py-4 rounded-2xl font-black text-lg shadow-lg hover:bg-slate-700 transition-colors">
+                    See Game Results
                 </button>
-                <button onclick="game.hideFinishPrompt()"
-                    class="w-full bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">
-                    Continue Anyway
+                <button id="continue-anyway-btn" onclick="game.multiplayer.continueAnyway()"
+                    class="hidden w-full bg-slate-100 text-slate-600 py-3 rounded-2xl font-black text-sm">
+                    Continue anyway
                 </button>
             </div>
         </div>
@@ -1326,6 +1422,12 @@
             async endGame() {
                 if (!this.roomRef) return;
                 await this.roomRef.child('gameState/status').set('finished');
+
+                // Hide any visible turn indicators
+                const turnIndicator = document.getElementById('multiplayer-turn-indicator');
+                if (turnIndicator) turnIndicator.classList.add('hidden');
+                const yourBadge = document.getElementById('your-team-badge');
+                if (yourBadge) yourBadge.classList.add('hidden');
             }
 
             handleGameStateChange() {
@@ -1378,9 +1480,21 @@
                 const shouldSee = isMyTurn || (isTeamMode && isOpposingTeam);
 
                 // Handle Finish Game prompt (New Conditional Leave Logic)
-                if (this.gameState.promptFinish) {
+                if (this.gameState.promptFinish || this.gameState.forcedFinish) {
                     const modal = document.getElementById('modal-finish-game-prompt');
-                    if (modal) modal.classList.remove('hidden');
+                    const msgEl = document.getElementById('finish-game-msg');
+                    const continueBtn = document.getElementById('continue-anyway-btn');
+
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        if (this.gameState.forcedFinish) {
+                            if (msgEl) msgEl.textContent = "Too many players have left. The game must end to keep it fair for everyone.";
+                            if (continueBtn) continueBtn.classList.add('hidden');
+                        } else {
+                            if (msgEl) msgEl.textContent = "A player left and the teams are now unbalanced. Would you like to finish and see the scores?";
+                            if (continueBtn) continueBtn.classList.remove('hidden');
+                        }
+                    }
                 }
 
                 if (this.gameState.currentCard && this.gameState.roundActive) {
@@ -1448,18 +1562,75 @@
                     scoreEl.textContent = this.players[this.playerId].score || 0;
                 }
 
+                // Persistent "Your Team" badge
+                const yourTeamBadge = document.getElementById('your-team-badge');
+                if (yourTeamBadge && this.players[this.playerId]) {
+                    const myTeam = this.players[this.playerId].team;
+                    if (myTeam && isTeamMode) {
+                        yourTeamBadge.classList.remove('hidden');
+                        yourTeamBadge.textContent = `Your Team: ${myTeam}`;
+                        yourTeamBadge.className = `your-team-pill ${myTeam === 'A' ? 'team-a' : 'team-b'}`;
+                    } else {
+                        yourTeamBadge.classList.add('hidden');
+                    }
+                }
+
                 // Show/hide multiplayer UI elements
                 const turnIndicator = document.getElementById('multiplayer-turn-indicator');
+                const roleBadge = document.getElementById('turn-role-badge');
                 const startRoundBtn = document.getElementById('multiplayer-start-round');
                 const waitingMsg = document.getElementById('multiplayer-waiting');
                 const playerList = document.getElementById('multiplayer-player-list');
                 const buzzerContainer = document.getElementById('multiplayer-buzzer-container');
 
+                const currentPlayer = this.players[currentPlayerId];
+                const currentPlayerName = currentPlayer?.name || 'Unknown';
+                const activeTeam = currentPlayer?.team;
+
+                // Apply team theme to game board
+                const mainBoard = document.querySelector('main > div#screen-game');
+                if (mainBoard) {
+                    mainBoard.classList.remove('team-a-theme', 'team-b-theme');
+                    if (isTeamMode && activeTeam) {
+                        mainBoard.classList.add(activeTeam === 'A' ? 'team-a-theme' : 'team-b-theme');
+                    }
+                }
+
                 if (turnIndicator) turnIndicator.classList.remove('hidden');
                 if (playerList) playerList.classList.remove('hidden');
 
-                const currentPlayer = this.players[currentPlayerId];
-                const currentPlayerName = currentPlayer?.name || 'Unknown';
+                // Apply team theme to indicator
+                if (turnIndicator) {
+                    turnIndicator.classList.remove('team-a', 'team-b', 'bg-slate-50', 'border-slate-200');
+                    if (isTeamMode && activeTeam) {
+                        turnIndicator.classList.add(activeTeam === 'A' ? 'team-a' : 'team-b');
+                    } else {
+                        turnIndicator.classList.add('bg-slate-50', 'border-slate-200');
+                    }
+                }
+
+                const myTeam = this.players[this.playerId]?.team;
+                const isSameTeam = isTeamMode && myTeam && activeTeam && myTeam === activeTeam;
+                const isOpposingTeam = isTeamMode && myTeam && activeTeam && myTeam !== activeTeam;
+
+                if (roleBadge) {
+                    roleBadge.classList.remove('hidden', 'bg-pink-600', 'bg-blue-300', 'bg-slate-800', 'text-white');
+                    if (isTeamMode) {
+                        roleBadge.classList.remove('hidden');
+                        if (isMyTurn) {
+                            roleBadge.textContent = 'Describer View';
+                            roleBadge.classList.add('bg-pink-600', 'text-white');
+                        } else if (isSameTeam) {
+                            roleBadge.textContent = 'Guesser View';
+                            roleBadge.classList.add('bg-blue-300', 'text-white');
+                        } else if (isOpposingTeam) {
+                            roleBadge.textContent = 'Buzzer Duty';
+                            roleBadge.classList.add('bg-slate-800', 'text-white');
+                        }
+                    } else {
+                        roleBadge.classList.add('hidden');
+                    }
+                }
 
                 if (isMyTurn) {
                     if (roundActive) {
@@ -1470,7 +1641,7 @@
                         if (waitingMsg) waitingMsg.classList.add('hidden');
                     }
                     if (turnIndicator) {
-                        turnIndicator.querySelector('#turn-indicator-text').textContent = roundActive ? 'Your Turn!' : 'Your Turn!';
+                        turnIndicator.querySelector('#turn-indicator-text').textContent = isTeamMode ? `Team ${activeTeam} is up!` : 'Your Turn!';
                         turnIndicator.querySelector('#turn-indicator-subtext').textContent = roundActive ? 'Describe the word!' : 'Start your round when ready';
                     }
                 } else {
@@ -1482,9 +1653,9 @@
                             `Waiting for ${currentPlayerName} to start their round...`;
                     }
                     if (turnIndicator) {
-                        turnIndicator.querySelector('#turn-indicator-text').textContent = `${currentPlayerName}'s Turn`;
+                        turnIndicator.querySelector('#turn-indicator-text').textContent = isTeamMode ? `Team ${activeTeam} is up!` : `${currentPlayerName}'s Turn`;
                         turnIndicator.querySelector('#turn-indicator-subtext').textContent = isTeamMode ?
-                            `Team ${currentPlayer?.team || ''}` : '';
+                            `${currentPlayerName} is talking` : '';
                     }
                 }
 
@@ -1492,10 +1663,6 @@
                 const skipBtn = document.getElementById('btn-skip');
                 const buzzedBtn = document.getElementById('btn-buzzed');
                 const correctBtn = document.querySelector('button[onclick="game.nextCard(true)"]');
-                const myTeam = this.players[this.playerId]?.team;
-                const currentPlayerTeam = currentPlayer?.team;
-                const isOpposingTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam !== currentPlayerTeam;
-                const isSameTeam = isTeamMode && myTeam && currentPlayerTeam && myTeam === currentPlayerTeam;
 
                 if (isMyTurn && roundActive) {
                     // Active player during their round: show skip, buzzed, and correct buttons
@@ -1547,6 +1714,10 @@
             showMultiplayerEndGame() {
                 this.game.showScreen('multiplayer-endgame');
 
+                // Hide unbalanced/forced finish modal if it was showing
+                const finishModal = document.getElementById('modal-finish-game-prompt');
+                if (finishModal) finishModal.classList.add('hidden');
+
                 // Determine winner(s)
                 const playerArray = Object.entries(this.players).map(([id, data]) => ({
                     id,
@@ -1556,9 +1727,68 @@
                 // Sort by score descending
                 playerArray.sort((a, b) => (b.score || 0) - (a.score || 0));
 
-                const highestScore = playerArray[0]?.score || 0;
-                const winners = playerArray.filter(p => p.score === highestScore);
+                const isTeamMode = !!this.gameState.teams;
+                let winners = [];
+                let winnerText = "";
+                let winnerSubtext = "";
+                let winnerEmoji = "🏆";
+
+                if (isTeamMode) {
+                    // Team Based Scoring
+                    const teamA = playerArray.filter(p => p.team === 'A');
+                    const teamB = playerArray.filter(p => p.team === 'B');
+                    const scoreA = teamA.reduce((sum, p) => sum + (p.score || 0), 0);
+                    const scoreB = teamB.reduce((sum, p) => sum + (p.score || 0), 0);
+
+                    // Update UI cards
+                    const teamContainer = document.getElementById('team-scores-container');
+                    if (teamContainer) teamContainer.classList.remove('hidden');
+
+                    const scoreAEl = document.getElementById('team-a-total-pts');
+                    const scoreBEl = document.getElementById('team-b-total-pts');
+                    if (scoreAEl) scoreAEl.textContent = scoreA;
+                    if (scoreBEl) scoreBEl.textContent = scoreB;
+
+                    const cardA = document.getElementById('team-a-score-card');
+                    const cardB = document.getElementById('team-b-score-card');
+                    if (cardA) cardA.classList.remove('team-winner-glow');
+                    if (cardB) cardB.classList.remove('team-winner-glow-b');
+
+                    if (scoreA > scoreB) {
+                        winnerText = "Team A Wins!";
+                        winnerSubtext = `Total Team Scored ${scoreA} Points!`;
+                        if (cardA) cardA.classList.add('team-winner-glow');
+                        winners = teamA;
+                    } else if (scoreB > scoreA) {
+                        winnerText = "Team B Wins!";
+                        winnerSubtext = `Total Team Scored ${scoreB} Points!`;
+                        if (cardB) cardB.classList.add('team-winner-glow-b');
+                        winners = teamB;
+                    } else {
+                        winnerText = "It's a Team Draw!";
+                        winnerSubtext = `Both teams scored ${scoreA} points!`;
+                        winners = playerArray;
+                    }
+                } else {
+                    // FFA Scoring
+                    const highestScore = playerArray[0]?.score || 0;
+                    winners = playerArray.filter(p => p.score === highestScore);
+                    const winnerNames = winners.map(w => w.name).join(' & ');
+
+                    if (winners.length > 1) {
+                        winnerText = "Draw!";
+                        winnerSubtext = `${winnerNames} both scored ${highestScore} points!`;
+                    } else {
+                        winnerText = `${winners[0]?.name} Wins!`;
+                        winnerSubtext = `A stunning performance with ${highestScore} points!`;
+                    }
+
+                    const teamContainer = document.getElementById('team-scores-container');
+                    if (teamContainer) teamContainer.classList.add('hidden');
+                }
+
                 const isWinner = winners.some(w => w.id === this.playerId);
+                if (!isWinner) winnerEmoji = "👏";
 
                 // Update winner indicator
                 const emojiEl = document.getElementById('winner-emoji');
@@ -1566,22 +1796,16 @@
                 const subtitleEl = document.getElementById('winner-subtitle');
                 const indicatorEl = document.getElementById('winner-indicator');
 
-                if (isWinner) {
-                    if (emojiEl) {
-                        emojiEl.textContent = '🎉';
-                        emojiEl.classList.add('winner-animation');
+                if (emojiEl) emojiEl.textContent = winnerEmoji;
+                if (titleEl) titleEl.textContent = winnerText;
+                if (subtitleEl) subtitleEl.textContent = winnerSubtext;
+                if (indicatorEl) {
+                    indicatorEl.classList.remove('winner-animation', 'loser-animation');
+                    if (isWinner) {
+                        indicatorEl.classList.add('winner-animation');
+                    } else {
+                        indicatorEl.classList.add('loser-animation');
                     }
-                    if (titleEl) titleEl.textContent = winners.length > 1 ? 'You Tied!' : 'You Won!';
-                    if (subtitleEl) subtitleEl.textContent = 'Congratulations! 🏆';
-                    if (indicatorEl) indicatorEl.classList.add('winner-animation');
-                } else {
-                    if (emojiEl) {
-                        emojiEl.textContent = '😔';
-                        emojiEl.classList.add('loser-animation');
-                    }
-                    if (titleEl) titleEl.textContent = 'Better Luck Next Time';
-                    if (subtitleEl) subtitleEl.textContent = 'Keep practicing! You\'ll get \'em next time.';
-                    if (indicatorEl) indicatorEl.classList.add('loser-animation');
                 }
 
                 // Display final scores
@@ -1590,16 +1814,18 @@
                     scoresListEl.innerHTML = '';
                     playerArray.forEach((player, index) => {
                         const div = document.createElement('div');
-                        const isMe = player.id === this.playerId;
-                        const isTopScore = player.score === highestScore;
-                        div.className = `flex justify-between items-center p-3 rounded-xl ${isMe ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'}`;
+                        div.className = `flex justify-between items-center p-3 rounded-xl ${player.id === this.playerId ? 'bg-slate-50 border-2 border-slate-200' : 'bg-white'}`;
+
+                        const teamIndicator = isTeamMode ?
+                            `<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${player.team === 'A' ? 'team-a' : 'team-b'} ml-2">Team ${player.team}</span>` : '';
+
                         div.innerHTML = `
-                            <div class="flex items-center gap-2">
-                                <span class="text-lg font-black ${isTopScore ? 'text-yellow-500' : 'text-slate-400'}">${index + 1}</span>
-                                <span class="font-bold text-slate-700">${player.name}${isMe ? ' (You)' : ''}</span>
-                                ${isTopScore ? '<span class="text-lg">👑</span>' : ''}
+                            <div class="flex items-center">
+                                <span class="text-xs font-black text-slate-400 mr-3">${index + 1}</span>
+                                <span class="font-bold text-slate-800">${player.name}${player.id === this.playerId ? ' (You)' : ''}</span>
+                                ${teamIndicator}
                             </div>
-                            <span class="font-black text-slate-800 text-lg">${player.score || 0}</span>
+                            <span class="font-black text-slate-800">${player.score || 0}</span>
                         `;
                         scoresListEl.appendChild(div);
                     });
@@ -1659,19 +1885,17 @@
                 let shouldFinish = false;
 
                 if (initialCount === 4 && playerCount === 3) {
-                    // Start 4 -> Player left -> 3 players (2v1) -> Option 3
-                    shouldFinish = true;
+                    // Start 4 -> Player left -> 3 players (2v1) -> Mandatory for 4p start 
+                    await this.roomRef.child('gameState/forcedFinish').set(true);
+                    return;
                 } else if (initialCount >= 5 && initialCount <= 8) {
                     // Start 5-8 -> check for 1vn or nv1
                     const teamA = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'A');
                     const teamB = Object.values(this.players).filter(p => p.id !== removedPlayerId && p.team === 'B');
 
-                    if (teamA.length === 1 || teamB.length === 1) {
-                        shouldFinish = true;
-                    }
-                    if (teamA.length === 0 || teamB.length === 0) {
-                        // Total collapse
-                        await this.endGame();
+                    if (teamA.length <= 1 || teamB.length <= 1) {
+                        // 1vn or 0vn -> Mandatory end game
+                        await this.roomRef.child('gameState/forcedFinish').set(true);
                         return;
                     }
                 }
@@ -1712,8 +1936,8 @@
                     console.error('Error leaving room:', error);
                 } finally {
                     this.cleanup();
-                    this.game.multiplayerMode = false;
-                    this.game.showScreen('start');
+                    // Using location.reload() to guarantee full fresh state and main menu return
+                    location.reload();
                 }
             }
 
@@ -2039,12 +2263,22 @@
 
                 clearInterval(this.timer);
                 this.roundHistory.push({ round: this.roundNumber, score: this.roundScore });
-                document.getElementById('modal-end-turn').classList.add('hidden');
+
                 document.getElementById('round-score-val').textContent = this.roundScore;
                 document.getElementById('summary-title').textContent = `Round ${this.roundNumber} Done!`;
                 this.roundNumber++;
                 this.currentCard = null;
                 this.showScreen('summary');
+            }
+
+            continueAnyway() {
+                const modal = document.getElementById('modal-finish-game-prompt');
+                if (modal) modal.classList.add('hidden');
+
+                // Clear the flag in Firebase so other players don't see it anymore
+                if (this.multiplayerMode && this.multiplayer.isHost) {
+                    this.multiplayer.roomRef.child('gameState/promptFinish').remove();
+                }
             }
 
             showEndGame() {
