@@ -802,6 +802,12 @@
                     this.db = firebase.database();
                     this.playerId = this.generatePlayerId();
 
+                    // Track server time offset
+                    this.serverTimeOffset = 0;
+                    this.db.ref('.info/serverTimeOffset').on('value', (snap) => {
+                        this.serverTimeOffset = snap.val() || 0;
+                    });
+
                     // Add presence logic
                     const connectedRef = this.db.ref('.info/connected');
                     connectedRef.on('value', (snap) => {
@@ -1062,13 +1068,15 @@
                 if (!this.isHost || this.hostTimer) return;
 
                 this.hostTimer = setInterval(async () => {
-                    if (this.gameState && this.gameState.roundActive && this.gameState.timer > 0) {
-                        const newTimer = this.gameState.timer - 1;
-                        await this.roomRef.child('gameState/timer').set(newTimer);
+                    // Watchdog: If round is active and time exceeded by 2 seconds, force end
+                    if (this.gameState && this.gameState.roundActive && this.gameState.roundStartTime) {
+                        const now = Date.now() + (this.serverTimeOffset || 0);
+                        const elapsed = (now - this.gameState.roundStartTime) / 1000;
+                        const limit = this.gameState.timer + 2; // 2 seconds grace
 
-                        if (newTimer === 0) {
-                            // Timer expired - end the round
-                            // The active player will handle this via the handleGameStateChange
+                        if (elapsed > limit) {
+                            console.warn("Host forcing end of round due to timeout");
+                            this.endRound(false, true); // Force end
                         }
                     }
                 }, 1000);
@@ -1409,11 +1417,11 @@
                 this.game.playObnoxiousBuzzer();
             }
 
-            async endRound(lastCorrect) {
+            async endRound(lastCorrect, force = false) {
                 if (!this.roomRef || !this.gameState) return;
 
                 const currentPlayerId = this.gameState.currentPlayer;
-                if (currentPlayerId !== this.playerId) return;
+                if (!force && currentPlayerId !== this.playerId) return;
 
                 // Prevent multiple calls
                 if (this.endingRound) return;
@@ -1495,20 +1503,51 @@
 
                 // Sync timer
                 if (this.gameState.timer !== undefined) {
-                    this.game.timeLeft = this.gameState.timer;
-                    const timerEl = document.getElementById('timer-display');
-                    if (timerEl) {
-                        timerEl.textContent = this.gameState.timer;
-                        if (this.gameState.timer <= 10 && this.gameState.roundActive) {
-                            timerEl.classList.add('pulse-timer');
-                        } else {
+                    // Clear existing local timer if round is not active
+                    if (!this.gameState.roundActive) {
+                        if (this.localTimer) {
+                            clearInterval(this.localTimer);
+                            this.localTimer = null;
+                        }
+                        // Reset display to full duration
+                        this.game.timeLeft = this.gameState.timer;
+                        const timerEl = document.getElementById('timer-display');
+                        if (timerEl) {
+                            timerEl.textContent = this.gameState.timer;
                             timerEl.classList.remove('pulse-timer');
                         }
-                    }
+                    } else {
+                        // Round IS active. Start local timer if not running
+                        if (!this.localTimer && this.gameState.roundStartTime) {
+                            this.localTimer = setInterval(() => {
+                                const now = Date.now() + (this.serverTimeOffset || 0);
+                                const elapsed = (now - this.gameState.roundStartTime) / 1000;
+                                const remaining = Math.max(0, Math.ceil(this.gameState.timer - elapsed));
 
-                    // Active player handles end of round when timer hits zero
-                    if (this.gameState.timer === 0 && this.gameState.roundActive && isMyTurn) {
-                        this.endRound(false);
+                                this.game.timeLeft = remaining;
+
+                                const timerEl = document.getElementById('timer-display');
+                                if (timerEl) {
+                                    timerEl.textContent = remaining;
+                                    if (remaining <= 10) {
+                                        timerEl.classList.add('pulse-timer');
+                                    } else {
+                                        timerEl.classList.remove('pulse-timer');
+                                    }
+                                }
+
+                                // Check for end of round
+                                if (remaining <= 0 && this.gameState.roundActive) {
+                                    // Prevent multiple triggers
+                                    if (this.endingRound) return;
+
+                                    const currentPlayerId = this.gameState.currentPlayer;
+                                    if (currentPlayerId === this.playerId) {
+                                        this.endRound(false);
+                                    }
+                                }
+                            }, 100);
+                        }
                     }
                 }
 
@@ -1996,6 +2035,14 @@
                 if (this.game.timer) {
                     clearInterval(this.game.timer);
                     this.game.timer = null;
+                }
+                if (this.localTimer) {
+                    clearInterval(this.localTimer);
+                    this.localTimer = null;
+                }
+                if (this.hostTimer) {
+                    clearInterval(this.hostTimer);
+                    this.hostTimer = null;
                 }
             }
 
