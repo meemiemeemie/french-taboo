@@ -775,6 +775,7 @@
                 this.playerId = null;
                 this.roomCode = null;
                 this.isHost = false;
+                this.currentHostId = null;
                 this.players = {};
                 this.gameState = null;
                 this.sessionPlayedIds = new Set();
@@ -857,6 +858,7 @@
 
                     this.roomCode = code;
                     this.isHost = true;
+                    this.currentHostId = this.playerId;
 
                     const roomPath = `rooms/${code}`;
                     this.roomRef = this.db.ref(roomPath);
@@ -926,6 +928,7 @@
                     }
 
                     this.isHost = roomData.host === this.playerId;
+                    this.currentHostId = roomData.host;
                     await this.joinRoomAsPlayer(playerName);
                     this.setupRoomListeners();
                     return true;
@@ -965,9 +968,7 @@
 
                     // Host Migration Logic
                     if (this.roomRef && this.players) {
-                        const roomSnapshot = await this.roomRef.once('value');
-                        const roomData = roomSnapshot.val();
-                        const currentHostId = roomData?.host;
+                        const currentHostId = this.currentHostId;
 
                         // If host is missing or offline
                         if (!currentHostId || !this.players[currentHostId] || this.players[currentHostId].online === false) {
@@ -992,6 +993,7 @@
                 // Listen to Host changes
                 this.roomRef.child('host').on('value', (snapshot) => {
                     const newHostId = snapshot.val();
+                    this.currentHostId = newHostId;
                     const wasHost = this.isHost;
                     this.isHost = (newHostId === this.playerId);
 
