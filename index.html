@@ -358,7 +358,7 @@
     <main class="w-full max-w-md my-auto">
         <!-- START SCREEN -->
         <div id="screen-start" class="text-center">
-            <div class="text-6xl mb-4">🇫🇷</div>
+            <div id="main-logo-emoji" class="text-6xl mb-4">🇫🇷</div>
             <h1 class="text-3xl font-black text-slate-800 mb-2">Taboo Français</h1>
             <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">
                 Loading...</p>
@@ -2265,9 +2265,18 @@
             }
 
             async initApp() {
+                this.handleWindowsEmoji();
                 await this.fetchData();
                 if (this.multiplayer) {
                     this.multiplayer.tryAutoRejoin();
+                }
+            }
+
+            handleWindowsEmoji() {
+                const isWindows = navigator.userAgent.indexOf('Windows') !== -1;
+                if (isWindows) {
+                    const el = document.getElementById('main-logo-emoji');
+                    if (el) el.textContent = '🥖';
                 }
             }
 
