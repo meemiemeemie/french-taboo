@@ -43,7 +43,10 @@ A web-based French language learning game inspired by the classic Taboo game. Pl
 - **Word Review**: Review all words played during your session with links to definitions
 - **Round History**: Track your performance across multiple rounds
 - **Mobile-Friendly**: Responsive design optimized for mobile devices
+- **Persistent Storage**: Automatically saves your player name, ID, and game history locally
+- **Auto-Rejoining**: Refreshing the page won't lose your game as long as the room exists
 - **No Dependencies**: Pure HTML/CSS/JavaScript - no build process required
+- **"How to Play" Overlay**: Integrated instructions available directly in the main menu
 
 ## 📋 Word Categories
 
@@ -102,10 +105,11 @@ Multiplayer mode requires Firebase Realtime Database. Follow these steps:
 
 4. **Update `index.html`**
    - Open `index.html` in a text editor
-   - Find the `FIREBASE_CONFIG` object (around line 264)
-   - Replace the placeholder values with your Firebase config:
+   - Find the `firebaseConfig` object (around line 800)
+   - Replace the placeholder values with your Firebase config.
+   - **Security Tip**: Restrict your API key to your specific domain in the Google Cloud Console (APIs & Services > Credentials).
      ```javascript
-     const FIREBASE_CONFIG = {
+     const firebaseConfig = {
        apiKey: "YOUR_API_KEY",
        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
        databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
@@ -166,7 +170,7 @@ french-taboo/
 - **Fonts**: Google Fonts (Lexend)
 - **Data Source**: CSV file hosted on GitHub
 - **Audio**: Web Audio API for buzzer sound
-- **Storage**: Session-based (no persistent storage)
+- **Storage**: Persistent `localStorage` for player identity, game history, and words described
 - **Multiplayer**: Firebase Realtime Database for real-time synchronization
   - Real-time state sync (cards, timer, scores)
   - Room-based system with 4-character codes

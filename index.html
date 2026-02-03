@@ -398,10 +398,16 @@
                     Multiplayer
                 </button>
             </div>
-            <button id="btn-reset-cards" onclick="game.resetAllCards()"
-                class="w-full py-2 text-slate-400 font-bold text-sm underline mb-8">
-                Put all cards back in play
-            </button>
+            <div class="flex flex-col gap-2 mb-8">
+                <button id="btn-how-to-play" onclick="game.showHowToPlay()"
+                    class="w-full py-2 text-pink-500 font-bold text-sm flex items-center justify-center gap-1">
+                    <span>❔ How to Play</span>
+                </button>
+                <button id="btn-reset-cards" onclick="game.resetAllCards()"
+                    class="w-full py-1 text-slate-400 font-bold text-[11px] underline">
+                    Reset all cards
+                </button>
+            </div>
 
             <div class="flex flex-col items-center">
                 <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
@@ -714,6 +720,51 @@
         </div>
     </div>
 
+    <!-- HOW TO PLAY MODAL -->
+    <div id="modal-how-to-play" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-6 overlay">
+        <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full max-h-[80vh] overflow-y-auto no-scrollbar">
+            <div class="text-4xl mb-4 text-center">📖</div>
+            <h3 class="text-2xl font-black mb-4 text-center">How to Play</h3>
+
+            <div class="space-y-6 text-sm text-slate-600">
+                <section>
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                        Goal</h4>
+                    <p>Describe the word at the top without using any of the 5 taboo words listed below it!</p>
+                </section>
+
+                <section>
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                        Modes</h4>
+                    <ul class="space-y-3">
+                        <li class="flex gap-3">
+                            <span class="text-lg">📱</span>
+                            <span><strong>Local Pass-and-Play:</strong> One phone, in the same room. Pass the phone to
+                                the next player after each round.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-lg">🌐</span>
+                            <span><strong>Online Multiplayer:</strong> Play with friends on their own devices. One
+                                person hosts, others join with a 4-letter code.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                        Buzzer</h4>
+                    <p>In Online mode, other players have a <strong>BUZZ</strong> button. If they hear you say a taboo
+                        word, they'll buzz you and you lose the point!</p>
+                </section>
+            </div>
+
+            <button onclick="game.hideHowToPlay()"
+                class="w-full mt-8 bg-slate-800 text-white py-4 rounded-2xl font-black">
+                Got it!
+            </button>
+        </div>
+    </div>
+
     <!-- Leave Game Modal - Step 1: Choose action -->
     <div id="modal-leave-game" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
         <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
@@ -755,7 +806,11 @@
     <script>
         const REMOTE_URL = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/word-list.csv';
 
-        // Firebase configuration - Replace with your Firebase project config
+        /**
+         * FIREBASE CONFIGURATION
+         * IMPORTANT: In a production environment, restrict your API key to your domain 
+         * in the Google Cloud Console (APIs & Services > Credentials).
+         */
         const firebaseConfig = {
             apiKey: "AIzaSyDwuX6WaTRSLAeDqdex0VyapFKYEJ5OGfQ",
             authDomain: "french-taboo.firebaseapp.com",
@@ -767,12 +822,70 @@
             measurementId: "G-LPCQEL2RXM"
         };
 
+        class StorageManager {
+            constructor() {
+                this.PREFIX = 'taboo_';
+            }
+
+            save(key, val) {
+                try {
+                    localStorage.setItem(this.PREFIX + key, JSON.stringify(val));
+                } catch (e) {
+                    console.error('Storage error:', e);
+                }
+            }
+
+            get(key) {
+                try {
+                    const item = localStorage.getItem(this.PREFIX + key);
+                    return item ? JSON.parse(item) : null;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            getPlayerId() { return this.get('player_id'); }
+            savePlayerId(id) { this.save('player_id', id); }
+
+            getPlayerName() { return this.get('player_name'); }
+            savePlayerName(name) { this.save('player_name', name); }
+
+            getRoomCode() { return this.get('room_code'); }
+            saveRoomCode(code) { this.save('room_code', code); }
+            clearRoomCode() { localStorage.removeItem(this.PREFIX + 'room_code'); }
+
+            getGameHistory() { return this.get('history') || []; }
+            addGameToHistory(game) {
+                const history = this.getGameHistory();
+                history.unshift({ ...game, timestamp: Date.now() });
+                this.save('history', history.slice(0, 20));
+            }
+
+            getDescribedWords() { return this.get('described_words') || []; }
+            addDescribedWord(wordData) {
+                const words = this.getDescribedWords();
+                if (!words.find(w => w.word === wordData.word)) {
+                    words.unshift({ ...wordData, timestamp: Date.now() });
+                    this.save('described_words', words.slice(0, 500));
+                }
+            }
+
+            updateLastWordStatus(status) {
+                const words = this.getDescribedWords();
+                if (words.length > 0) {
+                    words[0].status = status;
+                    this.save('described_words', words);
+                }
+            }
+        }
+
         class MultiplayerManager {
             constructor(gameInstance) {
                 this.game = gameInstance;
+                this.storage = new StorageManager();
                 this.db = null;
                 this.roomRef = null;
-                this.playerId = null;
+                this.playerId = this.storage.getPlayerId();
                 this.roomCode = null;
                 this.isHost = false;
                 this.currentHostId = null;
@@ -786,14 +899,12 @@
 
             initialize() {
                 try {
-                    // Check if Firebase is loaded
                     if (typeof firebase === 'undefined') {
                         console.error('Firebase SDK not loaded');
                         return false;
                     }
 
                     if (!firebase.apps || firebase.apps.length === 0) {
-                        // Check if config is valid
                         if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('YOUR_API_KEY')) {
                             console.warn('Firebase configuration is incomplete.');
                             return false;
@@ -801,7 +912,11 @@
                         firebase.initializeApp(firebaseConfig);
                     }
                     this.db = firebase.database();
-                    this.playerId = this.generatePlayerId();
+
+                    if (!this.playerId) {
+                        this.playerId = this.generatePlayerId();
+                        this.storage.savePlayerId(this.playerId);
+                    }
 
                     // Track server time offset
                     this.serverTimeOffset = 0;
@@ -868,6 +983,8 @@
 
                     const roomPath = `rooms/${code}`;
                     this.roomRef = this.db.ref(roomPath);
+                    this.storage.saveRoomCode(code);
+                    this.storage.savePlayerName(hostName || 'Host');
 
                     // Create room with expiration (1 hour)
                     const expirationTime = Date.now() + (60 * 60 * 1000);
@@ -935,12 +1052,46 @@
 
                     this.isHost = roomData.host === this.playerId;
                     this.currentHostId = roomData.host;
+                    this.storage.saveRoomCode(code);
+                    this.storage.savePlayerName(playerName);
                     await this.joinRoomAsPlayer(playerName);
                     this.setupRoomListeners();
                     return true;
                 } catch (error) {
                     console.error('Error joining room:', error);
                     alert('Failed to join room. Please check your connection and try again.');
+                    return false;
+                }
+            }
+
+            async tryAutoRejoin() {
+                try {
+                    const savedCode = this.storage.getRoomCode();
+                    const savedName = this.storage.getPlayerName();
+
+                    if (!savedCode || !savedName) return false;
+
+                    if (!this.db) {
+                        if (!this.initialize()) return false;
+                    }
+
+                    console.log('Attempting auto-rejoin to:', savedCode);
+
+                    const roomPath = `rooms/${savedCode}`;
+                    const snapshot = await this.db.ref(roomPath).once('value');
+
+                    if (!snapshot.exists()) {
+                        console.log('Room no longer exists');
+                        this.storage.clearRoomCode();
+                        return false;
+                    }
+
+                    const roomData = snapshot.val();
+                    // If room exists and player was in it (or room is still open)
+                    // We just join normally. joinRoom handles the rest.
+                    return await this.joinRoom(savedCode, savedName);
+                } catch (e) {
+                    console.error('Auto-rejoin error:', e);
                     return false;
                 }
             }
@@ -1334,14 +1485,15 @@
                 const currentPlayerId = this.gameState.currentPlayer;
                 if (currentPlayerId !== this.playerId) return;
 
-                // Log the current word for this player's session summary
                 if (this.game.currentCard) {
+                    const status = scored ? 'correct' : 'skipped';
                     this.game.wordLog.push({
                         word: this.game.currentCard.word,
                         type: this.game.currentCard.type,
                         level: this.game.currentCard.level,
-                        status: scored ? 'correct' : 'skipped'
+                        status: status
                     });
+                    this.storage.updateLastWordStatus(status);
 
                     if (scored) {
                         const currentScore = this.players[this.playerId]?.score || 0;
@@ -1387,6 +1539,13 @@
 
                 // Mark card as buzzed (remove from play, no score)
                 if (this.game.currentCard) {
+                    this.game.wordLog.push({
+                        word: this.game.currentCard.word,
+                        type: this.game.currentCard.type,
+                        level: this.game.currentCard.level,
+                        status: 'timeout'
+                    });
+                    this.storage.updateLastWordStatus('timeout');
                     await this.addSessionPlayed(this.game.currentCard.id);
                 }
 
@@ -1434,12 +1593,14 @@
                 this.endingRound = true;
 
                 if (this.game.currentCard) {
+                    const status = lastCorrect ? 'correct' : 'timeout';
                     this.game.wordLog.push({
                         word: this.game.currentCard.word,
                         type: this.game.currentCard.type,
                         level: this.game.currentCard.level,
-                        status: lastCorrect ? 'correct' : 'timeout'
+                        status: status
                     });
+                    this.storage.updateLastWordStatus(status);
                 }
 
                 if (lastCorrect && this.game.currentCard) {
@@ -1893,6 +2054,15 @@
                     }
                 }
 
+                // Save game to history
+                this.storage.addGameToHistory({
+                    roomCode: this.roomCode,
+                    score: this.players[this.playerId]?.score || 0,
+                    mode: isTeamMode ? 'Team' : 'FFA',
+                    winnerText: winnerText,
+                    isWinner: isWinner
+                });
+
                 // Display final scores
                 const scoresListEl = document.getElementById('final-scores-list');
                 if (scoresListEl) {
@@ -2023,6 +2193,7 @@
                 } catch (error) {
                     console.error('Error leaving room:', error);
                 } finally {
+                    this.storage.clearRoomCode();
                     this.cleanup();
                     // Using location.reload() to guarantee full fresh state and main menu return
                     location.reload();
@@ -2087,9 +2258,17 @@
                 this.levels = ['A1', 'A2', 'B1', 'B2'];
 
                 this.multiplayerMode = false;
+                this.storage = new StorageManager();
                 this.multiplayer = new MultiplayerManager(this);
 
-                this.fetchData();
+                this.initApp();
+            }
+
+            async initApp() {
+                await this.fetchData();
+                if (this.multiplayer) {
+                    this.multiplayer.tryAutoRejoin();
+                }
             }
 
             async fetchData() {
@@ -2285,12 +2464,14 @@
 
             nextCard(scored, skipAction = false) {
                 if (this.currentCard) {
+                    const status = scored ? 'correct' : (skipAction ? 'skipped' : 'timeout');
                     this.wordLog.push({
                         word: this.currentCard.word,
                         type: this.currentCard.type,
                         level: this.currentCard.level,
-                        status: scored ? 'correct' : (skipAction ? 'skipped' : 'timeout')
+                        status: status
                     });
+                    this.storage.updateLastWordStatus(status);
                     this.addPlayed(this.currentCard.id);
                 }
 
@@ -2433,6 +2614,11 @@
                 const targetEl = document.getElementById('screen-' + id);
                 if (targetEl) targetEl.classList.remove('hidden');
 
+                if (id === 'lobby' && this.multiplayer && this.multiplayer.roomCode) {
+                    const roomCodeEl = document.getElementById('lobby-room-code');
+                    if (roomCodeEl) roomCodeEl.textContent = this.multiplayer.roomCode;
+                }
+
                 const hud = document.getElementById('game-hud');
                 const leaveBtn = document.getElementById('leave-game-btn');
                 const leaveSep = document.getElementById('leave-separator');
@@ -2452,6 +2638,16 @@
                         leaveSep.classList.add('hidden');
                     }
                 }
+            }
+
+            showHowToPlay() {
+                const modal = document.getElementById('modal-how-to-play');
+                if (modal) modal.classList.remove('hidden');
+            }
+
+            hideHowToPlay() {
+                const modal = document.getElementById('modal-how-to-play');
+                if (modal) modal.classList.add('hidden');
             }
 
             // Multiplayer methods
@@ -2530,6 +2726,22 @@
 
             displayCard(card) {
                 if (!card) return;
+
+                // Track word in local history if we are the one describing
+                const isMultiplayerDescribing = this.multiplayerMode &&
+                    this.multiplayer.gameState &&
+                    this.multiplayer.gameState.currentPlayer === this.multiplayer.playerId;
+
+                if (!this.multiplayerMode || isMultiplayerDescribing) {
+                    this.storage.addDescribedWord({
+                        word: card.word,
+                        taboo: card.taboo,
+                        level: card.level,
+                        type: card.type || 'N/A',
+                        status: 'current'
+                    });
+                }
+
                 document.getElementById('word-to-guess').textContent = card.word;
                 document.getElementById('card-level-tag').textContent = `Level ${card.level}`;
                 const list = document.getElementById('taboo-words');
