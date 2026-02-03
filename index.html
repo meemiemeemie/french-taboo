@@ -1169,16 +1169,20 @@
 
                 if (listEl) {
                     listEl.innerHTML = '';
+                    const fragment = document.createDocumentFragment();
                     playerArray.forEach(player => {
-                        listEl.appendChild(renderPlayer(player, false));
+                        fragment.appendChild(renderPlayer(player, false));
                     });
+                    listEl.appendChild(fragment);
                 }
 
                 if (gameListEl) {
                     gameListEl.innerHTML = '';
+                    const fragment = document.createDocumentFragment();
                     playerArray.forEach(player => {
-                        gameListEl.appendChild(renderPlayer(player, true));
+                        fragment.appendChild(renderPlayer(player, true));
                     });
+                    gameListEl.appendChild(fragment);
                 }
 
                 // Show/hide host controls
