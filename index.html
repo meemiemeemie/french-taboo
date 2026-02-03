@@ -2045,7 +2045,7 @@
 
             async fetchData() {
                 try {
-                    const response = await fetch(REMOTE_URL + '?t=' + Date.now());
+                    const response = await fetch(REMOTE_URL);
                     const text = await response.text();
                     this.loadData(text);
                 } catch (e) {
