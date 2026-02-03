@@ -2068,6 +2068,7 @@
                         id: word + '|' + level,
                         word,
                         level: level,
+                        levelIdx: this.levels.indexOf(level),
                         type: cols[2].trim(),
                         taboo: [cols[3], cols[4], cols[5], cols[6], cols[7]].map(s => s.trim())
                     });
@@ -2086,7 +2087,7 @@
                 if (!level || !this.db.length) return [];
                 const maxIdx = this.levels.indexOf(level);
                 const playedSource = this.multiplayerMode ? this.multiplayer.sessionPlayedIds : this.playedIds;
-                return this.db.filter(c => this.levels.indexOf(c.level) <= maxIdx && !playedSource.has(c.id));
+                return this.db.filter(c => c.levelIdx <= maxIdx && !playedSource.has(c.id));
             }
 
             addPlayed(id) {
