@@ -393,9 +393,34 @@
                     <span id="start-btn-sub"
                         class="text-[10px] uppercase tracking-widest opacity-80 mt-1 hidden"></span>
                 </button>
+            </div>
+
+            <!-- Timer Mode Selection -->
+            <div class="mb-6">
+                <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">Timer Mode
+                </div>
+                <div class="flex gap-2">
+                    <button id="timer-standard" onclick="game.setTimerMode(60, this)"
+                        class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
+                        Standard (60s)
+                    </button>
+                    <button id="timer-beginner" onclick="game.setTimerMode(120, this)"
+                        class="flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all">
+                        Beginner (2m)
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mb-4">
+                <button id="btn-local-play" onclick="game.showScreen('start')"
+                    class="btn-3d flex-1 bg-pink-500 text-white py-4 rounded-3xl text-sm font-black flex flex-col items-center gap-1 shadow-lg">
+                    <span class="text-xl">📱</span>
+                    <span>Local Pass-and-Play</span>
+                </button>
                 <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()"
-                    class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
-                    Multiplayer
+                    class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-3xl text-sm font-black flex flex-col items-center gap-1 shadow-lg">
+                    <span class="text-xl">🌐</span>
+                    <span>Online Multiplayer</span>
                 </button>
             </div>
             <div class="flex flex-col gap-2 mb-8">
@@ -739,13 +764,14 @@
                     <ul class="space-y-3">
                         <li class="flex gap-3">
                             <span class="text-lg">📱</span>
-                            <span><strong>Local Pass-and-Play:</strong> One phone, in the same room. Pass the phone to
-                                the next player after each round.</span>
+                            <span><strong>Local Pass-and-Play:</strong> One phone, in the same room. Select
+                                <strong>Standard</strong> or <strong>Beginner</strong> timer, then pass the phone to the
+                                next player after each round.</span>
                         </li>
                         <li class="flex gap-3">
                             <span class="text-lg">🌐</span>
                             <span><strong>Online Multiplayer:</strong> Play with friends on their own devices. One
-                                person hosts, others join with a 4-letter code.</span>
+                                person hosts and sets the timer, others join with a 4-letter code.</span>
                         </li>
                     </ul>
                 </section>
@@ -1391,7 +1417,7 @@
                     level: level,
                     currentPlayer: firstPlayer,
                     currentCard: null,
-                    timer: 60,
+                    timer: this.game.timeLeft, // Use currently selected timer duration
                     roundActive: false,
                     teams: teams,
                     turnOrder: turnOrder,
@@ -1464,7 +1490,7 @@
 
                 await this.roomRef.child('gameState').update({
                     currentCard: card,
-                    timer: 60,
+                    timer: this.gameState.timer, // Use the room's set timer
                     roundActive: true,
                     roundStartTime: firebase.database.ServerValue.TIMESTAMP
                 });
@@ -1623,7 +1649,7 @@
                     currentPlayer: nextPlayer,
                     currentCard: null,
                     roundActive: false,
-                    timer: 60,
+                    timer: this.gameState.timer,
                     currentTurnIndex: nextIndex
                 });
 
@@ -2179,7 +2205,7 @@
                     currentPlayer: nextPlayer,
                     currentCard: null,
                     roundActive: false,
-                    timer: 60,
+                    timer: this.gameState.timer,
                     currentTurnIndex: nextIndex
                 });
             }
@@ -2437,6 +2463,21 @@
                 this.updateStartUI();
             }
 
+            setTimerMode(duration, btn) {
+                this.timeLeft = duration;
+                this.timerDuration = duration;
+
+                // Update UI state
+                document.getElementById('timer-standard').className = 'flex-1 py-3 rounded-xl border-2 transition-all ' +
+                    (duration === 60 ? 'border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
+                document.getElementById('timer-beginner').className = 'flex-1 py-3 rounded-xl border-2 transition-all ' +
+                    (duration === 120 ? 'border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
+
+                // Update HUD immediately
+                const timerEl = document.getElementById('timer-display');
+                if (timerEl) timerEl.textContent = duration;
+            }
+
             startRound() {
                 if (this.multiplayerMode) {
                     // Multiplayer rounds are started by individual players
@@ -2452,7 +2493,7 @@
                 }
                 this.initAudio();
                 this.roundScore = 0;
-                this.timeLeft = 60;
+                this.timeLeft = this.timerDuration || 60;
                 this.skips = 1;
                 this.updateStackDisplay();
                 this.nextCard(false);

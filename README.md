@@ -8,18 +8,19 @@ A web-based French language learning game inspired by the classic Taboo game. Pl
 *Best for friends and family in the same room.*
 
 1. **Select a Level**: Choose from A1 (Beginner), A2 (Elementary), B1 (Intermediate), or B2 (Upper Intermediate).
-2. **Start a Round**: One person takes the phone. Each round lasts 60 seconds.
-3. **Describe the Word**: Explain the target word at the top without using any of the 5 taboo words listed below it.
-4. **Score Points**: A teammate guesses. Click **Correct!** for each success.
-5. **Pass the Phone**: After the round ends, pass the device to the next player.
+2. **Select Timer Mode**: Choose between **Standard (60s)** or **Beginner (120s)**.
+3. **Start a Round**: Click **"📱 Local Pass-and-Play"**. One person takes the phone.
+4. **Describe the Word**: Explain the target word at the top without using any of the 5 taboo words listed below it.
+5. **Score Points**: A teammate guesses. Click **Correct!** for each success.
+6. **Pass the Phone**: After the round ends, pass the device to the next player.
 6. **Buzzer**: Use the big BUZZ button if someone says a taboo word!
 
 ### 🌐 Online Multiplayer (Play from Anywhere)
 *Best for playing with friends on their own devices.*
 
-1. **Setup**: One player clicks "Multiplayer" -> "Create Room" and shares the 4-character code (e.g., "AB12").
+1. **Setup**: One player clicks **"🌐 Online Multiplayer"** -> "Create Room" and shares the 4-character code (e.g., "AB12").
 2. **Join**: Other players enter the room code and their name to join.
-3. **Start Game**: The host selects a level and starts the session once everyone is in.
+3. **Start Game**: The host selects a level and **Timer Mode**, then starts the session once everyone is in.
 4. **Take Turns**: 
    - **2-3 Players**: Turn-based - one player describes, the others guess.
    - **4+ Players**: Team-based - the game automatically splits you into Team A and Team B.
@@ -30,6 +31,7 @@ A web-based French language learning game inspired by the classic Taboo game. Pl
 ## ✨ Features
 
 - **4 Difficulty Levels**: A1, A2, B1, B2 (CEFR standards).
+- **Variable Timers**: Choose **Standard (60s)** or **Beginner (120s)** for a more relaxed experience.
 - **1000+ French Words**: Comprehensive vocabulary coverage.
 - **Local Pass-and-Play**: No setup required, just one phone and a group of friends.
 - **Online Multiplayer**: Play with up to 8 people in real-time.
