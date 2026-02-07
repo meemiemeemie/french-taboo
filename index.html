@@ -363,64 +363,94 @@
             <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">
                 Loading...</p>
 
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <button onclick="game.setLevel('A1', this)"
-                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
-                    <div class="font-black text-pink-500 text-xl">A1</div>
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
+            <!-- Mode Tabs -->
+            <div class="flex bg-slate-100 p-1 rounded-2xl mb-6 shadow-inner">
+                <button id="tab-local" onclick="game.setTab('local')"
+                    class="flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm">
+                    <span>📱</span> Local
                 </button>
-                <button onclick="game.setLevel('A2', this)"
-                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
-                    <div class="font-black text-blue-500 text-xl">A2</div>
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
-                </button>
-                <button onclick="game.setLevel('B1', this)"
-                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
-                    <div class="font-black text-purple-500 text-xl">B1</div>
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
-                </button>
-                <button onclick="game.setLevel('B2', this)"
-                    class="level-btn bg-white p-4 rounded-2xl shadow-sm text-left">
-                    <div class="font-black text-orange-500 text-xl">B2</div>
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
+                <button id="tab-online" onclick="game.setTab('online')"
+                    class="flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 text-slate-400">
+                    <span>🌐</span> Online
                 </button>
             </div>
 
-            <div class="flex gap-3 mb-4">
-                <button id="btn-start-round" disabled onclick="game.startRound()"
-                    class="btn-3d flex-1 bg-slate-200 text-slate-400 py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight">
-                    <span id="start-btn-main" class="text-xl">Select a Level</span>
-                    <span id="start-btn-sub"
-                        class="text-[10px] uppercase tracking-widest opacity-80 mt-1 hidden"></span>
-                </button>
-            </div>
-
-            <!-- Timer Mode Selection -->
-            <div class="mb-6">
-                <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">Timer Mode
-                </div>
-                <div class="flex gap-2">
-                    <button id="timer-standard" onclick="game.setTimerMode(60, this)"
-                        class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
-                        Standard (60s)
+            <!-- Tab Content: Local -->
+            <div id="content-local" class="space-y-6">
+                <!-- Level Selection -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button
+                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
+                        onclick="game.setLevel('A1', this)">
+                        <div class="text-pink-500 font-black text-lg">A1</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Beginner</div>
                     </button>
-                    <button id="timer-beginner" onclick="game.setTimerMode(120, this)"
-                        class="flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all">
-                        Beginner (2m)
+                    <button
+                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
+                        onclick="game.setLevel('A2', this)">
+                        <div class="text-blue-500 font-black text-lg">A2</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Elementary</div>
+                    </button>
+                    <button
+                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
+                        onclick="game.setLevel('B1', this)">
+                        <div class="text-purple-500 font-black text-lg">B1</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Intermediate</div>
+                    </button>
+                    <button
+                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
+                        onclick="game.setLevel('B2', this)">
+                        <div class="text-orange-500 font-black text-lg">B2</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Upper Inter.</div>
                     </button>
                 </div>
+
+                <!-- Timer Mode -->
+                <div>
+                    <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">Timer
+                        Duration</div>
+                    <div class="flex gap-2">
+                        <button id="timer-standard" onclick="game.setTimerMode(60, this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
+                            Standard (60s)
+                        </button>
+                        <button id="timer-beginner" onclick="game.setTimerMode(120, this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all">
+                            Beginner (2m)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button id="btn-start-round" disabled onclick="game.startRound()"
+                        class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-xl shadow-lg">
+                        Select a Level
+                    </button>
+                </div>
             </div>
 
-            <div class="flex gap-3 mb-4">
-                <button id="btn-local-play" onclick="game.showScreen('start')"
-                    class="btn-3d flex-1 bg-pink-500 text-white py-4 rounded-3xl text-sm font-black flex flex-col items-center gap-1 shadow-lg">
-                    <span class="text-xl">📱</span>
-                    <span>Local Pass-and-Play</span>
-                </button>
-                <button id="btn-multiplayer" onclick="game.showMultiplayerOptions()"
-                    class="btn-3d flex-1 bg-blue-500 text-white py-4 rounded-3xl text-sm font-black flex flex-col items-center gap-1 shadow-lg">
-                    <span class="text-xl">🌐</span>
-                    <span>Online Multiplayer</span>
+            <!-- Tab Content: Online -->
+            <div id="content-online" class="hidden space-y-6">
+                <div class="bg-blue-50 p-6 rounded-3xl border border-blue-100 space-y-4">
+                    <div class="text-center">
+                        <div class="text-xl font-black text-blue-600 mb-1">Play with Friends</div>
+                        <p class="text-xs text-blue-400 font-medium">Create a private room and share the code</p>
+                    </div>
+
+                    <input id="input-host-name" type="text" maxlength="20" placeholder="Your Name (Optional)"
+                        class="w-full px-4 py-3 rounded-xl border-2 border-blue-100 text-center text-lg font-bold bg-white">
+
+                    <button onclick="game.createRoom()"
+                        class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-lg font-black shadow-lg">
+                        Create New Room
+                    </button>
+                </div>
+
+                <div class="text-center text-[10px] font-black text-slate-300 uppercase tracking-widest">— OR —</div>
+
+                <button onclick="game.showJoinRoom()"
+                    class="btn-3d w-full bg-white border-2 border-slate-100 text-slate-600 py-4 rounded-2xl text-lg font-black shadow-sm">
+                    Join Existing Room
                 </button>
             </div>
             <div class="flex flex-col gap-2 mb-8">
@@ -428,17 +458,17 @@
                     class="w-full py-2 text-pink-500 font-bold text-sm flex items-center justify-center gap-1">
                     <span>❔ How to Play</span>
                 </button>
-                <button id="btn-reset-cards" onclick="game.resetAllCards()"
-                    class="w-full py-1 text-slate-400 font-bold text-[11px] underline">
+                <button onclick="game.storage.resetPlayed()"
+                    class="text-[10px] text-slate-300 font-bold uppercase tracking-widest hover:text-slate-400 transition-colors">
                     Reset all cards
                 </button>
             </div>
-
-            <div class="flex flex-col items-center">
-                <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
-            </div>
         </div>
 
+        <button id="global-buzzer" onclick="game.handleBuzzer()"
+            class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-32 h-32 bg-red-600 text-white rounded-full font-black text-xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center border-8 border-red-500 uppercase z-[60]">
+            Buzz!
+        </button>
         <div id="screen-game" class="hidden flex flex-col items-center">
             <div id="card-container"
                 class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-pink-100 p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
@@ -446,7 +476,8 @@
                     <div id="card-level-tag"
                         class="inline-block px-3 py-1 rounded-full bg-pink-50 text-pink-500 text-[10px] font-black mb-4 uppercase">
                         Level A1</div>
-                    <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">...
+                    <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">
+                        ...
                     </h2>
                     <ul id="taboo-words" class="space-y-2"></ul>
                 </div>
@@ -478,7 +509,6 @@
 
             <!-- Multiplayer buzzer for opposing players -->
             <div id="multiplayer-buzzer-container" class="hidden w-full mb-8">
-                <div onmousedown="game.handleBuzzer()" class="buzzer-button">BUZZ!</div>
                 <p class="text-[10px] text-slate-400 font-bold uppercase mt-2 text-center">Buzz if you hear a taboo
                     word!</p>
             </div>
@@ -487,7 +517,8 @@
             <div id="multiplayer-turn-indicator"
                 class="hidden w-full mb-4 rounded-2xl p-4 border-2 transition-all duration-300">
                 <div id="turn-role-badge" class="role-badge hidden"></div>
-                <div class="text-lg font-black uppercase tracking-tight leading-none mb-1" id="turn-indicator-text">Your
+                <div class="text-lg font-black uppercase tracking-tight leading-none mb-1" id="turn-indicator-text">
+                    Your
                     turn!</div>
                 <div class="text-xs font-bold opacity-80" id="turn-indicator-subtext"></div>
             </div>
@@ -512,11 +543,11 @@
             <h2 id="summary-title" class="text-3xl font-black text-slate-800 mb-2">Round Finished</h2>
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-4 w-full shadow-sm">
                 <div id="round-score-val" class="text-6xl font-black text-pink-500 mb-2">0</div>
-                <div class="text-xs text-slate-400 uppercase font-black tracking-widest mb-6">Points this round</div>
+                <div class="text-xs text-slate-400 uppercase font-black tracking-widest mb-6">Points this round
+                </div>
 
                 <div class="flex flex-col items-center py-4">
-                    <div onmousedown="game.playObnoxiousBuzzer()" class="buzzer-button">BUZZ!</div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Buzz the Others!</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Next round coming up!</p>
                 </div>
             </div>
 
@@ -531,27 +562,7 @@
             </div>
         </div>
 
-        <!-- MULTIPLAYER OPTIONS SCREEN -->
-        <div id="screen-multiplayer-options" class="hidden text-center flex flex-col items-center">
-            <div class="text-6xl mb-4">👥</div>
-            <h2 class="text-3xl font-black text-slate-800 mb-6">Multiplayer Mode</h2>
-            <div class="flex flex-col gap-4 w-full">
-                <input id="input-host-name" type="text" maxlength="20" placeholder="Your Name (Optional)"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold">
-                <button onclick="game.createRoom()"
-                    class="btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black">
-                    Create Room
-                </button>
-                <button onclick="game.showJoinRoom()"
-                    class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-xl font-black">
-                    Join Room
-                </button>
-                <button onclick="game.showScreen('start')"
-                    class="w-full py-2 text-slate-400 font-bold text-sm underline">
-                    Back to Main Menu
-                </button>
-            </div>
-        </div>
+
 
         <!-- JOIN ROOM SCREEN -->
         <div id="screen-join-room" class="hidden text-center flex flex-col items-center">
@@ -560,6 +571,7 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
                 <label class="block text-left text-sm font-bold text-slate-600 mb-2">Room Code</label>
                 <input id="input-room-code" type="text" maxlength="4" placeholder="AB12"
+                    oninput="this.value = this.value.toUpperCase()"
                     class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-2xl font-black room-code-display uppercase mb-4"
                     style="letter-spacing: 0.2em;">
                 <label class="block text-left text-sm font-bold text-slate-600 mb-2">Your Name</label>
@@ -569,11 +581,11 @@
                     class="btn-3d w-full bg-blue-500 text-white py-3 rounded-xl font-black">
                     Join
                 </button>
+                <button onclick="game.showScreen('start')"
+                    class="w-full mt-4 text-slate-400 font-bold text-sm underline">
+                    Back
+                </button>
             </div>
-            <button onclick="game.showMultiplayerOptions()"
-                class="w-full py-2 text-slate-400 font-bold text-sm underline">
-                Back
-            </button>
         </div>
 
         <!-- LOBBY SCREEN -->
@@ -618,6 +630,19 @@
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
                         </button>
                     </div>
+
+                    <label class="block text-left text-sm font-bold text-slate-600 mb-2">Timer Duration</label>
+                    <div class="flex gap-2 mb-4">
+                        <button id="lobby-timer-standard" onclick="game.setMultiplayerTimer(60, this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
+                            Standard (60s)
+                        </button>
+                        <button id="lobby-timer-beginner" onclick="game.setMultiplayerTimer(120, this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all">
+                            Beginner (2m)
+                        </button>
+                    </div>
+
                     <button id="btn-start-game" disabled onclick="game.startMultiplayerGame()"
                         class="btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl text-xl font-black">
                         Select Level to Start
@@ -656,12 +681,13 @@
                 </button>
 
                 <div id="review-section" class="hidden mt-6 text-left">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3">Word Review (Click for Definition)
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3">Word Review (Click for
+                        Definition)
                     </h3>
                     <div id="word-review-list" class="space-y-2"></div>
                 </div>
             </div>
-            <button onclick="location.reload()"
+            <button onclick="game.returnToMainMenu()"
                 class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
                 Main Menu
             </button>
@@ -701,7 +727,7 @@
                 <div id="my-words-list" class="space-y-2 mb-6"></div>
             </div>
 
-            <button onclick="location.reload()"
+            <button onclick="game.returnToMainMenu()"
                 class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-xl font-black">
                 Main Menu
             </button>
@@ -779,8 +805,8 @@
                 <section>
                     <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
                         Buzzer</h4>
-                    <p>In Online mode, other players have a <strong>BUZZ</strong> button. If they hear you say a taboo
-                        word, they'll buzz you and you lose the point!</p>
+                    <p>In <strong>Online Team</strong> mode, the opposing team has a <strong>BUZZ</strong> button. If
+                        they hear you say a taboo word, they'll buzz you and you lose the point!</p>
                 </section>
             </div>
 
@@ -798,10 +824,13 @@
             <h3 class="text-xl font-black mb-2">Leave Game?</h3>
             <p class="text-slate-500 mb-6 text-sm">What would you like to do?</p>
             <div class="flex flex-col gap-3">
-                <button onclick="game.confirmLeaveAction('leave')"
+                <button id="btn-leave-individual" onclick="game.confirmLeaveAction('leave')"
                     class="w-full bg-orange-500 text-white py-3 rounded-xl font-bold">
                     Leave Game
                 </button>
+                <p id="leave-game-warning"
+                    class="hidden text-orange-600 text-[10px] font-black uppercase tracking-tighter bg-orange-50 p-3 rounded-xl border border-orange-100 leading-tight">
+                </p>
                 <button id="end-for-all-btn" onclick="game.confirmLeaveAction('endAll')"
                     class="w-full bg-red-500 text-white py-3 rounded-xl font-bold">
                     End for All Players
@@ -1386,6 +1415,15 @@
                 }
             }
 
+            async setTimer(seconds) {
+                if (!this.isHost || !this.roomRef) return;
+                try {
+                    await this.roomRef.child('gameState/timer').set(seconds);
+                } catch (e) {
+                    console.error("Error setting timer:", e);
+                }
+            }
+
             async startGame(level) {
                 if (!this.isHost || !this.roomRef) return;
 
@@ -1791,6 +1829,21 @@
                     const modal = document.getElementById('modal-end-turn');
                     if (modal) modal.classList.add('hidden');
                 }
+
+                // Visual feedback for timer in lobby
+                if (this.gameState.status === 'lobby' && this.gameState.timer !== undefined) {
+                    const standardBtn = document.getElementById('lobby-timer-standard');
+                    const beginnerBtn = document.getElementById('lobby-timer-beginner');
+                    if (standardBtn && beginnerBtn) {
+                        if (this.gameState.timer === 60) {
+                            standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all";
+                            beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
+                        } else {
+                            beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all";
+                            standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
+                        }
+                    }
+                }
             }
 
             showBuzzModal(buzzData) {
@@ -1931,10 +1984,16 @@
                     }
                 }
 
-                // Show/hide buttons based on role
-                const skipBtn = document.getElementById('btn-skip');
-                const buzzedBtn = document.getElementById('btn-buzzed');
-                const correctBtn = document.querySelector('button[onclick="game.nextCard(true)"]');
+                // Show/hide GLOBAL buzzer based on role
+                const globalBuzzer = document.getElementById('global-buzzer');
+                if (globalBuzzer) {
+                    const shouldShowBuzzer = roundActive && isOpposingTeam;
+                    if (shouldShowBuzzer) {
+                        globalBuzzer.classList.remove('hidden');
+                    } else {
+                        globalBuzzer.classList.add('hidden');
+                    }
+                }
 
                 if (isMyTurn && roundActive) {
                     // Active player during their round: show skip, buzzed, and correct buttons
@@ -1944,14 +2003,14 @@
                     if (buzzerContainer) buzzerContainer.classList.add('hidden');
                 } else if (!isMyTurn && roundActive) {
                     // Other players during active round
-                    if (isOpposingTeam || !isTeamMode) {
-                        // Opposing team or non-team mode: show buzzer, hide skip/correct/buzzed
+                    if (isOpposingTeam) {
+                        // Opposing team: show instructions, hide skip/correct/buzzed
                         if (skipBtn) skipBtn.classList.add('hidden');
                         if (buzzedBtn) buzzedBtn.classList.add('hidden');
                         if (correctBtn) correctBtn.classList.add('hidden');
                         if (buzzerContainer) buzzerContainer.classList.remove('hidden');
-                    } else if (isSameTeam) {
-                        // Same team (guessing): hide everything except timer
+                    } else if (isSameTeam || !isTeamMode) {
+                        // Same team (guessing) or FFA (no buzzer as per request): hide everything except timer
                         if (skipBtn) skipBtn.classList.add('hidden');
                         if (buzzedBtn) buzzedBtn.classList.add('hidden');
                         if (correctBtn) correctBtn.classList.add('hidden');
@@ -2371,37 +2430,27 @@
                 if (!el) return;
 
                 const startBtn = document.getElementById('btn-start-round');
-                const mainText = document.getElementById('start-btn-main');
-                const subText = document.getElementById('start-btn-sub');
+                if (!startBtn) return;
 
                 if (!this.selectedLevel) {
                     el.textContent = `${this.db.length} cards total · Select a level`;
-                    if (mainText) mainText.textContent = 'Select a Level';
-                    if (subText) subText.classList.add('hidden');
+                    startBtn.disabled = true;
+                    startBtn.className = "btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-xl shadow-lg";
+                    startBtn.textContent = "Select a Level";
                     return;
                 }
 
                 const pool = this.getPool(this.selectedLevel);
                 el.textContent = `${pool.length} cards in stack`;
 
-                if (!startBtn) return;
-
                 if (pool.length === 0) {
                     startBtn.disabled = true;
-                    startBtn.className = "btn-3d flex-1 bg-slate-200 text-slate-400 py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight";
-                    if (mainText) mainText.textContent = 'No cards left';
-                    if (subText) {
-                        subText.textContent = 'Reset to play';
-                        subText.classList.remove('hidden');
-                    }
+                    startBtn.className = "btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-xl shadow-lg transition-all";
+                    startBtn.textContent = "No cards left - Reset to play";
                 } else {
                     startBtn.disabled = false;
-                    startBtn.className = "btn-3d flex-1 bg-pink-500 text-white py-3 rounded-2xl font-black flex flex-col items-center justify-center leading-tight";
-                    if (mainText) mainText.textContent = 'Start Round';
-                    if (subText) {
-                        subText.textContent = `${pool.length} IN STACK`;
-                        subText.classList.remove('hidden');
-                    }
+                    startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]";
+                    startBtn.textContent = `Start Round (${pool.length} in stack)`;
                 }
             }
 
@@ -2461,6 +2510,26 @@
                 document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 this.updateStartUI();
+            }
+
+            setTab(tab) {
+                this.activeTab = tab;
+                const localTab = document.getElementById('tab-local');
+                const onlineTab = document.getElementById('tab-online');
+                const localContent = document.getElementById('content-local');
+                const onlineContent = document.getElementById('content-online');
+
+                if (tab === 'local') {
+                    localTab.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm";
+                    onlineTab.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 text-slate-400";
+                    localContent.classList.remove('hidden');
+                    onlineContent.classList.add('hidden');
+                } else {
+                    onlineTab.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm";
+                    localTab.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 text-slate-400";
+                    onlineContent.classList.remove('hidden');
+                    localContent.classList.add('hidden');
+                }
             }
 
             setTimerMode(duration, btn) {
@@ -2664,6 +2733,12 @@
                 const targetEl = document.getElementById('screen-' + id);
                 if (targetEl) targetEl.classList.remove('hidden');
 
+                // Buzzer visibility: Default to HIDDEN. MultiplayerManager.updateGameUI will handle showing it if needed.
+                const buzzer = document.getElementById('global-buzzer');
+                if (buzzer) {
+                    buzzer.classList.add('hidden');
+                }
+
                 if (id === 'lobby' && this.multiplayer && this.multiplayer.roomCode) {
                     const roomCodeEl = document.getElementById('lobby-room-code');
                     if (roomCodeEl) roomCodeEl.textContent = this.multiplayer.roomCode;
@@ -2702,7 +2777,8 @@
 
             // Multiplayer methods
             showMultiplayerOptions() {
-                this.showScreen('multiplayer-options');
+                this.setTab('online');
+                this.showScreen('start');
             }
 
             showJoinRoom() {
@@ -2772,6 +2848,19 @@
 
             async startMultiplayerRound() {
                 await this.multiplayer.startRound();
+            }
+
+            setMultiplayerTimer(seconds, btn) {
+                if (this.multiplayer.isHost) {
+                    this.multiplayer.setTimer(seconds);
+                }
+            }
+
+            returnToMainMenu() {
+                // Clear state to prevent auto-rejoin loop
+                this.storage.clearRoomCode();
+                this.multiplayer.cleanup();
+                window.location.href = window.location.origin + window.location.pathname;
             }
 
             displayCard(card) {
@@ -2895,19 +2984,44 @@
                 if (!this.multiplayerMode) return;
 
                 const modal = document.getElementById('modal-leave-game');
-                const leaveBtn = modal.querySelector('button[onclick*="confirmLeaveAction(\'leave\')"]');
+                const leaveBtn = document.getElementById('btn-leave-individual');
                 const endForAllBtn = document.getElementById('end-for-all-btn');
-                const initialCount = this.multiplayer.gameState?.initialPlayerCount || 4;
+                const leaveWarn = document.getElementById('leave-game-warning');
 
-                // Rule 1: 2-Player Match (initialCount === 2) -> No individual Leave
-                if (initialCount === 2) {
+                const initialCount = this.multiplayer.gameState?.initialPlayerCount || 2;
+                const currentPlayers = Object.keys(this.multiplayer.players || {});
+                const isTeamMode = !!this.multiplayer.gameState?.teams;
+                const myId = this.multiplayer.playerId;
+                const myTeam = this.multiplayer.players[myId]?.team;
+
+                // Dynamic Fair Play Check:
+                // Is this player the last one on their team?
+                let isLastOnTeam = false;
+                if (isTeamMode && myTeam) {
+                    const myTeamMembers = currentPlayers.filter(id => this.multiplayer.players[id].team === myTeam);
+                    if (myTeamMembers.length <= 2) {
+                        isLastOnTeam = true;
+                    }
+                }
+
+                // Rule: 2-Player Match OR Last player on a team -> No individual Leave
+                const mustEndForAll = (initialCount === 2) || (isTeamMode && isLastOnTeam);
+
+                if (mustEndForAll) {
                     if (leaveBtn) leaveBtn.classList.add('hidden');
+                    if (leaveWarn) {
+                        leaveWarn.classList.remove('hidden');
+                        leaveWarn.textContent = isLastOnTeam ?
+                            "Leaving would leave only one player on your team. This would end the game for everyone." :
+                            "Leaving a 2-player match will end the game for both players.";
+                    }
                     if (endForAllBtn) {
                         endForAllBtn.classList.remove('hidden');
                         endForAllBtn.textContent = 'End Game for All';
                     }
                 } else {
                     if (leaveBtn) leaveBtn.classList.remove('hidden');
+                    if (leaveWarn) leaveWarn.classList.add('hidden');
                     // Only show "End for All Players" option if user is the host
                     if (endForAllBtn) {
                         if (this.multiplayer.isHost) {
