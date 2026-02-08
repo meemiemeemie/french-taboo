@@ -2117,12 +2117,12 @@
 
                     if (scoreA > scoreB) {
                         winnerText = "Team A Wins!";
-                        winnerSubtext = `Total Team Scored ${scoreA} Points!`;
+                        winnerSubtext = `Team Scored ${scoreA} Points!`;
                         if (cardA) cardA.classList.add('team-winner-glow');
                         winners = teamA;
                     } else if (scoreB > scoreA) {
                         winnerText = "Team B Wins!";
-                        winnerSubtext = `Total Team Scored ${scoreB} Points!`;
+                        winnerSubtext = `Team Scored ${scoreB} Points!`;
                         if (cardB) cardB.classList.add('team-winner-glow-b');
                         winners = teamB;
                     } else {
