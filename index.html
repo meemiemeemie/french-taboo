@@ -1810,7 +1810,7 @@
 
                     // If word is already in log, update status (unless it was already correct/skipped)
                     if (lastLogItem && lastLogItem.word === this.game.currentCard.word) {
-                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped') {
+                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped' && lastLogItem.status !== 'buzzed') {
                             lastLogItem.status = lastCorrect ? 'correct' : 'timeout';
                         }
                     } else {
@@ -2405,8 +2405,18 @@
                             const div = document.createElement('div');
                             div.className = "flex justify-between items-center p-3 border-b border-slate-50 last:border-0";
                             const url = this.game.getRefUrl(item.word, item.type);
-                            const statusColors = { correct: 'bg-green-100 text-green-700', skipped: 'bg-yellow-100 text-yellow-700', timeout: 'bg-red-100 text-red-700' };
-                            const statusLabels = { correct: '✓', skipped: 'Skip', timeout: 'Time' };
+                            const statusColors = {
+                                correct: 'bg-green-100 text-green-700',
+                                skipped: 'bg-yellow-100 text-yellow-700',
+                                timeout: 'bg-red-100 text-red-700',
+                                buzzed: 'bg-red-100 text-red-700'
+                            };
+                            const statusLabels = {
+                                correct: '✓',
+                                skipped: 'Skip',
+                                timeout: 'Time',
+                                buzzed: 'Buzzed'
+                            };
                             div.innerHTML = `
                                 <div class="flex flex-col">
                                     <a href="${url}" target="_blank" class="word-link font-bold text-slate-700">
@@ -2883,6 +2893,8 @@
                 this.skips = 1;
                 this.updateStackDisplay();
                 this.nextCard(false);
+                const buzzedBtn = document.getElementById('btn-buzzed');
+                if (buzzedBtn) buzzedBtn.classList.remove('hidden');
                 this.showScreen('game');
 
                 this.timer = setInterval(() => {
@@ -2962,7 +2974,7 @@
                     if (lastLogItem && lastLogItem.word === this.currentCard.word) {
                         // Word is already in log. If it was skipped, keep it as skipped.
                         // Otherwise update to the final result of the round.
-                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped') {
+                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped' && lastLogItem.status !== 'buzzed') {
                             lastLogItem.status = lastCorrect ? 'correct' : 'timeout';
                         }
                     } else {
@@ -3029,8 +3041,18 @@
                     return;
                 }
                 this.wordLog.forEach(item => {
-                    const statusColors = { correct: 'bg-green-100 text-green-700', skipped: 'bg-yellow-100 text-yellow-700', timeout: 'bg-red-100 text-red-700' };
-                    const statusLabels = { correct: 'Correct', skipped: 'Skipped', timeout: 'Buzzed' };
+                    const statusColors = {
+                        correct: 'bg-green-100 text-green-700',
+                        skipped: 'bg-yellow-100 text-yellow-700',
+                        timeout: 'bg-red-100 text-red-700',
+                        buzzed: 'bg-red-100 text-red-700'
+                    };
+                    const statusLabels = {
+                        correct: 'Correct',
+                        skipped: 'Skipped',
+                        timeout: 'Timeout',
+                        buzzed: 'Buzzed'
+                    };
                     const div = document.createElement('div');
                     div.className = "flex justify-between items-center p-3 border-b border-slate-50 last:border-0";
                     const url = this.getRefUrl(item.word, item.type);
@@ -3058,8 +3080,12 @@
 
                 // Buzzer visibility: Default to HIDDEN. MultiplayerManager.updateGameUI will handle showing it if needed.
                 const buzzer = document.getElementById('global-buzzer');
+                const localBuzzed = document.getElementById('btn-buzzed');
                 if (buzzer) {
                     buzzer.classList.add('hidden');
+                }
+                if (localBuzzed) {
+                    localBuzzed.classList.add('hidden');
                 }
 
                 if (id === 'lobby' && this.multiplayer && this.multiplayer.roomCode) {
