@@ -3138,8 +3138,8 @@
                 } else if (this.pendingLeaveAction === 'leaveAndEnd') {
                     // Force end game first
                     await this.multiplayer.endGame();
-                    // THEN leave
-                    await this.multiplayer.leaveRoom();
+                    // STAY in room to see results (user request)
+                    // The "Main Menu" button on the end screen will handle the actual leaving later.
                 } else {
                     // Just leave the room
                     await this.multiplayer.leaveRoom();
