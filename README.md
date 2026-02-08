@@ -1,4 +1,4 @@
-# Taboolingo 🇫🇷 / 🇬�
+# Taboolingo 🥖 / 🍵
 
 A web-based bilingual language learning game inspired by the classic Taboo game. Players must describe French or English words without using forbidden "taboo" words, making it an engaging way to practice vocabulary and communication skills in either language. Optimized for all ages, from students to seniors.
 
@@ -62,5 +62,5 @@ Multiplayer mode uses Firebase for synchronization.
 
 ---
 
-**Enjoy learning French with Taboolingo!** 🎉
+**Enjoy learning languages with Taboolingo!** 🎉
 
