@@ -13,7 +13,6 @@ A web-based French language learning game inspired by the classic Taboo game. Pl
 4. **Describe the Word**: Explain the target word at the top without using any of the 5 taboo words listed below it.
 5. **Score Points**: A teammate guesses. Click **Correct!** for each success.
 6. **Pass the Phone**: After the round ends, pass the device to the next player.
-6. **Buzzer**: Use the big BUZZ button if someone says a taboo word!
 
 ### 🌐 Online Multiplayer (Play from Anywhere)
 *Best for playing with friends on their own devices.*
