@@ -2893,8 +2893,6 @@
                 this.skips = 1;
                 this.updateStackDisplay();
                 this.nextCard(false);
-                const buzzedBtn = document.getElementById('btn-buzzed');
-                if (buzzedBtn) buzzedBtn.classList.remove('hidden');
                 this.showScreen('game');
 
                 this.timer = setInterval(() => {
@@ -3080,12 +3078,15 @@
 
                 // Buzzer visibility: Default to HIDDEN. MultiplayerManager.updateGameUI will handle showing it if needed.
                 const buzzer = document.getElementById('global-buzzer');
+                if (buzzer) buzzer.classList.add('hidden');
+
                 const localBuzzed = document.getElementById('btn-buzzed');
-                if (buzzer) {
-                    buzzer.classList.add('hidden');
-                }
                 if (localBuzzed) {
-                    localBuzzed.classList.add('hidden');
+                    if (id === 'game' && !this.multiplayerMode) {
+                        localBuzzed.classList.remove('hidden');
+                    } else {
+                        localBuzzed.classList.add('hidden');
+                    }
                 }
 
                 if (id === 'lobby' && this.multiplayer && this.multiplayer.roomCode) {
