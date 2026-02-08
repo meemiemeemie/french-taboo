@@ -2149,7 +2149,12 @@
                             roleBadge.classList.add('bg-primary-light', 'text-primary');
                         } else if (isOpposingTeam) {
                             roleBadge.textContent = 'Buzzer Duty';
-                            roleBadge.classList.add('bg-slate-800', 'text-white');
+                            // Light Red for English, Light Indigo for French
+                            if (this.game.activeLanguage === 'en') {
+                                roleBadge.classList.add('bg-red-100', 'text-red-700');
+                            } else {
+                                roleBadge.classList.add('bg-indigo-100', 'text-indigo-700');
+                            }
                         }
                     } else {
                         roleBadge.classList.add('hidden');
