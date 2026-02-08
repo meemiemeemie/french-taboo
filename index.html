@@ -1060,6 +1060,14 @@
                     this.save('described_words', words);
                 }
             }
+
+            resetPlayed() {
+                if (confirm('Are you sure you want to reset all played cards? This will allow previously played words to appear again.')) {
+                    this.save('described_words', []);
+                    alert('All cards have been reset!');
+                    location.reload();
+                }
+            }
         }
 
         class MultiplayerManager {

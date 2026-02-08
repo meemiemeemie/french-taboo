@@ -31,14 +31,14 @@ A web-based bilingual language learning game inspired by the classic Taboo game.
 
 - **4 Difficulty Levels**: A1, A2, B1, B2 (CEFR standards).
 - **Variable Timers**: Choose **Standard (60s)** or **Beginner (120s)** for a more relaxed experience.
-- **1000+ French Words**: Comprehensive vocabulary coverage.
+- **1000+ Words in each language**: Comprehensive vocabulary coverage.
 - **Local Pass-and-Play**: No setup required, just one phone and a group of friends.
 - **Online Multiplayer**: Play with up to 8 people in real-time.
   - **Shared Sync**: Cards, timer, and scores stay perfectly in sync.
   - **Automatic Teams**: Turns and scoring handled for you.
   - **Rejoin Logic**: Refreshing the page won't lose your spot in the game.
 - **Micro-Animations**: A vibrant, premium UI that feels alive.
-- **Word Review**: Full session breakdown with links to French definitions.
+- **Word Review**: Full session breakdown with links to definitions.
 - **Windows Optimized**: Smart emoji detection for a great experience on any device.
 
 ## 🚀 Getting Started
