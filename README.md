@@ -1,6 +1,6 @@
-# Taboo Français Pro 🇫🇷
+# Taboolingo 🇫🇷 / 🇬�
 
-A web-based French language learning game inspired by the classic Taboo game. Players must describe French words without using forbidden "taboo" words, making it an engaging way to practice vocabulary and communication skills. Optimized for all ages, from students to seniors.
+A web-based bilingual language learning game inspired by the classic Taboo game. Players must describe French or English words without using forbidden "taboo" words, making it an engaging way to practice vocabulary and communication skills in either language. Optimized for all ages, from students to seniors.
 
 ## 🎮 How to Play
 
@@ -63,5 +63,5 @@ Multiplayer mode uses Firebase for synchronization.
 
 ---
 
-**Enjoy learning French with Taboo Français Pro!** 🎉
+**Enjoy learning French with Taboolingo!** 🎉
 

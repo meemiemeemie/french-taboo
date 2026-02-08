@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗃️</text></svg>">
-    <title>Taboo Français Pro</title>
+    <title>Taboolingo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -15,9 +15,94 @@
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap');
 
         :root {
-            --pastel-bg: #f8fafc;
-            --primary-pop: #ec4899;
-            --secondary-pop: #ef4444;
+            --bg-color: #f8fafc;
+            /* Slate-50 */
+            --primary-color: #4f46e5;
+            /* Indigo-600 (French UI) */
+            --secondary-color: #64748b;
+            /* Slate-500 */
+            --primary-light: #e0e7ff;
+            /* Indigo-100 */
+            --text-color: #1e293b;
+
+            /* Permanent Team Colors */
+            --team-a: #d946ef;
+            /* Fuchsia-500 */
+            --team-a-light: #fdf4ff;
+            /* Fuchsia-50 */
+            --team-b: #0ea5e9;
+            /* Sky-500 */
+            --team-b-light: #f0f9ff;
+            /* Sky-50 */
+        }
+
+        .theme-english {
+            --bg-color: #fafaf9;
+            /* Stone-50 */
+            --primary-color: #e11d48;
+            /* Rose-600 (English UI) */
+            --secondary-color: #78716c;
+            /* Stone-500 */
+            --primary-light: #ffe4e6;
+            /* Rose-100 */
+        }
+
+        /* Semantic Utilities */
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .bg-primary-light {
+            background-color: var(--primary-light) !important;
+        }
+
+        .border-primary {
+            border-color: var(--primary-color) !important;
+        }
+
+        .text-team-a {
+            color: var(--team-a) !important;
+        }
+
+        .bg-team-a {
+            background-color: var(--team-a) !important;
+        }
+
+        .bg-team-a-light {
+            background-color: var(--team-a-light) !important;
+        }
+
+        .border-team-a {
+            border-color: var(--team-a) !important;
+        }
+
+        .text-team-b {
+            color: var(--team-b) !important;
+        }
+
+        .bg-team-b {
+            background-color: var(--team-b) !important;
+        }
+
+        .bg-team-b-light {
+            background-color: var(--team-b-light) !important;
+        }
+
+        .border-team-b {
+            border-color: var(--team-b) !important;
+        }
+
+        /* Legacy Override Cleanup */
+        body.theme-english .text-pink-500,
+        body.theme-english .bg-pink-500,
+        body.theme-english .bg-pink-50,
+        body.theme-english .border-pink-500,
+        body.theme-english .text-pink-600 {
+            /* No longer needed with semantic vars, but keeping empty to override if I missed some */
         }
 
         body {
@@ -73,9 +158,9 @@
         }
 
         .level-btn.selected {
-            border-color: var(--primary-pop);
+            border-color: var(--primary-color);
             transform: scale(1.05);
-            background-color: #fdf2f8;
+            background-color: var(--primary-light);
         }
 
         .overlay {
@@ -167,17 +252,13 @@
         }
 
         .team-a {
-            background-color: #fce7f3;
-            /* Pink-100 */
-            color: #be185d;
-            /* Pink-700 */
+            background-color: var(--team-a-light);
+            color: var(--team-a);
         }
 
         .team-b {
-            background-color: #dbeafe;
-            /* Blue-100 */
-            color: #1d4ed8;
-            /* Blue-700 */
+            background-color: var(--team-b-light);
+            color: var(--team-b);
         }
 
         .team-score-card {
@@ -189,24 +270,22 @@
         }
 
         .team-winner-glow {
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
-            border: 2px solid #ec4899;
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.3);
+            border: 2px solid var(--team-a);
         }
 
         .team-winner-glow-b {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            border: 2px solid #3b82f6;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+            border: 2px solid var(--team-b);
         }
 
         /* Team Themes for Game Board */
         .team-a-theme {
-            border-color: #f472b6 !important;
-            /* Pink-400 */
+            border-color: var(--team-a) !important;
         }
 
         .team-b-theme {
-            border-color: #60a5fa !important;
-            /* Blue-400 */
+            border-color: var(--team-b) !important;
         }
 
         .your-team-pill {
@@ -329,7 +408,7 @@
             <!-- Score -->
             <div class="flex flex-col items-center min-w-[40px]">
                 <span class="text-[8px] uppercase font-black text-slate-400 leading-none mb-1">Score</span>
-                <div id="score-display" class="text-lg font-black text-pink-500 leading-none">0</div>
+                <div id="score-display" class="text-lg font-black text-primary leading-none">0</div>
             </div>
 
             <!-- Timer -->
@@ -359,11 +438,37 @@
         <!-- START SCREEN -->
         <div id="screen-start" class="text-center">
             <div id="main-logo-emoji" class="text-6xl mb-4">🇫🇷</div>
-            <h1 class="text-3xl font-black text-slate-800 mb-2">Taboo Français</h1>
-            <p id="total-card-count" class="text-[10px] font-black text-pink-500 uppercase mb-4 tracking-widest">
+            <h1 class="text-3xl font-black text-slate-800 mb-2">Taboo<span class="text-primary">lingo</span></h1>
+            <p id="total-card-count" class="text-[10px] font-black text-primary uppercase mb-4 tracking-widest">
                 Loading...</p>
 
-            <!-- Mode Tabs -->
+            <!-- Language Selection (Step 1) -->
+            <div class="mb-6">
+                <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">1. Select
+                    Language</div>
+                <div class="flex gap-4">
+                    <button id="lang-fr" onclick="game.setLanguage('fr')"
+                        class="flex-1 py-4 rounded-2xl bg-white border-4 border-slate-100 shadow-sm transition-all hover:scale-105 active:scale-95 group">
+                        <div class="text-4xl mb-1 group-hover:scale-110 transition-transform"><span
+                                class="emoji-fr">🇫🇷</span></div>
+                        <div
+                            class="text-xs font-black text-slate-400 uppercase tracking-wider group-[.selected]:text-primary">
+                            Français</div>
+                    </button>
+                    <button id="lang-en" onclick="game.setLanguage('en')"
+                        class="flex-1 py-4 rounded-2xl bg-white border-4 border-slate-100 shadow-sm transition-all hover:scale-105 active:scale-95 group">
+                        <div class="text-4xl mb-1 group-hover:scale-110 transition-transform"><span
+                                class="emoji-en">🇬🇧</span></div>
+                        <div
+                            class="text-xs font-black text-slate-400 uppercase tracking-wider group-[.selected]:text-primary">
+                            English</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mode Tabs (Step 2) -->
+            <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">2. Connection
+                Mode</div>
             <div class="flex bg-slate-100 p-1 rounded-2xl mb-6 shadow-inner">
                 <button id="tab-local" onclick="game.setTab('local')"
                     class="flex-1 py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-white text-slate-800 shadow-sm">
@@ -378,31 +483,38 @@
             <!-- Tab Content: Local -->
             <div id="content-local" class="space-y-6">
                 <!-- Level Selection -->
-                <div class="grid grid-cols-2 gap-3">
-                    <button
-                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
-                        onclick="game.setLevel('A1', this)">
-                        <div class="text-pink-500 font-black text-lg">A1</div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Beginner</div>
-                    </button>
-                    <button
-                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
-                        onclick="game.setLevel('A2', this)">
-                        <div class="text-blue-500 font-black text-lg">A2</div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Elementary</div>
-                    </button>
-                    <button
-                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
-                        onclick="game.setLevel('B1', this)">
-                        <div class="text-purple-500 font-black text-lg">B1</div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Intermediate</div>
-                    </button>
-                    <button
-                        class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left"
-                        onclick="game.setLevel('B2', this)">
-                        <div class="text-orange-500 font-black text-lg">B2</div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Upper Inter.</div>
-                    </button>
+                <!-- Level Selection (Step 3) -->
+                <div>
+                    <div class="text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest text-center">3.
+                        select Difficulty</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button
+                            class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left opacity-50 cursor-not-allowed"
+                            onclick="game.setLevel('A1', this)" disabled>
+                            <div class="text-primary font-black text-lg">A1</div>
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Beginner</div>
+                        </button>
+                        <button
+                            class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left opacity-50 cursor-not-allowed"
+                            onclick="game.setLevel('A2', this)" disabled>
+                            <div class="text-primary font-black text-lg">A2</div>
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Elementary</div>
+                        </button>
+                        <button
+                            class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left opacity-50 cursor-not-allowed"
+                            onclick="game.setLevel('B1', this)" disabled>
+                            <div class="text-primary font-black text-lg">B1</div>
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Intermediate
+                            </div>
+                        </button>
+                        <button
+                            class="level-btn p-4 rounded-2xl bg-white border-2 border-slate-100 transition-all text-left opacity-50 cursor-not-allowed"
+                            onclick="game.setLevel('B2', this)" disabled>
+                            <div class="text-primary font-black text-lg">B2</div>
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Upper Inter.
+                            </div>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Timer Mode -->
@@ -411,7 +523,7 @@
                         Duration</div>
                     <div class="flex gap-2">
                         <button id="timer-standard" onclick="game.setTimerMode(60, this)"
-                            class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
+                            class="flex-1 py-3 rounded-xl border-2 border-primary bg-primary-light text-primary font-bold text-sm transition-all">
                             Standard (60s)
                         </button>
                         <button id="timer-beginner" onclick="game.setTimerMode(120, this)"
@@ -455,7 +567,7 @@
             </div>
             <div class="flex flex-col gap-2 mb-8">
                 <button id="btn-how-to-play" onclick="game.showHowToPlay()"
-                    class="w-full py-2 text-pink-500 font-bold text-sm flex items-center justify-center gap-1">
+                    class="w-full py-2 text-primary font-bold text-sm flex items-center justify-center gap-1">
                     <span>❔ How to Play</span>
                 </button>
                 <button onclick="game.storage.resetPlayed()"
@@ -478,10 +590,10 @@
             </div>
 
             <div id="card-container"
-                class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-pink-100 p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
+                class="w-full bg-white rounded-[2rem] shadow-xl border-4 border-primary-light p-8 mb-8 text-center min-h-[380px] flex flex-col justify-between">
                 <div>
                     <div id="card-level-tag"
-                        class="inline-block px-3 py-1 rounded-full bg-pink-50 text-pink-500 text-[10px] font-black mb-4 uppercase">
+                        class="inline-block px-3 py-1 rounded-full bg-primary-light text-primary text-[10px] font-black mb-4 uppercase">
                         Level A1</div>
                     <h2 id="word-to-guess" class="text-4xl font-black text-slate-800 mb-6 uppercase leading-tight">
                         ...
@@ -501,7 +613,7 @@
                     Buzzed
                 </button>
                 <button id="btn-correct" onclick="game.nextCard(true)"
-                    class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
+                    class="btn-3d flex-[2] bg-primary text-white py-4 rounded-2xl font-black text-lg">
                     Correct! ✅
                 </button>
             </div>
@@ -545,7 +657,7 @@
             <div class="text-6xl mb-4">🎉</div>
             <h2 id="summary-title" class="text-3xl font-black text-slate-800 mb-2">Round Finished</h2>
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-4 w-full shadow-sm">
-                <div id="round-score-val" class="text-6xl font-black text-pink-500 mb-2">0</div>
+                <div id="round-score-val" class="text-6xl font-black text-primary mb-2">0</div>
                 <div class="text-xs text-slate-400 uppercase font-black tracking-widest mb-6">Points this round
                 </div>
 
@@ -598,7 +710,7 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
                 <div class="mb-6">
                     <div class="text-xs text-slate-400 font-bold uppercase mb-2">Room Code</div>
-                    <div id="lobby-room-code" class="text-4xl font-black room-code-display text-pink-500 mb-2">----
+                    <div id="lobby-room-code" class="text-4xl font-black room-code-display text-primary mb-2">----
                     </div>
                     <button id="btn-copy-code" onclick="game.copyRoomCode()"
                         class="text-xs text-blue-500 font-bold underline">
@@ -610,26 +722,38 @@
                     <div id="lobby-players-list" class="space-y-2 text-left"></div>
                 </div>
                 <div id="lobby-host-controls" class="hidden">
+                    <label class="block text-left text-sm font-bold text-slate-600 mb-2">Language</label>
+                    <div class="flex gap-2 mb-4">
+                        <button id="lobby-lang-fr" onclick="game.setMultiplayerLanguage('fr', this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="emoji-fr">🇫🇷</span> Français
+                        </button>
+                        <button id="lobby-lang-en" onclick="game.setMultiplayerLanguage('en', this)"
+                            class="flex-1 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm transition-all flex items-center justify-center gap-2">
+                            <span class="emoji-en">🇬🇧</span> English
+                        </button>
+                    </div>
+
                     <label class="block text-left text-sm font-bold text-slate-600 mb-2">Select Level</label>
                     <div class="grid grid-cols-2 gap-2 mb-4">
                         <button onclick="game.setMultiplayerLevel('A1', this)"
                             class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
-                            <div class="font-black text-pink-500 text-lg">A1</div>
+                            <div class="font-black text-primary text-lg">A1</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Beginner</div>
                         </button>
                         <button onclick="game.setMultiplayerLevel('A2', this)"
                             class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
-                            <div class="font-black text-blue-500 text-lg">A2</div>
+                            <div class="font-black text-primary text-lg">A2</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Elementary</div>
                         </button>
                         <button onclick="game.setMultiplayerLevel('B1', this)"
                             class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
-                            <div class="font-black text-purple-500 text-lg">B1</div>
+                            <div class="font-black text-primary text-lg">B1</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Intermediate</div>
                         </button>
                         <button onclick="game.setMultiplayerLevel('B2', this)"
                             class="level-btn bg-white p-3 rounded-xl shadow-sm text-left border-2 border-slate-200">
-                            <div class="font-black text-orange-500 text-lg">B2</div>
+                            <div class="font-black text-primary text-lg">B2</div>
                             <div class="text-[10px] text-slate-400 uppercase font-bold">Upper Inter.</div>
                         </button>
                     </div>
@@ -637,7 +761,7 @@
                     <label class="block text-left text-sm font-bold text-slate-600 mb-2">Timer Duration</label>
                     <div class="flex gap-2 mb-4">
                         <button id="lobby-timer-standard" onclick="game.setMultiplayerTimer(60, this)"
-                            class="flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all">
+                            class="flex-1 py-3 rounded-xl border-2 border-primary bg-primary-light text-primary font-bold text-sm transition-all">
                             Standard (60s)
                         </button>
                         <button id="lobby-timer-beginner" onclick="game.setMultiplayerTimer(120, this)"
@@ -666,8 +790,8 @@
             <div class="bg-white rounded-3xl p-6 border-2 border-slate-100 mb-6 w-full shadow-sm">
                 <div class="flex justify-around mb-6 pb-6 border-b border-slate-100">
                     <div class="text-center">
-                        <div id="total-final-score" class="text-4xl font-black text-pink-500">0</div>
-                        <div class="text-[10px] text-slate-400 font-black uppercase">Total Points</div>
+                        <div id="total-final-score" class="text-4xl font-black text-primary">0</div>
+                        <div class="text-center text-[10px] text-slate-400 font-black uppercase">Total Points</div>
                     </div>
                     <div class="text-center">
                         <div id="total-rounds-count" class="text-4xl font-black text-slate-800">0</div>
@@ -679,7 +803,7 @@
                 <div id="round-history-list" class="space-y-2 mb-6"></div>
 
                 <button id="btn-show-review" onclick="game.showWordReview()"
-                    class="w-full bg-pink-100 text-pink-600 py-3 rounded-2xl font-black text-sm">
+                    class="w-full bg-primary-light text-primary py-3 rounded-2xl font-black text-sm">
                     Review Guessed Words?
                 </button>
 
@@ -743,12 +867,12 @@
             <div class="text-4xl mb-4">🔔</div>
             <h3 class="text-xl font-black mb-2">Buzzer!</h3>
             <p class="text-slate-500 mb-6 text-sm" id="buzz-modal-text">Did you get <span id="last-word-hint"
-                    class="font-bold text-pink-500"></span> correctly?</p>
+                    class="font-bold text-primary"></span> correctly?</p>
             <div class="flex gap-3">
                 <button onclick="game.handleBuzzResponse(false)"
                     class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold">No</button>
                 <button onclick="game.handleBuzzResponse(true)"
-                    class="flex-1 bg-pink-500 text-white py-3 rounded-xl font-bold">Yes!</button>
+                    class="flex-1 bg-primary text-white py-3 rounded-xl font-bold">Yes!</button>
             </div>
         </div>
     </div>
@@ -782,13 +906,13 @@
 
             <div class="space-y-6 text-sm text-slate-600">
                 <section>
-                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-primary tracking-widest">The
                         Goal</h4>
                     <p>Describe the word at the top without using any of the 5 taboo words listed below it!</p>
                 </section>
 
                 <section>
-                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-primary tracking-widest">The
                         Modes</h4>
                     <ul class="space-y-3">
                         <li class="flex gap-3">
@@ -806,7 +930,7 @@
                 </section>
 
                 <section>
-                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-pink-500 tracking-widest">The
+                    <h4 class="font-black text-slate-800 uppercase text-[10px] mb-2 text-primary tracking-widest">The
                         Buzzer</h4>
                     <p>In <strong>Online Team</strong> mode, the opposing team has a <strong>BUZZ</strong> button. If
                         they hear you say a taboo word, they'll buzz you and you lose the point!</p>
@@ -862,7 +986,8 @@
     </div>
 
     <script>
-        const REMOTE_URL = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/word-list.csv';
+        const REMOTE_URL_FR = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/word-list.csv';
+        const REMOTE_URL_EN = 'https://raw.githubusercontent.com/meemiemeemie/french-taboo/main/english_words.csv';
 
         /**
          * FIREBASE CONFIGURATION
@@ -1057,7 +1182,8 @@
                             currentCard: null,
                             timer: 60,
                             roundActive: false,
-                            playedIds: {}
+                            playedIds: {},
+                            language: this.game.activeLanguage || 'fr'
                         },
                         players: {}
                     });
@@ -1372,12 +1498,12 @@
                     colorIndex++;
                     const isCurrentPlayer = player.id === this.playerId;
                     const isHostPlayer = this.isHost && player.id === this.playerId;
-                    const hostBadge = isHostPlayer ? '<span class="text-[8px] bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full ml-2">HOST</span>' : '';
+                    const hostBadge = isHostPlayer ? '<span class="text-[8px] bg-primary-light text-primary px-2 py-0.5 rounded-full ml-2">HOST</span>' : '';
                     const teamBadge = player.team ? `<span class="team-indicator ${player.team === 'A' ? 'team-a' : 'team-b'}">Team ${player.team}</span>` : '';
                     const onlineStatus = player.online === false ? '<span class="text-[8px] text-slate-300 ml-2 italic">(offline)</span>' : '';
 
                     const div = document.createElement('div');
-                    div.className = `flex justify-between items-center p-2 rounded-lg ${isCurrentPlayer ? 'bg-pink-50 border-2 border-pink-200' : 'bg-slate-50'} ${player.online === false ? 'opacity-50' : ''}`;
+                    div.className = `flex justify-between items-center p-2 rounded-lg ${isCurrentPlayer ? 'bg-primary-light border-2 border-primary' : 'bg-slate-50'} ${player.online === false ? 'opacity-50' : ''}`;
                     div.innerHTML = `
                         <div class="flex items-center">
                             <span class="player-color-dot" style="background-color: ${player.online === false ? '#cbd5e1' : color}"></span>
@@ -1429,6 +1555,15 @@
                     await this.roomRef.child('gameState/timer').set(seconds);
                 } catch (e) {
                     console.error("Error setting timer:", e);
+                }
+            }
+
+            async setLanguage(lang) {
+                if (!this.isHost || !this.roomRef) return;
+                try {
+                    await this.roomRef.child('gameState/language').set(lang);
+                } catch (e) {
+                    console.error("Error setting language:", e);
                 }
             }
 
@@ -1734,11 +1869,19 @@
                     // Sync level and update stack count
                     if (this.gameState.level) {
                         this.game.selectedLevel = this.gameState.level;
-                        this.game.updateStackDisplay();
                     }
+                    if (this.gameState.language && this.gameState.language !== this.game.activeLanguage) {
+                        this.game.setLanguage(this.gameState.language);
+                    }
+                    // Update stack display after ensuring language/level are set
+                    this.game.updateStackDisplay();
                     this.updateGameUI();
                 } else if (this.gameState.status === 'lobby') {
                     this.game.showScreen('lobby');
+                    // Sync language in lobby too
+                    if (this.gameState.language && this.gameState.language !== this.game.activeLanguage) {
+                        this.game.setLanguage(this.gameState.language);
+                    }
                 } else if (this.gameState.status === 'finished') {
                     // Game finished - show multiplayer end game screen
                     this.showMultiplayerEndGame();
@@ -1848,17 +1991,35 @@
                 }
 
                 // Visual feedback for timer in lobby
-                if (this.gameState.status === 'lobby' && this.gameState.timer !== undefined) {
-                    const standardBtn = document.getElementById('lobby-timer-standard');
-                    const beginnerBtn = document.getElementById('lobby-timer-beginner');
-                    if (standardBtn && beginnerBtn) {
-                        if (this.gameState.timer === 60) {
-                            standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all";
-                            beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
-                        } else {
-                            beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm transition-all";
-                            standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
+                if (this.gameState.status === 'lobby') {
+                    if (this.gameState.timer !== undefined) {
+                        const standardBtn = document.getElementById('lobby-timer-standard');
+                        const beginnerBtn = document.getElementById('lobby-timer-beginner');
+                        if (standardBtn && beginnerBtn) {
+                            if (this.gameState.timer === 60) {
+                                standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-primary bg-primary-light text-primary font-bold text-sm transition-all";
+                                beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
+                            } else {
+                                beginnerBtn.className = "flex-1 py-3 rounded-xl border-2 border-primary bg-primary-light text-primary font-bold text-sm transition-all";
+                                standardBtn.className = "flex-1 py-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 font-bold text-sm transition-all";
+                            }
                         }
+                    }
+
+                    // Visual feedback for Language in Lobby
+                    if (this.gameState.language) {
+                        ['fr', 'en'].forEach(l => {
+                            const btn = document.getElementById(`lobby-lang-${l}`);
+                            if (btn) {
+                                if (l === this.gameState.language) {
+                                    btn.classList.add('border-primary', 'bg-primary-light', 'selected');
+                                    btn.classList.remove('border-slate-100', 'bg-white');
+                                } else {
+                                    btn.classList.remove('border-primary', 'bg-primary-light', 'selected');
+                                    btn.classList.add('border-slate-100', 'bg-white');
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -1871,7 +2032,7 @@
 
                 if (textEl) {
                     // Update: addressing player as 'you' for a more direct experience
-                    textEl.innerHTML = `Did you get <span id="last-word-hint" class="font-bold text-pink-500"></span> correctly?`;
+                    textEl.innerHTML = `Did you get <span id="last-word-hint" class="font-bold text-primary"></span> correctly?`;
                 }
 
                 // Re-fetch hintEl as it might have been replaced by innerHTML
@@ -1966,10 +2127,10 @@
                         roleBadge.classList.remove('hidden');
                         if (isMyTurn) {
                             roleBadge.textContent = 'Describer View';
-                            roleBadge.classList.add('bg-pink-600', 'text-white');
+                            roleBadge.classList.add('bg-primary', 'text-white');
                         } else if (isSameTeam) {
                             roleBadge.textContent = 'Guesser View';
-                            roleBadge.classList.add('bg-blue-300', 'text-white');
+                            roleBadge.classList.add('bg-primary-light', 'text-primary');
                         } else if (isOpposingTeam) {
                             roleBadge.textContent = 'Buzzer Duty';
                             roleBadge.classList.add('bg-slate-800', 'text-white');
@@ -2360,7 +2521,8 @@
 
         class TabooPro {
             constructor() {
-                this.db = [];
+                this.db = { fr: [], en: [] };
+                this.activeLanguage = null; // 'fr' or 'en'
                 this.playedIds = new Set();
                 this.selectedLevel = null;
                 this.score = 0;
@@ -2384,33 +2546,57 @@
             }
 
             async initApp() {
-                this.handleWindowsEmoji();
+                // Platform specific visuals (Windows Emojis)
+                this.updatePlatformVisuals();
+
+                // Load saved language
+                const savedLang = localStorage.getItem('taboo_lang');
+                if (savedLang) {
+                    this.setLanguage(savedLang);
+                }
+
                 await this.fetchData();
                 if (this.multiplayer) {
                     this.multiplayer.tryAutoRejoin();
                 }
             }
 
-            handleWindowsEmoji() {
+            updatePlatformVisuals() {
                 const isWindows = navigator.userAgent.indexOf('Windows') !== -1;
                 if (isWindows) {
-                    const el = document.getElementById('main-logo-emoji');
-                    if (el) el.textContent = '🥖';
+                    // Start screen logo (initial state is France)
+                    const mainLogo = document.getElementById('main-logo-emoji');
+                    if (mainLogo && mainLogo.textContent.trim() === '🇫🇷') {
+                        mainLogo.textContent = '🥖';
+                    }
+
+                    // Update all English buttons to Tea
+                    document.querySelectorAll('.emoji-en').forEach(el => el.textContent = '🍵');
+                    // Update all French buttons to Baguette
+                    document.querySelectorAll('.emoji-fr').forEach(el => el.textContent = '🥖');
                 }
             }
 
             async fetchData() {
                 try {
-                    const response = await fetch(REMOTE_URL);
-                    const text = await response.text();
-                    this.loadData(text);
+                    const [resFr, resEn] = await Promise.all([
+                        fetch(REMOTE_URL_FR),
+                        fetch(REMOTE_URL_EN)
+                    ]);
+
+                    const textFr = await resFr.text();
+                    const textEn = await resEn.text();
+
+                    this.loadData(textFr, 'fr');
+                    this.loadData(textEn, 'en');
                 } catch (e) {
+                    console.error("Error loading data:", e);
                     const el = document.getElementById('total-card-count');
                     if (el) el.textContent = 'Error loading list';
                 }
             }
 
-            loadData(csvText) {
+            loadData(csvText, lang) {
                 const lines = csvText.trim().split('\n');
                 const results = [];
                 for (let i = 1; i < lines.length; i++) {
@@ -2427,21 +2613,27 @@
                         taboo: [cols[3], cols[4], cols[5], cols[6], cols[7]].map(s => s.trim())
                     });
                 }
-                this.db = results;
-                const stored = [];
-                try {
-                    const raw = localStorage.getItem('taboo_played');
-                    if (raw) stored.push(...JSON.parse(raw));
-                } catch (_) { }
-                this.playedIds = new Set(stored);
+                this.db[lang] = results;
+
+                // Initialize played IDs if not already done
+                if (!this.playedIds) {
+                    const stored = [];
+                    try {
+                        const raw = localStorage.getItem('taboo_played');
+                        if (raw) stored.push(...JSON.parse(raw));
+                    } catch (_) { }
+                    this.playedIds = new Set(stored);
+                }
+
                 this.updateStartUI();
             }
 
             getPool(level) {
-                if (!level || !this.db.length) return [];
+                if (!level || !this.activeLanguage || !this.db[this.activeLanguage]) return [];
+                const dataset = this.db[this.activeLanguage];
                 const maxIdx = this.levels.indexOf(level);
                 const playedSource = this.multiplayerMode ? this.multiplayer.sessionPlayedIds : this.playedIds;
-                return this.db.filter(c => c.levelIdx <= maxIdx && !playedSource.has(c.id));
+                return dataset.filter(c => c.levelIdx <= maxIdx && !playedSource.has(c.id));
             }
 
             addPlayed(id) {
@@ -2466,8 +2658,11 @@
                 const startBtn = document.getElementById('btn-start-round');
                 if (!startBtn) return;
 
-                if (!this.selectedLevel) {
-                    el.textContent = `${this.db.length} cards total · Select a level`;
+                if (!this.selectedLevel || !this.activeLanguage) {
+                    const frCount = this.db.fr ? this.db.fr.length : 0;
+                    const enCount = this.db.en ? this.db.en.length : 0;
+                    const total = frCount + enCount;
+                    el.textContent = `${total} cards loaded · Select Language & Level`;
                     startBtn.disabled = true;
                     startBtn.className = "btn-3d w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-xl shadow-lg";
                     startBtn.textContent = "Select a Level";
@@ -2531,15 +2726,75 @@
                 if (isWiktionary) {
                     // Wiktionary needs lowercase for general words to resolve correctly
                     const lowercaseWord = word.toLowerCase().replace(/\s+/g, '_');
-                    return `https://fr.wiktionary.org/wiki/${encodeURIComponent(lowercaseWord)}`;
+                    const langDomain = this.activeLanguage === 'en' ? 'en' : 'fr';
+                    return `https://${langDomain}.wiktionary.org/wiki/${encodeURIComponent(lowercaseWord)}`;
                 }
 
                 // Wikipedia generally handles capitalized titles better
                 const encodedWord = encodeURIComponent(word.replace(/\s+/g, '_'));
+                if (this.activeLanguage === 'en') {
+                    return `https://en.wikipedia.org/wiki/${encodedWord}`;
+                }
                 return `https://fr.wikipedia.org/wiki/${encodedWord}`;
             }
 
+            setLanguage(lang) {
+                this.activeLanguage = lang;
+                localStorage.setItem('taboo_lang', lang);
+
+                // Toggle theme
+                if (lang === 'en') {
+                    document.body.classList.add('theme-english');
+                } else {
+                    document.body.classList.remove('theme-english');
+                }
+
+                // Update Main Logo based on OS and Language
+                const logoEl = document.getElementById('main-logo-emoji');
+                if (logoEl) {
+                    const isWindows = navigator.userAgent.indexOf('Windows') !== -1;
+                    if (lang === 'en') {
+                        // English: Tea (Win) or Flag (Others)
+                        logoEl.textContent = isWindows ? '🍵' : '🇬🇧';
+                    } else {
+                        // French: Baguette (Win) or Flag (Others)
+                        logoEl.textContent = isWindows ? '🥖' : '🇫🇷';
+                    }
+                }
+
+                // Update UI selection
+                ['fr', 'en'].forEach(l => {
+                    const btn = document.getElementById(`lang-${l}`);
+                    if (btn) {
+                        if (l === lang) {
+                            btn.classList.add('border-primary', 'bg-primary-light', 'selected');
+                            btn.classList.remove('border-slate-100', 'bg-white');
+                        } else {
+                            btn.classList.remove('border-primary', 'bg-primary-light', 'selected');
+                            btn.classList.add('border-slate-100', 'bg-white');
+                        }
+                    }
+                });
+
+                // Enable level buttons
+                document.querySelectorAll('.level-btn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                });
+
+                // Reset level selection if language changes (to force re-selection or at least re-validation)
+                // Actually, let's keep the level if it was already selected, but update the start UI
+                this.updateStartUI();
+
+                // If in multiplayer lobby, we should ideally sync this, but for now just local
+            }
+
             setLevel(lvl, btn) {
+                if (!this.activeLanguage) {
+                    // Should be disabled, but just in case
+                    alert("Please select a language first.");
+                    return;
+                }
                 this.selectedLevel = lvl;
                 document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -2572,9 +2827,9 @@
 
                 // Update UI state
                 document.getElementById('timer-standard').className = 'flex-1 py-3 rounded-xl border-2 transition-all ' +
-                    (duration === 60 ? 'border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
+                    (duration === 60 ? 'border-primary bg-primary-light text-primary font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
                 document.getElementById('timer-beginner').className = 'flex-1 py-3 rounded-xl border-2 transition-all ' +
-                    (duration === 120 ? 'border-pink-500 bg-pink-50 text-pink-600 font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
+                    (duration === 120 ? 'border-primary bg-primary-light text-primary font-bold text-sm' : 'border-slate-100 bg-white text-slate-400 font-bold text-sm');
 
                 // Update HUD immediately
                 const timerEl = document.getElementById('timer-display');
@@ -2868,6 +3123,12 @@
                     startBtn.disabled = false;
                     startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black";
                     startBtn.textContent = `Start Game (Level ${level})`;
+                }
+            }
+
+            setMultiplayerLanguage(lang, btn) {
+                if (this.multiplayer.isHost) {
+                    this.multiplayer.setLanguage(lang);
                 }
             }
 
