@@ -554,7 +554,7 @@
                         class="w-full px-4 py-3 rounded-xl border-2 border-blue-100 text-center text-lg font-bold bg-white">
 
                     <button onclick="game.createRoom()"
-                        class="btn-3d w-full bg-blue-500 text-white py-4 rounded-2xl text-lg font-black shadow-lg">
+                        class="btn-3d w-full bg-slate-800 text-white py-4 rounded-2xl text-lg font-black shadow-lg">
                         Create New Room
                     </button>
                 </div>
@@ -694,7 +694,7 @@
                 <input id="input-player-name" type="text" maxlength="20" placeholder="Enter your name"
                     class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-center text-lg font-bold mb-4">
                 <button onclick="game.joinRoom()"
-                    class="btn-3d w-full bg-blue-500 text-white py-3 rounded-xl font-black">
+                    class="btn-3d w-full bg-slate-800 text-white py-3 rounded-xl font-black">
                     Join
                 </button>
                 <button onclick="game.showScreen('start')"
@@ -714,7 +714,7 @@
                     <div id="lobby-room-code" class="text-4xl font-black room-code-display text-primary mb-2">----
                     </div>
                     <button id="btn-copy-code" onclick="game.copyRoomCode()"
-                        class="text-xs text-blue-500 font-bold underline">
+                        class="text-xs text-slate-500 font-bold underline">
                         Copy Code
                     </button>
                 </div>
@@ -1809,14 +1809,21 @@
                 this.endingRound = true;
 
                 if (this.game.currentCard) {
-                    const status = lastCorrect ? 'correct' : 'timeout';
-                    this.game.wordLog.push({
-                        word: this.game.currentCard.word,
-                        type: this.game.currentCard.type,
-                        level: this.game.currentCard.level,
-                        status: status
-                    });
-                    this.storage.updateLastWordStatus(status);
+                    const lastLogIdx = this.game.wordLog.length - 1;
+                    const lastLogItem = lastLogIdx >= 0 ? this.game.wordLog[lastLogIdx] : null;
+
+                    // Prevent duplicate logging if the card was just skipped (and thus already logged)
+                    // or if it was just logged as timeout in a race condition
+                    if (!lastLogItem || lastLogItem.word !== this.game.currentCard.word) {
+                        const status = lastCorrect ? 'correct' : 'timeout';
+                        this.game.wordLog.push({
+                            word: this.game.currentCard.word,
+                            type: this.game.currentCard.type,
+                            level: this.game.currentCard.level,
+                            status: status
+                        });
+                        this.storage.updateLastWordStatus(status);
+                    }
                 }
 
                 if (lastCorrect && this.game.currentCard) {
@@ -2936,19 +2943,30 @@
                 }
 
                 // Single-player logic
+                // Single-player logic
                 if (this.currentCard) {
                     const lastLogIdx = this.wordLog.length - 1;
-                    if (lastLogIdx >= 0 && this.wordLog[lastLogIdx].word === this.currentCard.word) {
-                        this.wordLog[lastLogIdx].status = lastCorrect ? 'correct' : 'timeout';
-                    } else {
+                    const lastLogItem = lastLogIdx >= 0 ? this.wordLog[lastLogIdx] : null;
+
+                    // Prevent duplicate logging
+                    if (!lastLogItem || lastLogItem.word !== this.currentCard.word) {
                         this.wordLog.push({
                             word: this.currentCard.word,
                             type: this.currentCard.type,
                             level: this.currentCard.level,
                             status: lastCorrect ? 'correct' : 'timeout'
                         });
+                    } else if (lastLogItem.word === this.currentCard.word && lastLogItem.status === 'skipped' && !lastCorrect) {
+                        // If it was skipped, DO NOT change it to timeout.
+                        // Skipped means skipped.
+                    } else if (lastLogItem.word === this.currentCard.word && !lastCorrect) {
+                        // Update status to timeout if it was something else? No, usually we just push.
+                        // But if we are here, we want to ensure we don't double log.
                     }
-                    if (!fromExhaust) this.addPlayed(this.currentCard.id);
+
+                    if (!fromExhaust && (!lastLogItem || lastLogItem.word !== this.currentCard.word)) {
+                        this.addPlayed(this.currentCard.id);
+                    }
                 }
 
                 if (lastCorrect) {
@@ -3130,7 +3148,7 @@
                 const startBtn = document.getElementById('btn-start-game');
                 if (startBtn) {
                     startBtn.disabled = false;
-                    startBtn.className = "btn-3d w-full bg-pink-500 text-white py-4 rounded-2xl text-xl font-black";
+                    startBtn.className = "btn-3d w-full bg-green-500 text-white py-4 rounded-2xl text-xl font-black";
                     startBtn.textContent = `Start Game (Level ${level})`;
                 }
             }
