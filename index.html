@@ -2137,7 +2137,15 @@
                 const isOpposingTeam = isTeamMode && myTeam && activeTeam && myTeam !== activeTeam;
 
                 if (roleBadge) {
-                    roleBadge.classList.remove('hidden', 'bg-pink-600', 'bg-blue-300', 'bg-slate-800', 'text-white');
+                    // Systematically clear ALL potential role classes to prevent "class stacking"
+                    roleBadge.classList.remove(
+                        'hidden',
+                        'bg-primary', 'text-white',
+                        'bg-primary-light', 'text-primary',
+                        'bg-indigo-100', 'text-indigo-700',
+                        'bg-red-100', 'text-red-700',
+                        'bg-slate-800'
+                    );
                     if (isTeamMode) {
                         roleBadge.classList.remove('hidden');
                         if (isMyTurn) {
