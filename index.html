@@ -493,7 +493,7 @@
                     class="btn-3d flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold hidden">
                     Buzzed
                 </button>
-                <button onclick="game.nextCard(true)"
+                <button id="btn-correct" onclick="game.nextCard(true)"
                     class="btn-3d flex-[2] bg-pink-500 text-white py-4 rounded-2xl font-black text-lg">
                     Correct! ✅
                 </button>
@@ -1908,6 +1908,11 @@
                 const playerList = document.getElementById('multiplayer-player-list');
                 const buzzerContainer = document.getElementById('multiplayer-buzzer-container');
 
+                // UI Buttons
+                const skipBtn = document.getElementById('btn-skip');
+                const buzzedBtn = document.getElementById('btn-buzzed');
+                const correctBtn = document.getElementById('btn-correct');
+
                 const currentPlayer = this.players[currentPlayerId];
                 const currentPlayerName = currentPlayer?.name || 'Unknown';
                 const activeTeam = currentPlayer?.team;
@@ -1979,8 +1984,11 @@
                     }
                     if (turnIndicator) {
                         turnIndicator.querySelector('#turn-indicator-text').textContent = isTeamMode ? `Team ${activeTeam} is up!` : `${currentPlayerName}'s Turn`;
-                        turnIndicator.querySelector('#turn-indicator-subtext').textContent = isTeamMode ?
-                            `${currentPlayerName} is talking` : '';
+                        if (isTeamMode) {
+                            turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is talking`;
+                        } else {
+                            turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is describing, you need to guess!`;
+                        }
                     }
                 }
 
@@ -3008,21 +3016,29 @@
                 const mustEndForAll = (initialCount === 2) || (isTeamMode && isLastOnTeam);
 
                 if (mustEndForAll) {
-                    if (leaveBtn) leaveBtn.classList.add('hidden');
+                    // Just warn them, but allow leaving. The validateRoomState logic will handle the forced finish.
+                    if (leaveBtn) {
+                        leaveBtn.classList.remove('hidden');
+                        leaveBtn.textContent = 'Leave & End Game';
+                        leaveBtn.className = "w-full bg-orange-500 text-white py-3 rounded-xl font-bold";
+                    }
                     if (leaveWarn) {
                         leaveWarn.classList.remove('hidden');
                         leaveWarn.textContent = isLastOnTeam ?
-                            "Leaving would leave only one player on your team. This would end the game for everyone." :
-                            "Leaving a 2-player match will end the game for both players.";
+                            "Leaving will leave your team with too few players. The game will end for everyone." :
+                            "Leaving a 2-player match will end the game for everyone.";
                     }
-                    if (endForAllBtn) {
-                        endForAllBtn.classList.remove('hidden');
-                        endForAllBtn.textContent = 'End Game for All';
-                    }
+                    // Hide separate "End for All" button to avoid confusion, since leaving does the same thing effectively
+                    if (endForAllBtn) endForAllBtn.classList.add('hidden');
                 } else {
-                    if (leaveBtn) leaveBtn.classList.remove('hidden');
+                    if (leaveBtn) {
+                        leaveBtn.classList.remove('hidden');
+                        leaveBtn.textContent = 'Leave Game';
+                        leaveBtn.className = "w-full bg-orange-500 text-white py-3 rounded-xl font-bold";
+                    }
                     if (leaveWarn) leaveWarn.classList.add('hidden');
-                    // Only show "End for All Players" option if user is the host
+
+                    // Show "End for All" only for host as an extra option
                     if (endForAllBtn) {
                         if (this.multiplayer.isHost) {
                             endForAllBtn.classList.remove('hidden');
