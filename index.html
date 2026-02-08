@@ -3022,8 +3022,8 @@
                 const endForAllBtn = document.getElementById('end-for-all-btn');
                 const leaveWarn = document.getElementById('leave-game-warning');
 
-                const initialCount = this.multiplayer.gameState?.initialPlayerCount || 2;
                 const currentPlayers = Object.keys(this.multiplayer.players || {});
+                const playerCount = currentPlayers.length;
                 const isTeamMode = !!this.multiplayer.gameState?.teams;
                 const myId = this.multiplayer.playerId;
                 const myTeam = this.multiplayer.players[myId]?.team;
@@ -3039,7 +3039,7 @@
                 }
 
                 // Rule: 2-Player Match OR Last player on a team -> No individual Leave
-                const mustEndForAll = (initialCount === 2) || (isTeamMode && isLastOnTeam);
+                const mustEndForAll = (playerCount <= 2) || (isTeamMode && isLastOnTeam);
 
                 if (mustEndForAll) {
                     // Just warn them, but allow leaving. The validateRoomState logic will handle the forced finish.
