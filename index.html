@@ -865,8 +865,8 @@
     <!-- MODALS -->
     <div id="modal-end-turn" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 overlay">
         <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-xs w-full text-center">
-            <div class="text-4xl mb-4">🔔</div>
-            <h3 class="text-xl font-black mb-2">Buzzer!</h3>
+            <div id="modal-icon" class="text-4xl mb-4">🔔</div>
+            <h3 id="modal-title" class="text-xl font-black mb-2">Buzzer!</h3>
             <p class="text-slate-500 mb-6 text-sm" id="buzz-modal-text">Did you get <span id="last-word-hint"
                     class="font-bold text-primary"></span> correctly?</p>
             <div class="flex gap-3">
@@ -1087,6 +1087,9 @@
                 this.listeners = [];
                 this.reconnectAttempts = 0;
                 this.maxReconnectAttempts = 5;
+                this.endingRound = false;
+                this.pendingDecisionType = null; // 'buzz' or 'timeout'
+                this.timeoutModalOpen = false;
             }
 
             initialize() {
@@ -1678,15 +1681,15 @@
                 this.game.currentCard = card;
                 await this.addSessionPlayed(card.id); // Mark as played immediately in session
 
+                // Reset skip limit for the round BEFORE starting (fixes race condition)
+                this.game.skips = 1;
+
                 await this.roomRef.child('gameState').update({
                     currentCard: card,
                     timer: this.gameState.timer, // Use the room's set timer
                     roundActive: true,
                     roundStartTime: firebase.database.ServerValue.TIMESTAMP
                 });
-
-                // Reset skip limit for the round
-                this.game.skips = 1;
 
                 // Display card immediately
                 this.game.displayCard(card);
@@ -1849,6 +1852,12 @@
                     currentTurnIndex: nextIndex
                 });
 
+                // Reset modal flags
+                this.pendingDecisionType = null;
+                this.timeoutModalOpen = false;
+                const endTurnModal = document.getElementById('modal-end-turn');
+                if (endTurnModal) endTurnModal.classList.add('hidden');
+
                 // Reset flag after a delay
                 setTimeout(() => {
                     this.endingRound = false;
@@ -1949,7 +1958,25 @@
 
                                     const currentPlayerId = this.gameState.currentPlayer;
                                     if (currentPlayerId === this.playerId) {
-                                        this.endRound(false);
+                                        if (!this.timeoutModalOpen) {
+                                            this.timeoutModalOpen = true;
+                                            this.pendingDecisionType = 'timeout';
+                                            const modal = document.getElementById('modal-end-turn');
+                                            const iconEl = document.getElementById('modal-icon');
+                                            const titleEl = document.getElementById('modal-title');
+                                            const textEl = document.getElementById('buzz-modal-text');
+                                            const hintEl = document.getElementById('last-word-hint');
+
+                                            if (iconEl) iconEl.textContent = '⌛';
+                                            if (titleEl) titleEl.textContent = "Time's Up!";
+                                            if (textEl) textEl.innerHTML = `Did you get <span id="last-word-hint" class="font-bold text-primary"></span> just in time?`;
+                                            const newHintEl = document.getElementById('last-word-hint');
+                                            if (newHintEl && this.game.currentCard) {
+                                                newHintEl.textContent = `"${this.game.currentCard.word}"`;
+                                            }
+                                            if (modal) modal.classList.remove('hidden');
+                                            this.game.playObnoxiousBuzzer();
+                                        }
                                     }
                                 }
                             }, 100);
@@ -2041,10 +2068,15 @@
 
             showBuzzModal(buzzData) {
                 // Show modal asking if they got it correct
+                this.pendingDecisionType = 'buzz';
                 const modal = document.getElementById('modal-end-turn');
+                const iconEl = document.getElementById('modal-icon');
+                const titleEl = document.getElementById('modal-title');
                 const textEl = document.getElementById('buzz-modal-text');
                 const hintEl = document.getElementById('last-word-hint');
 
+                if (iconEl) iconEl.textContent = '🔔';
+                if (titleEl) titleEl.textContent = "Buzzer!";
                 if (textEl) {
                     // Update: addressing player as 'you' for a more direct experience
                     textEl.innerHTML = `Did you get <span id="last-word-hint" class="font-bold text-primary"></span> correctly?`;
@@ -2271,6 +2303,11 @@
                 // Hide unbalanced/forced finish modal if it was showing
                 const finishModal = document.getElementById('modal-finish-game-prompt');
                 if (finishModal) finishModal.classList.add('hidden');
+
+                const endTurnModal = document.getElementById('modal-end-turn');
+                if (endTurnModal) endTurnModal.classList.add('hidden');
+                this.timeoutModalOpen = false;
+                this.pendingDecisionType = null;
 
                 // Determine winner(s)
                 const playerArray = Object.entries(this.players).map(([id, data]) => ({
@@ -2902,6 +2939,13 @@
                     if (this.timeLeft <= 0) {
                         clearInterval(this.timer);
                         this.playObnoxiousBuzzer();
+                        const iconEl = document.getElementById('modal-icon');
+                        const titleEl = document.getElementById('modal-title');
+                        const textEl = document.getElementById('buzz-modal-text');
+                        if (iconEl) iconEl.textContent = '⌛';
+                        if (titleEl) titleEl.textContent = "Time's Up!";
+                        if (textEl) textEl.innerHTML = `Did you get <span id="last-word-hint" class="font-bold text-primary"></span> just in time?`;
+
                         document.getElementById('last-word-hint').textContent = `"${this.currentCard.word}"`;
                         document.getElementById('modal-end-turn').classList.remove('hidden');
                     }
@@ -3485,18 +3529,28 @@
                 if (modal) modal.classList.add('hidden');
 
                 if (this.multiplayerMode) {
-                    // Clear buzz event
-                    if (this.multiplayer.roomRef) {
+                    const decisionType = this.multiplayer.pendingDecisionType || 'buzz';
+                    this.multiplayer.pendingDecisionType = null;
+                    this.multiplayer.timeoutModalOpen = false;
+
+                    // Clear buzz event in all cases if it was a buzz
+                    if (decisionType === 'buzz' && this.multiplayer.roomRef) {
                         await this.multiplayer.roomRef.child('gameState/lastBuzz').set(null);
                     }
-                    // If correct, mark as scored, otherwise mark as buzzed
-                    if (correct) {
-                        await this.multiplayer.nextCard(true);
+
+                    if (decisionType === 'timeout') {
+                        // Ending round with result
+                        await this.multiplayer.endRound(correct);
                     } else {
-                        await this.multiplayer.markBuzzed();
+                        // It was a buzz resolution
+                        if (correct) {
+                            await this.multiplayer.nextCard(true);
+                        } else {
+                            await this.multiplayer.markBuzzed();
+                        }
+                        // Stay on game screen
+                        this.showScreen('game');
                     }
-                    // Stay on game screen, just clear modal
-                    this.showScreen('game');
                 } else {
                     // Single player mode
                     await this.finishRound(correct);
