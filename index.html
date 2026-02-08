@@ -1695,23 +1695,29 @@
                 this.game.displayCard(card);
             }
 
-            async nextCard(scored) {
+            async nextCard(statusOrScored) {
                 if (!this.roomRef || !this.gameState) return;
+                const status = typeof statusOrScored === 'string' ? statusOrScored : (statusOrScored === true ? 'correct' : 'timeout');
 
                 const currentPlayerId = this.gameState.currentPlayer;
                 if (currentPlayerId !== this.playerId) return;
 
                 if (this.game.currentCard) {
-                    const status = scored ? 'correct' : 'skipped';
-                    this.game.wordLog.push({
-                        word: this.game.currentCard.word,
-                        type: this.game.currentCard.type,
-                        level: this.game.currentCard.level,
-                        status: status
-                    });
-                    this.storage.updateLastWordStatus(status);
+                    const lastLogIdx = this.game.wordLog.length - 1;
+                    const lastLogItem = lastLogIdx >= 0 ? this.game.wordLog[lastLogIdx] : null;
 
-                    if (scored) {
+                    // Only log if not already logged (prevents dupes)
+                    if (!lastLogItem || lastLogItem.word !== this.game.currentCard.word) {
+                        this.game.wordLog.push({
+                            word: this.game.currentCard.word,
+                            type: this.game.currentCard.type,
+                            level: this.game.currentCard.level,
+                            status: status
+                        });
+                        this.storage.updateLastWordStatus(status);
+                    }
+
+                    if (status === 'correct') {
                         const currentScore = this.players[this.playerId]?.score || 0;
                         await this.roomRef.child(`players/${this.playerId}/score`).set(currentScore + 1);
                     }
@@ -1753,20 +1759,10 @@
                 // Clear buzz event
                 await this.roomRef.child('gameState/lastBuzz').set(null);
 
-                // Mark card as buzzed (remove from play, no score)
+                // Mark card as buzzed and get next
                 if (this.game.currentCard) {
-                    this.game.wordLog.push({
-                        word: this.game.currentCard.word,
-                        type: this.game.currentCard.type,
-                        level: this.game.currentCard.level,
-                        status: 'timeout'
-                    });
-                    this.storage.updateLastWordStatus('timeout');
-                    await this.addSessionPlayed(this.game.currentCard.id);
+                    await this.nextCard('buzzed');
                 }
-
-                // Get next card
-                await this.nextCard(false);
             }
 
             async skipCard() {
@@ -1777,7 +1773,7 @@
 
                 if (this.game.skips > 0) {
                     this.game.skips--;
-                    await this.nextCard(false);
+                    await this.nextCard('skipped');
                 }
             }
 
@@ -1812,9 +1808,12 @@
                     const lastLogIdx = this.game.wordLog.length - 1;
                     const lastLogItem = lastLogIdx >= 0 ? this.game.wordLog[lastLogIdx] : null;
 
-                    // Prevent duplicate logging if the card was just skipped (and thus already logged)
-                    // or if it was just logged as timeout in a race condition
-                    if (!lastLogItem || lastLogItem.word !== this.game.currentCard.word) {
+                    // If word is already in log, update status (unless it was already correct/skipped)
+                    if (lastLogItem && lastLogItem.word === this.game.currentCard.word) {
+                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped') {
+                            lastLogItem.status = lastCorrect ? 'correct' : 'timeout';
+                        }
+                    } else {
                         const status = lastCorrect ? 'correct' : 'timeout';
                         this.game.wordLog.push({
                             word: this.game.currentCard.word,
@@ -2948,28 +2947,23 @@
                 }
 
                 // Single-player logic
-                // Single-player logic
                 if (this.currentCard) {
                     const lastLogIdx = this.wordLog.length - 1;
                     const lastLogItem = lastLogIdx >= 0 ? this.wordLog[lastLogIdx] : null;
 
-                    // Prevent duplicate logging
-                    if (!lastLogItem || lastLogItem.word !== this.currentCard.word) {
+                    if (lastLogItem && lastLogItem.word === this.currentCard.word) {
+                        // Word is already in log. If it was skipped, keep it as skipped.
+                        // Otherwise update to the final result of the round.
+                        if (lastLogItem.status !== 'correct' && lastLogItem.status !== 'skipped') {
+                            lastLogItem.status = lastCorrect ? 'correct' : 'timeout';
+                        }
+                    } else {
                         this.wordLog.push({
                             word: this.currentCard.word,
                             type: this.currentCard.type,
                             level: this.currentCard.level,
                             status: lastCorrect ? 'correct' : 'timeout'
                         });
-                    } else if (lastLogItem.word === this.currentCard.word && lastLogItem.status === 'skipped' && !lastCorrect) {
-                        // If it was skipped, DO NOT change it to timeout.
-                        // Skipped means skipped.
-                    } else if (lastLogItem.word === this.currentCard.word && !lastCorrect) {
-                        // Update status to timeout if it was something else? No, usually we just push.
-                        // But if we are here, we want to ensure we don't double log.
-                    }
-
-                    if (!fromExhaust && (!lastLogItem || lastLogItem.word !== this.currentCard.word)) {
                         this.addPlayed(this.currentCard.id);
                     }
                 }
@@ -3225,12 +3219,18 @@
             async markBuzzed() {
                 if (this.multiplayerMode) {
                     await this.multiplayer.markBuzzed();
+                } else {
+                    // Original single-player logic
+                    if (this.currentCard) {
+                        this.nextCard('buzzed');
+                    }
                 }
             }
 
-            async nextCard(scored) {
+            async nextCard(statusOrScored) {
+                const status = typeof statusOrScored === 'string' ? statusOrScored : (statusOrScored === true ? 'correct' : 'timeout');
                 if (this.multiplayerMode) {
-                    await this.multiplayer.nextCard(scored);
+                    await this.multiplayer.nextCard(status === 'correct');
                 } else {
                     // Original single-player logic
                     if (this.currentCard) {
@@ -3238,12 +3238,12 @@
                             word: this.currentCard.word,
                             type: this.currentCard.type,
                             level: this.currentCard.level,
-                            status: scored ? 'correct' : 'timeout'
+                            status: status
                         });
                         this.addPlayed(this.currentCard.id);
                     }
 
-                    if (scored) {
+                    if (status === 'correct') {
                         this.roundScore++;
                         this.score++;
                     }
@@ -3281,7 +3281,7 @@
                     // Original single-player logic
                     if (this.skips > 0) {
                         this.skips--;
-                        this.nextCard(false, true);
+                        this.nextCard('skipped');
                     }
                 }
             }
