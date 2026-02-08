@@ -2007,7 +2007,11 @@
                     if (turnIndicator) {
                         turnIndicator.querySelector('#turn-indicator-text').textContent = isTeamMode ? `Team ${activeTeam} is up!` : `${currentPlayerName}'s Turn`;
                         if (isTeamMode) {
-                            turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is describing. Guess the word!`;
+                            if (isOpposingTeam) {
+                                turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is describing. Buzz if you hear a taboo word!`;
+                            } else {
+                                turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is describing. Guess the word!`;
+                            }
                         } else {
                             turnIndicator.querySelector('#turn-indicator-subtext').textContent = `${currentPlayerName} is describing. Guess the word!`;
                         }
